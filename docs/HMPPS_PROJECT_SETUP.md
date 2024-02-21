@@ -16,7 +16,7 @@ After deploying your repository, enable Actions via the GitHub `Actions` tab.
 
 Run the `rename-project-create-pr` workflow to automatically rename the project and create a PR for review.
 
-## Manually Branding from Template App
+## Manually Renaming from Template App
 
 Run the `rename-project.bash` script with the project's name as the argument. This script performs a search and replace across the project, updating names and directories to match your new project's name.
 

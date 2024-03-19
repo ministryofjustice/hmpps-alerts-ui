@@ -16,7 +16,6 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
         logger.error('User is not authorised to access this')
         return res.redirect('/authError')
       }
-
       return next()
     }
 

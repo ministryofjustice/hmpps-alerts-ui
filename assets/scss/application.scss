@@ -8,4 +8,6 @@ $govuk-page-width: $moj-page-width;
 @import 'moj/all';
 
 @import './components/header-bar';
+@import './components/gds-card';
+@import './components/gds-header';
 @import 'assets/scss/local';

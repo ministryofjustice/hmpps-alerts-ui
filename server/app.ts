@@ -19,10 +19,10 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import type { Services } from './services'
+import AuthorisedRoles from './authentication/authorisedRoles'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
-
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
@@ -36,7 +36,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
   app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 

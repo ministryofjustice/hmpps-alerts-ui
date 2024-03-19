@@ -17,6 +17,8 @@
       </div>
     </div>
   </div>
-  {% include "./partials/referenceDataPanels.njk" %}
+  {% if roles and roles.includes('ALERTS_REFERENCE_DATA_MANAGER') %}
+    {% include "./partials/referenceDataPanels.njk" %}
+  {% endif %}
 
 {% endblock %}

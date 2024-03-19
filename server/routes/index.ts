@@ -11,7 +11,8 @@ export default function routes(service: Services): Router {
   // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const createAlertTypeRoutes = new CreateAlertTypeRoutes()
   get('/', (req, res, next) => {
-    res.render('pages/index')
+    const { roles } = res.locals.user
+    res.render('pages/index', { roles })
   })
   get('/alertType/create', createAlertTypeRoutes.startPage)
 

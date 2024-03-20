@@ -8,13 +8,13 @@ import CreateAlertTypeRoutes from './createAlertTypeRoutes'
 export default function routes(service: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const createAlertTypeRoutes = new CreateAlertTypeRoutes()
   get('/', (req, res, next) => {
     const { roles } = res.locals.user
     res.render('pages/index', { roles })
   })
   get('/alertType/create', createAlertTypeRoutes.startPage)
-
+  post('/alertType/create', createAlertTypeRoutes.submitAlertType)
   return router
 }

@@ -17,54 +17,31 @@
                 </h1>
                 <form method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                    {% if alertTypeCodeErrorMessage %}
-                        {{ govukInput({
-                            label: {
-                                text: "Enter an alert type code"
-                            },
-                            classes: "govuk-input--width-5",
-                            errorMessage: {
-                                text: alertTypeCodeErrorMessage
-                            },
-                            id: "alertTypeCode",
-                            name: "alertTypeCode",
-                            value: alertTypeCode
-                        }) }}
-                    {% else %}
-                        {{ govukInput({
-                            label: {
-                                text: "Enter an alert type code"
-                            },
-                            classes: "govuk-input--width-5",
-                            id: "alertTypeCode",
-                            name: "alertTypeCode",
-                            value: alertTypeCode
-                        }) }}
-                    {% endif %}
-                    {% if alertTypeDescriptionErrorMessage %}
-                        {{ govukInput({
-                            label: {
-                                text: "Enter a description of the alert type"
-                            },
-                            classes: "govuk-input--width-full",
-                            errorMessage: {
-                                text: alertTypeDescriptionErrorMessage
-                            },
-                            id: "alertTypeDescription",
-                            name: "alertTypeDescription",
-                            value: alertTypeDescription
-                        }) }}
-                    {% else %}
-                        {{ govukInput({
-                            label: {
-                                text: "Enter a description of the alert type"
-                            },
-                            classes: "govuk-input--width-full",
-                            id: "alertTypeDescription",
-                            name: "alertTypeDescription",
-                            value: alertTypeDescription
-                        }) }}
-                    {% endif %}
+
+                    {{ govukInput({
+                        label: {
+                            text: "Enter an alert type code"
+                        },
+                        classes: "govuk-input--width-5",
+                        id: "alertTypeCode",
+                        errorMessage: {
+                            text: alertTypeCodeErrorMessage
+                        } if alertTypeCodeErrorMessage,
+                        name: "alertTypeCode",
+                        value: alertTypeCode
+                    }) }}
+                    {{ govukInput({
+                        label: {
+                            text: "Enter a description of the alert type"
+                        },
+                        classes: "govuk-input--width-full",
+                        errorMessage: {
+                            text: alertTypeDescriptionErrorMessage
+                        } if alertTypeDescriptionErrorMessage,
+                        id: "alertTypeDescription",
+                        name: "alertTypeDescription",
+                        value: alertTypeDescription
+                    }) }}
                     {{ govukButton({
                         text: "Continue",
                         type: submit,

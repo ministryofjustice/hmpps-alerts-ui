@@ -42,6 +42,7 @@ describe('createAlertTypeRoutes', () => {
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
+        expect(res.text).toContain('There is a problem')
         expect(res.text).toContain('An alert type code must be entered')
         expect(res.text).toContain('An alert type description must be entered')
       })
@@ -54,6 +55,7 @@ describe('createAlertTypeRoutes', () => {
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
+        expect(res.text).toContain('There is a problem')
         expect(res.text).toContain('An alert type code must be entered')
         expect(res.text).toContain('This is a unique description')
         expect(res.text).not.toContain('An alert type description must be entered')
@@ -67,6 +69,7 @@ describe('createAlertTypeRoutes', () => {
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
+        expect(res.text).toContain('There is a problem')
         expect(res.text).not.toContain('An alert type code must be entered')
         expect(res.text).toContain('An alert type description must be entered')
         expect(res.text).toContain('AA')

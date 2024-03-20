@@ -9,6 +9,9 @@
     <div class="govuk-!-margin-bottom-9">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-three-quarters">
+                {% if  alertTypeCodeErrorMessage or alertTypeDescriptionErrorMessage %}
+                    {% include './partials/createAlertTypeErrorBanner.njk' %}
+                {% endif %}
                 <h1 class="govuk-heading-xl">
                     Create an alert type
                 </h1>

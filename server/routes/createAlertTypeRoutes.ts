@@ -2,7 +2,8 @@ import { RequestHandler } from 'express'
 
 export default class CreateAlertTypeRoutes {
   public startPage: RequestHandler = async (req, res): Promise<void> => {
-    return res.render('pages/createAlertType/index')
+    const { alertTypeCode, alertTypeDescription } = req.session
+    return res.render('pages/createAlertType/index', { alertTypeCode, alertTypeDescription })
   }
 
   public submitAlertType: RequestHandler = async (req, res): Promise<void> => {
@@ -18,7 +19,24 @@ export default class CreateAlertTypeRoutes {
     if (this.isNullOrEmpty(alertTypeDescription)) {
       return res.render('pages/createAlertType/index', { alertTypeDescriptionErrorMessage, alertTypeCode })
     }
+    req.session.alertTypeCode = alertTypeCode
+    req.session.alertTypeDescription = alertTypeDescription
+    return res.redirect('/alertType/confirmation')
+  }
+
+  public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
+    const { alertTypeCode, alertTypeDescription } = req.session
     return res.render('pages/createAlertType/confirmation', { alertTypeCode, alertTypeDescription })
+  }
+
+  public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
+    return res.redirect('/alertType/success')
+  }
+
+  public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
+    const { alertTypeCode, alertTypeDescription } = req.session
+
+    return res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription })
   }
 
   private isNullOrEmpty(value: string): boolean {

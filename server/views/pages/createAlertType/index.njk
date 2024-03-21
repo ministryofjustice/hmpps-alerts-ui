@@ -1,10 +1,16 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - Create alert type" %}
 {% set mainClasses = "app-container govuk-body" %}
-
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/"
+    }) }}
+{% endblock %}
 {% block content %}
     <div class="govuk-!-margin-bottom-9">
         <div class="govuk-grid-row">

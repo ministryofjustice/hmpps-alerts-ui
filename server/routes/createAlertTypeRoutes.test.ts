@@ -28,10 +28,10 @@ describe('createAlertTypeRoutes', () => {
       .post('/alertType/create')
       .type('form')
       .send({ alertTypeCode: 'DB', alertTypeDescription: 'Description' })
-      .expect(200)
-      .expect('Content-Type', /html/)
+      .expect(302)
+      .expect('Location', '/alertType/confirmation')
       .expect(res => {
-        expect(res.text).toContain('Check your answers before creating your alert type')
+        expect(res.redirect).toBeTruthy()
       })
   })
   it('POST /alertType/create should render both errors if no fields entered', () => {
@@ -73,6 +73,25 @@ describe('createAlertTypeRoutes', () => {
         expect(res.text).not.toContain('An alert type code must be entered')
         expect(res.text).toContain('An alert type description must be entered')
         expect(res.text).toContain('AA')
+      })
+  })
+  it('GET /alertType/confirmation should render confirmation page', () => {
+    return request(app)
+      .get('/alertType/confirmation')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Check your answers before creating your alert type')
+      })
+  })
+  // Update this test when check that the alert type has been saved (next ticket)
+  it('POST /alertType/confirmation should redirect to success page', () => {
+    return request(app)
+      .post('/alertType/confirmation')
+      .expect(302)
+      .expect('Location', '/alertType/success')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
       })
   })
 })

@@ -7,6 +7,8 @@ declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
+    alertTypeCode: string
+    alertTypeDescription: string
   }
 }
 

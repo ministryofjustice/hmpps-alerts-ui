@@ -16,5 +16,8 @@ export default function routes(service: Services): Router {
   })
   get('/alertType/create', createAlertTypeRoutes.startPage)
   post('/alertType/create', createAlertTypeRoutes.submitAlertType)
+  get('/alertType/confirmation', createAlertTypeRoutes.loadConfirmation)
+  post('/alertType/confirmation', createAlertTypeRoutes.submitConfirmation)
+  get('/alertType/success', createAlertTypeRoutes.loadSuccess)
   return router
 }

@@ -1,5 +1,7 @@
 import { RequestHandler } from 'express'
+import AlertsApiClient from '../data/alertsApiClient'
 
+const alertsApiClient = new AlertsApiClient()
 export default class CreateAlertTypeRoutes {
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     const { alertTypeCode, alertTypeDescription } = req.session
@@ -35,8 +37,27 @@ export default class CreateAlertTypeRoutes {
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { alertTypeCode, alertTypeDescription } = req.session
-
-    return res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription })
+    console.log(req.session)
+    await alertsApiClient
+      .createAlertType(res.locals.user.token, {
+        code: alertTypeCode,
+        description: alertTypeDescription,
+      })
+      .then(() => res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription, res }))
+      .catch(err => {
+        console.log(err)
+        const alertTypeCodeErrorMessage = `Alert type with code '${alertTypeCode}' already exists`
+        switch (err.code) {
+          case 409:
+            return res.render('pages/createAlertType/index', {
+              alertTypeCodeErrorMessage,
+              alertTypeCode,
+              alertTypeDescription,
+            })
+          default:
+            return res.render('pages/createAlertType/error')
+        }
+      })
   }
 
   private isNullOrEmpty(value: string): boolean {

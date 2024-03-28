@@ -9,6 +9,7 @@ context('Create an alert type', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubManageUser')
+    cy.task('stubCreateAlertType')
   })
 
   it('Create a new alert type - happy path', () => {

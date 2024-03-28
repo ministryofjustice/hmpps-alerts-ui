@@ -3,17 +3,18 @@
  * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
  * In particular, applicationinsights automatically collects bunyan logs
  */
-import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureAppInsights'
+import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 import applicationInfoSupplier from '../applicationInfo'
-import TokenStore from './tokenStore/tokenStore'
-import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
-import ManageUsersApiClient from './manageUsersApiClient'
-import { createRedisClient } from './redisClient'
-import AlertsApiClient from './alertsApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
+
+import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
+import ManageUsersApiClient from './manageUsersApiClient'
+import { createRedisClient } from './redisClient'
+import TokenStore from './tokenStore/tokenStore'
+import AlertsApiClient from './alertsApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -25,6 +26,6 @@ export const dataAccess = () => ({
   alertsApiClient: new AlertsApiClient(),
 })
 
-export type DataAccess = typeof dataAccess
+export type DataAccess = ReturnType<typeof dataAccess>
 
 export { HmppsAuthClient, RestClientBuilder, ManageUsersApiClient }

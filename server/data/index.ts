@@ -9,6 +9,7 @@ import TokenStore from './tokenStore/tokenStore'
 import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
 import ManageUsersApiClient from './manageUsersApiClient'
 import { createRedisClient } from './redisClient'
+import AlertsApiClient from './alertsApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -21,6 +22,7 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   manageUsersApiClient: new ManageUsersApiClient(),
   systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
+  alertsApiClient: new AlertsApiClient(),
 })
 
 export type DataAccess = typeof dataAccess

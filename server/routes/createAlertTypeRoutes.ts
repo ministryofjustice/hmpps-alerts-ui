@@ -2,8 +2,9 @@ import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
 import logger from '../../logger'
 
-const alertsApiClient = new AlertsApiClient()
 export default class CreateAlertTypeRoutes {
+  constructor(private readonly alertsApiClient: AlertsApiClient) {}
+
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     const { alertTypeCode, alertTypeDescription } = req.session
     return res.render('pages/createAlertType/index', { alertTypeCode, alertTypeDescription })
@@ -31,7 +32,7 @@ export default class CreateAlertTypeRoutes {
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { alertTypeCode, alertTypeDescription } = req.session
-    const response = await alertsApiClient
+    const response = await this.alertsApiClient
       .createAlertType(req.middleware.clientToken, {
         code: alertTypeCode,
         description: alertTypeDescription,

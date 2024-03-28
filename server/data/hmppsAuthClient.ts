@@ -65,10 +65,7 @@ export const systemTokenBuilder =
       return token
     }
     const newToken = await getSystemClientTokenFromHmppsAuth(username)
-    await tokenStore
-      .setToken(key, newToken.body.access_token, newToken.body.expires_in - 60)
-      .then(res => {})
-      .catch(err => console.log(err))
+    await tokenStore.setToken(key, newToken.body.access_token, newToken.body.expires_in - 60)
     // set TTL slightly less than expiry of token. Async but no need to wait
 
     return newToken.body.access_token

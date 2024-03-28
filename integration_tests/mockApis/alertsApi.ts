@@ -1,7 +1,6 @@
 import { stubFor } from './wiremock'
 
 const stubCreateAlertType = () => {
-  console.log('Stubbing create alert request')
   return stubFor({
     request: {
       method: 'POST',

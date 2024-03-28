@@ -1,6 +1,5 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
-import logger from '../../logger'
 
 export default class CreateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}

@@ -2,9 +2,9 @@ import nock from 'nock'
 
 import config from '../config'
 import HmppsAuthClient from './hmppsAuthClient'
-import TokenStore from './tokenStore/redisTokenStore'
+import TokenStore from './tokenStore/tokenStore'
 
-jest.mock('./tokenStore/redisTokenStore')
+jest.mock('./tokenStore/tokenStore')
 
 const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
 

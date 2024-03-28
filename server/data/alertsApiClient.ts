@@ -1,5 +1,6 @@
 import RestClient from './restClient'
 import config from '../config'
+import logger from '../../logger'
 
 export interface AlertType {
   code: string
@@ -38,10 +39,11 @@ export default class AlertsApiClient {
   constructor() {}
 
   private static restClient(token: string): RestClient {
-    return new RestClient('Manage Users Api Client', config.apis.alertsApi, token)
+    return new RestClient('Alerts Api Client', config.apis.alertsApi, token)
   }
 
   createAlertType(token: string, requestBody: CreateAlertTypeRequest) {
+    logger.info(`Creating an alert with body ${JSON.stringify(requestBody)}`)
     return AlertsApiClient.restClient(token).post({ path: '/alert-types', data: requestBody })
   }
 }

@@ -9,8 +9,17 @@
 {% block content %}
     <div class="govuk-!-margin-bottom-9">
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds-from-desktop">
-                <h1 class="govuk-heading-xl">Error</h1>
+            <div class="govuk-grid-column-two-thirds">
+                {{ govukPanel({
+                    titleText: "An error occurred",
+                    html: "Your alert type was not created",
+                    classes: 'govuk-panel-confirmation-error'
+                }) }}
+                <div class="govuk-!-margin-top-8">
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="/">Return to Alerts Management</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

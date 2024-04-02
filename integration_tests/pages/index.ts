@@ -12,6 +12,8 @@ export default class IndexPage extends Page {
 
   createAlertTypeLink = (): PageElement => cy.get('[data-qa=create-alert-type]')
 
+  createAlertCodeLink = (): PageElement => cy.get('[data-qa=create-alert-code]')
+
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
   headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')

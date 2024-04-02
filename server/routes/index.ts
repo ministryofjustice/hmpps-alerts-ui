@@ -4,6 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import CreateAlertTypeRoutes from './createAlertTypeRoutes'
 import { dataAccess } from '../data'
+import CreateAlertCodeRoutes from './createAlertCodeRoutes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -12,14 +13,25 @@ export default function routes(service: Services): Router {
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const { alertsApiClient } = dataAccess()
   const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
+  const createAlertCodeRoutes = new CreateAlertCodeRoutes()
   get('/', (req, res, next) => {
     const { roles } = res.locals.user
     res.render('pages/index', { roles })
   })
-  get('/alertType/create', createAlertTypeRoutes.startPage)
-  post('/alertType/create', createAlertTypeRoutes.submitAlertType)
-  get('/alertType/confirmation', createAlertTypeRoutes.loadConfirmation)
-  post('/alertType/confirmation', createAlertTypeRoutes.submitConfirmation)
-  get('/alertType/success', createAlertTypeRoutes.loadSuccess)
+
+  const createAlertType = () => {
+    get('/alertType/create', createAlertTypeRoutes.startPage)
+    post('/alertType/create', createAlertTypeRoutes.submitAlertType)
+    get('/alertType/confirmation', createAlertTypeRoutes.loadConfirmation)
+    post('/alertType/confirmation', createAlertTypeRoutes.submitConfirmation)
+    get('/alertType/success', createAlertTypeRoutes.loadSuccess)
+  }
+
+  const createAlertCode = () => {
+    get('/alertCode/create', createAlertCodeRoutes.startPage)
+  }
+
+  createAlertType()
+  createAlertCode()
   return router
 }

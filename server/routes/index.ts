@@ -13,7 +13,7 @@ export default function routes(service: Services): Router {
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const { alertsApiClient } = dataAccess()
   const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
-  const createAlertCodeRoutes = new CreateAlertCodeRoutes()
+  const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
   get('/', (req, res, next) => {
     const { roles } = res.locals.user
     res.render('pages/index', { roles })
@@ -29,6 +29,8 @@ export default function routes(service: Services): Router {
 
   const createAlertCode = () => {
     get('/alertCode/create', createAlertCodeRoutes.startPage)
+    post('/alertCode/create', createAlertCodeRoutes.submitAlertType)
+    get('/alertCode/alertCode', createAlertCodeRoutes.loadAlertCode)
   }
 
   createAlertType()

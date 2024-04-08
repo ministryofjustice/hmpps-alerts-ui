@@ -8,6 +8,7 @@ import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
+import SessionSetup from './sessionSetup'
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -30,7 +31,12 @@ export const user: Express.User = {
 
 export const flashProvider = jest.fn()
 
-function appSetup(services: Services, production: boolean, userSupplier: () => Express.User): Express {
+function appSetup(
+  services: Services,
+  production: boolean,
+  userSupplier: () => Express.User,
+  sessionSetup: SessionSetup = new SessionSetup(),
+): Express {
   const app = express()
 
   app.set('view engine', 'njk')
@@ -43,6 +49,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
     res.locals = {
       user: { ...req.user },
     }
+    sessionSetup.sessionDoctor(req)
     next()
   })
   app.use(express.json())
@@ -58,11 +65,13 @@ export function appWithAllRoutes({
   production = false,
   services = {},
   userSupplier = () => user,
+  sessionSetup = new SessionSetup(),
 }: {
   production?: boolean
   services?: Partial<Services>
   userSupplier?: () => Express.User
+  sessionSetup?: SessionSetup
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
-  return appSetup(services as Services, production, userSupplier)
+  return appSetup(services as Services, production, userSupplier, sessionSetup)
 }

@@ -9,6 +9,7 @@ declare module 'express-session' {
     nowInMinutes: number
     alertTypeCode: string
     alertTypeDescription: string
+    alertCodeParentType: string
   }
 }
 

@@ -31,6 +31,8 @@ export default function routes(service: Services): Router {
     get('/alertCode/create', createAlertCodeRoutes.startPage)
     post('/alertCode/create', createAlertCodeRoutes.submitAlertType)
     get('/alertCode/alertCode', createAlertCodeRoutes.loadAlertCode)
+    post('/alertCode/alertCode', createAlertCodeRoutes.submitAlertCode)
+    get('/alertCode/confirmation', createAlertCodeRoutes.loadConfirmation)
   }
 
   createAlertType()

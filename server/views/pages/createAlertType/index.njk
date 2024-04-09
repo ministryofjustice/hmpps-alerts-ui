@@ -18,8 +18,9 @@
                 {% if  alertTypeCodeErrorMessage or alertTypeDescriptionErrorMessage %}
                     {% include './partials/createAlertTypeErrorBanner.njk' %}
                 {% endif %}
+                <span class="govuk-caption-xl">Create an alert type</span>
                 <h1 class="govuk-heading-xl">
-                    Create an alert type
+                    Add alert type details
                 </h1>
                 <form method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>

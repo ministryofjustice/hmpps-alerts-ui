@@ -10,6 +10,8 @@ declare module 'express-session' {
     alertTypeCode: string
     alertTypeDescription: string
     alertCodeParentType: string
+    alertCode: string
+    alertDescription: string
   }
 }
 

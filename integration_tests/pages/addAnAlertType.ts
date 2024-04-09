@@ -2,7 +2,7 @@ import Page, { PageElement } from './page'
 
 export default class AddAnAlertType extends Page {
   constructor() {
-    super('Create an alert type')
+    super('Add alert type details')
   }
 
   public codeInput(): PageElement {

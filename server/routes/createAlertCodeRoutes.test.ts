@@ -54,6 +54,25 @@ describe('createAlertCodeRoutes', () => {
       .expect(302)
       .expect('Location', '/alertCode/alertCode')
   })
+  it('POST /alertCode/create should render with error', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alertCode/create')
+      .type('form')
+      .send({ alertType: '' })
+      .expect(200)
+      .expect(res => {
+        expect(res.text).toContain('Create an alert code')
+        expect(res.text).toContain('Select an alert type')
+        expect(res.text).toContain('Victim')
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain('An alert type must be selected')
+      })
+  })
   it('GET /alertCode/alertCode should render', () => {
     return request(app)
       .get('/alertCode/alertCode')
@@ -110,6 +129,50 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).not.toContain('An alert code must be between 1 and 12 characters')
         expect(res.text).toContain('An alert description must be between 1 and 40 characters')
         expect(res.text).toContain('DB')
+      })
+  })
+  it('GET /alertCode/confirmation should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'A description'
+      req.session.alertCodeParentType = 'BB'
+    }
+    return request(app)
+      .get('/alertCode/confirmation')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Check your answers before creating your alert code')
+        expect(res.text).toContain('AA')
+        expect(res.text).toContain('A description')
+        expect(res.text).toContain('BB')
+      })
+  })
+  it('POST /alertCode/confirmation should redirect', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'A description'
+      req.session.alertCodeParentType = 'BB'
+    }
+    return request(app)
+      .post('/alertCode/confirmation')
+      .type('form')
+      .send({ parent: 'DB', code: 'AA', description: 'A description' })
+      .expect(302)
+      .expect('Location', '/alertCode/success')
+  })
+  it('GET /alertCode/success should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'A description'
+      req.session.alertCodeParentType = 'BB'
+    }
+    return request(app)
+      .get('/alertCode/success')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Alert code created')
       })
   })
 })

@@ -16,13 +16,24 @@ export default class CreateAlertCodeRoutes {
   }
 
   public submitAlertType: RequestHandler = async (req, res): Promise<void> => {
+    if (this.isNullOrEmpty(req.body.alertType)) {
+      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(alertType => {
+        return {
+          value: alertType.code,
+          text: alertType.code,
+          hint: { text: alertType.description },
+        }
+      })
+      const alertTypeErrorMessage = 'An alert type must be selected'
+      return res.render('pages/createAlertCode/index', { alertTypes, alertTypeErrorMessage })
+    }
     req.session.alertCodeParentType = req.body.alertType
     return res.redirect('/alertCode/alertCode')
   }
 
   public loadAlertCode: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCodeParentType } = req.session
-    return res.render('pages/createAlertCode/alertCode', { alertCodeParentType })
+    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    return res.render('pages/createAlertCode/alertCode', { alertCode, alertDescription, alertCodeParentType })
   }
 
   public submitAlertCode: RequestHandler = async (req, res): Promise<void> => {
@@ -37,7 +48,17 @@ export default class CreateAlertCodeRoutes {
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    return res.render('pages/createAlertCode/confirmation')
+    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    return res.render('pages/createAlertCode/confirmation', { alertCode, alertDescription, alertCodeParentType })
+  }
+
+  public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
+    return res.redirect('/alertCode/success')
+  }
+
+  public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
+    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    return res.render('pages/createAlertCode/success', { alertCode, alertDescription, alertCodeParentType })
   }
 
   private isNullOrEmpty(value: string): boolean {

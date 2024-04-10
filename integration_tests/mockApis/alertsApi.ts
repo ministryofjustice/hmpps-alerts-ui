@@ -31,6 +31,10 @@ const stubGetAlertTypes = () => {
       },
       jsonBody: [
         {
+          code: 'DB',
+          description: 'A description',
+        },
+        {
           code: 'AA',
           description: 'A description',
         },

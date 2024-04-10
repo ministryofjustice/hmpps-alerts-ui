@@ -2,7 +2,7 @@ import IndexPage from '../pages'
 import AddAnAlertType from '../pages/addAnAlertType'
 import Page from '../pages/page'
 import AddAnAlertTypeConfirmationPage from '../pages/addAnAlertTypeConfirmationPage'
-import SuccessPage from '../pages/successPage'
+import AlertTypeSuccessPage from '../pages/alertTypeSuccessPage'
 
 context('Create an alert type', () => {
   beforeEach(() => {
@@ -23,6 +23,6 @@ context('Create an alert type', () => {
     confirmationPage.code().should('have.value', 'ABC')
     confirmationPage.description().should('have.value', 'This is a description')
     confirmationPage.continue().click()
-    Page.verifyOnPage(SuccessPage)
+    Page.verifyOnPage(AlertTypeSuccessPage)
   })
 })

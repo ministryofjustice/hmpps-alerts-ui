@@ -6,7 +6,7 @@ export default class SelectAnAlertType extends Page {
   }
 
   public selectCode(): PageElement {
-    return cy.get('[data-module=govuk-radios]').get('.govuk-radios__item')
+    return cy.get('#alertType')
   }
 
   public continue(): PageElement {

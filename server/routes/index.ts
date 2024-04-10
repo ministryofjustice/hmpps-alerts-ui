@@ -1,4 +1,4 @@
-import { type RequestHandler, Router } from 'express'
+import { Request, type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
@@ -14,8 +14,18 @@ export default function routes(service: Services): Router {
   const { alertsApiClient } = dataAccess()
   const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
   const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
+
+  const resetSessionData = (req: Request) => {
+    req.session.alertTypeCode = ''
+    req.session.alertTypeDescription = ''
+    req.session.alertCodeParentType = ''
+    req.session.alertCode = ''
+    req.session.alertDescription = ''
+  }
+
   get('/', (req, res, next) => {
     const { roles } = res.locals.user
+    resetSessionData(req)
     res.render('pages/index', { roles })
   })
 
@@ -33,6 +43,8 @@ export default function routes(service: Services): Router {
     get('/alertCode/alertCode', createAlertCodeRoutes.loadAlertCode)
     post('/alertCode/alertCode', createAlertCodeRoutes.submitAlertCode)
     get('/alertCode/confirmation', createAlertCodeRoutes.loadConfirmation)
+    post('/alertCode/confirmation', createAlertCodeRoutes.submitConfirmation)
+    get('/alertCode/success', createAlertCodeRoutes.loadSuccess)
   }
 
   createAlertType()

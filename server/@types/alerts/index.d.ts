@@ -83,6 +83,16 @@ export interface paths {
      */
     post: operations['createAlertType']
   }
+  '/alert-codes': {
+    /**
+     * Create an alert code
+     * @description Create a new alert code, typically from the Alerts UI
+     *
+     * Requires one of the following roles:
+     * * ROLE_ALERTS_ADMIN
+     */
+    post: operations['createAlertCode']
+  }
   '/prisoners/{prisonNumber}/alerts': {
     /**
      * Gets all the alerts for a prisoner by their prison number
@@ -155,6 +165,14 @@ export interface components {
        * @example Additional user comment on the alert comment thread
        */
       appendComment?: string
+    }
+    ErrorResponse: {
+      /** Format: int32 */
+      status: number
+      errorCode?: string
+      userMessage?: string
+      developerMessage?: string
+      moreInfo?: string
     }
     /** @description An alert associated with a person */
     Alert: {
@@ -281,14 +299,6 @@ export interface components {
        * @example Firstname Lastname
        */
       createdByDisplayName: string
-    }
-    ErrorResponse: {
-      /** Format: int32 */
-      status: number
-      errorCode?: string
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
     }
     /** @description The alert data to use to create an alert in the service */
     MigrateAlertRequest: {
@@ -542,6 +552,24 @@ export interface components {
       deactivatedBy?: string
       /** @description The alert codes associated with this alert type */
       alertCodes: components['schemas']['AlertCode'][]
+    }
+    /** @description The request body for creating a new alert code */
+    CreateAlertCodeRequest: {
+      /**
+       * @description The short code for the alert code
+       * @example A
+       */
+      code: string
+      /**
+       * @description The description of the alert code
+       * @example Alert code description
+       */
+      description: string
+      /**
+       * @description The short code for the parent type
+       * @example A
+       */
+      parent: string
     }
     PageAlert: {
       /** Format: int32 */
@@ -947,6 +975,58 @@ export interface operations {
         }
       }
       /** @description Conflict, the alert type code already exists */
+      409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Create an alert code
+   * @description Create a new alert code, typically from the Alerts UI
+   *
+   * Requires one of the following roles:
+   * * ROLE_ALERTS_ADMIN
+   */
+  createAlertCode: {
+    parameters: {
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAlertCodeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert code created */
+      201: {
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the parent alert type has not been found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Conflict, the alert code already exists */
       409: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

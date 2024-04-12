@@ -28,6 +28,10 @@ export default function routes(service: Services): Router {
     resetSessionData(req)
     res.render('pages/index', { roles })
   })
+  get('/errorPage', (req, res, next) => {
+    const { errorMessage } = req.session
+    res.render('pages/errorPage', { errorMessage })
+  })
 
   const createAlertType = () => {
     get('/alertType/create', createAlertTypeRoutes.startPage)

@@ -18,6 +18,24 @@ const stubCreateAlertType = () => {
   })
 }
 
+const stubCreateAlertCode = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/alert-codes',
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'AA',
+      },
+    },
+  })
+}
+
 const stubGetAlertTypes = () => {
   return stubFor({
     request: {
@@ -46,4 +64,5 @@ const stubGetAlertTypes = () => {
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
+  stubCreateAlertCode,
 }

@@ -1,7 +1,5 @@
-{% extends "../../partials/layout.njk" %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
 
 {% set pageTitle = applicationName + " - Create alert type success" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -12,7 +10,7 @@
             <div class="govuk-grid-column-two-thirds">
                 {{ govukPanel({
                     titleText: "An error occurred",
-                    html: "Your alert type was not created",
+                    html: errorMessage,
                     classes: 'govuk-panel-confirmation-error'
                 }) }}
                 <div class="govuk-!-margin-top-8">

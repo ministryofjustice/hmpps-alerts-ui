@@ -162,10 +162,13 @@ describe('createAlertCodeRoutes', () => {
       .expect('Location', '/alertCode/success')
   })
   it('GET /alertCode/success should render', () => {
+    fakeApi.post('/alert-codes').reply(201)
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
+      req.middleware = {}
+      req.middleware.clientToken = '123'
     }
     return request(app)
       .get('/alertCode/success')
@@ -173,6 +176,35 @@ describe('createAlertCodeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Alert code created')
+      })
+  })
+  it('GET /alertCode/success should redirect to error page', () => {
+    fakeApi.post('/alert-codes').reply(405)
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'A description'
+      req.session.alertCodeParentType = 'BB'
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+    }
+    return request(app).get('/alertCode/success').expect(302).expect('Location', '/errorPage')
+  })
+  it('GET /alertCode/success 409 should render code entry page', () => {
+    fakeApi.post('/alert-codes').reply(409)
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'A description'
+      req.session.alertCodeParentType = 'BB'
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+    }
+    return request(app)
+      .get('/alertCode/success')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain('Alert code &#39;AA&#39; already exists')
       })
   })
 })

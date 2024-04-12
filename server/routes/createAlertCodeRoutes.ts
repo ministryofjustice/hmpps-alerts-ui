@@ -58,7 +58,35 @@ export default class CreateAlertCodeRoutes {
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { alertCode, alertDescription, alertCodeParentType } = req.session
-    return res.render('pages/createAlertCode/success', { alertCode, alertDescription, alertCodeParentType })
+    this.alertsApiClient
+      .createAlertCode(req.middleware.clientToken, {
+        code: alertCode,
+        description: alertDescription,
+        parent: alertCodeParentType,
+      })
+      .then(response => {
+        return res.render('pages/createAlertCode/success', {
+          alertCode,
+          alertDescription,
+          alertCodeParentType,
+          response,
+        })
+      })
+      .catch(err => {
+        const alertCodeErrorMessage = `Alert code '${alertCode}' already exists`
+        switch (err.status) {
+          case 409:
+            return res.render('pages/createAlertCode/alertCode', {
+              alertCodeErrorMessage,
+              alertCode,
+              alertDescription,
+              alertCodeParentType,
+            })
+          default:
+            req.session.errorMessage = 'Your alert code was not created'
+            return res.redirect('/errorPage')
+        }
+      })
   }
 
   private isNullOrEmpty(value: string): boolean {

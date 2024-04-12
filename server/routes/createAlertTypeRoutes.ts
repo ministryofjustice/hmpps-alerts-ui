@@ -46,7 +46,8 @@ export default class CreateAlertTypeRoutes {
               alertTypeDescription,
             })
           default:
-            return res.render('pages/createAlertType/error')
+            req.session.errorMessage = 'Your alert type was not created'
+            return res.redirect('/errorPage')
         }
       })
     return res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription, response })

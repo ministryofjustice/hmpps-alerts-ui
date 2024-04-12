@@ -1,7 +1,7 @@
 import RestClient from './restClient'
 import config from '../config'
 import logger from '../../logger'
-import { AlertType, CreateAlertTypeRequest } from '../@types/alerts/alertsApiTypes'
+import { AlertType, CreateAlertCodeRequest, CreateAlertTypeRequest } from '../@types/alerts/alertsApiTypes'
 
 export default class AlertsApiClient {
   constructor() {}
@@ -11,12 +11,17 @@ export default class AlertsApiClient {
   }
 
   createAlertType(token: string, requestBody: CreateAlertTypeRequest) {
-    logger.info(`Creating an alert with body ${JSON.stringify(requestBody)}`)
+    logger.info(`Creating an alert type with body ${JSON.stringify(requestBody)}`)
     return AlertsApiClient.restClient(token).post({ path: '/alert-types', data: requestBody })
   }
 
   retrieveAlertTypes(token: string): Promise<AlertType[]> {
     logger.info('Retrieving all alert types')
     return AlertsApiClient.restClient(token).get({ path: '/alert-types' })
+  }
+
+  createAlertCode(token: string, requestBody: CreateAlertCodeRequest) {
+    logger.info(`Creating an alert code with body ${JSON.stringify(requestBody)}`)
+    return AlertsApiClient.restClient(token).post({ path: '/alert-codes', data: requestBody })
   }
 }

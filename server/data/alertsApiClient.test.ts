@@ -21,5 +21,9 @@ describe('The alerts API client', () => {
       fakeAlertsApi.post('/alert-types').reply(201)
       await alertsApiClient.createAlertType('token', { code: 'CO', description: 'Description' })
     })
+    it('should create an alert code', async () => {
+      fakeAlertsApi.post('/alert-codes').reply(201)
+      await alertsApiClient.createAlertCode('token', { code: 'CO', description: 'Description', parent: 'AA' })
+    })
   })
 })

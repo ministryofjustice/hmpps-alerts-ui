@@ -5,6 +5,7 @@ import type { Services } from '../services'
 import CreateAlertTypeRoutes from './createAlertTypeRoutes'
 import { dataAccess } from '../data'
 import CreateAlertCodeRoutes from './createAlertCodeRoutes'
+import DeactivateAlertCodeRoutes from './deactivateAlertCodeRoutes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -14,7 +15,7 @@ export default function routes(service: Services): Router {
   const { alertsApiClient } = dataAccess()
   const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
   const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
-
+  const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient)
   const resetSessionData = (req: Request) => {
     req.session.alertTypeCode = ''
     req.session.alertTypeDescription = ''
@@ -51,7 +52,12 @@ export default function routes(service: Services): Router {
     get('/alertCode/success', createAlertCodeRoutes.loadSuccess)
   }
 
+  const deactivateAlertCode = () => {
+    get('/alertCode/deactivate', deactivateAlertCodeRoutes.startPage)
+  }
+
   createAlertType()
   createAlertCode()
+  deactivateAlertCode()
   return router
 }

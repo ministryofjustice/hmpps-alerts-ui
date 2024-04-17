@@ -13,6 +13,7 @@ declare module 'express-session' {
     alertCode: string
     alertDescription: string
     errorMessage: string
+    deactivateAlertTypeCode: string
   }
 }
 

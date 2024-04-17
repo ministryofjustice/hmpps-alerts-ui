@@ -54,6 +54,8 @@ export default function routes(service: Services): Router {
 
   const deactivateAlertCode = () => {
     get('/alertCode/deactivate', deactivateAlertCodeRoutes.startPage)
+    post('/alertCode/deactivate', deactivateAlertCodeRoutes.submitStartPage)
+    get('/alertCode/deactivate/alertCode', deactivateAlertCodeRoutes.loadAlertCodesPage)
   }
 
   createAlertType()

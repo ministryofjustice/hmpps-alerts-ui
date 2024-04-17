@@ -5,6 +5,10 @@ export default abstract class Page {
     return new constructor()
   }
 
+  static verifyOnPageWithArgs<T>(constructor: new (arg: string) => T, arg: string): T {
+    return new constructor(arg)
+  }
+
   constructor(private readonly title: string) {
     this.checkOnPage()
   }

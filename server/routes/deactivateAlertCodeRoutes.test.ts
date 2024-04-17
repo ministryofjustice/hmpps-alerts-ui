@@ -103,4 +103,54 @@ describe('deactivateAlertCode', () => {
         expect(res.redirect).toBeTruthy()
       })
   })
+  it('GET /alertCode/deactivate/confirmation should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertTypeCode = 'VI'
+      req.session.deactivateAlertCode = 'AA'
+    }
+    return request(app)
+      .get('/alertCode/deactivate/confirmation')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert code')
+        expect(res.text).toContain('Are you sure you want to deactivate alert code AA?')
+      })
+  })
+  it('POST /alertCode/deactivate/alertCode should redirect', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alertCode/deactivate/alertCode')
+      .type('form')
+      .send({ alertCode: 'DB' })
+      .expect(302)
+      .expect('Location', '/alertCode/deactivate/confirmation')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
+      })
+  })
+  it('POST /alertCode/deactivate/alertCode no alert code shows error', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alertCode/deactivate/alertCode')
+      .type('form')
+      .send({})
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert code')
+        expect(res.text).toContain('An alert code must be selected')
+      })
+  })
 })

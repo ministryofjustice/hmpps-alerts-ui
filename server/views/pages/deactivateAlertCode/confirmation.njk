@@ -16,29 +16,42 @@
     <div class="govuk-!-margin-bottom-5">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-three-quarters">
-                {% if  alertCodeErrorMessage %}
+                {% if  alertTypeErrorMessage %}
                     {% include './partials/deactivateAlertCodeErrorBanner.njk' %}
                 {% endif %}
                 <span class="govuk-caption-xl">Deactivate an alert code</span>
                 <form method="post">
                     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                     {{ govukRadios({
-                        name: "alertCode",
+                        classes: "govuk-radios--inline",
+                        name: "confirmation",
                         fieldset: {
                             legend: {
-                                text: "Select an alert code",
+                                text: "Are you sure you want to deactivate alert code " + deactivateAlertCode + "?",
                                 isPageHeading: true,
                                 classes: "govuk-fieldset__legend--xl"
                             }
                         },
-                        items: codes
+                        hint: {
+                            text: "This will immediately stop the alert code from being used on new alerts."
+                        },
+                        items: [
+                            {
+                                value: "yes",
+                                text: "Yes"
+                            },
+                            {
+                                value: "no",
+                                text: "No"
+                            }
+                        ]
                     }) }}
                     {{ govukButton({
                         text: "Continue",
                         type: submit,
-                        value: 'alert-code',
+                        value: 'confirmation',
                         preventDoubleClick: true,
-                        attributes: {  'data-qa': 'alert-code' }
+                        attributes: {  'data-qa': 'confirmation' }
                     }) }}
                 </form>
             </div>

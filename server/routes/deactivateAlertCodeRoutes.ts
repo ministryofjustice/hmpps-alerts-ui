@@ -74,4 +74,22 @@ export default class DeactivateAlertCodeRoutes {
     const { deactivateAlertCode } = req.session
     return res.render('pages/deactivateAlertCode/confirmation', { deactivateAlertCode })
   }
+
+  public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
+    const { confirmation } = req.body
+    const { deactivateAlertCode } = req.session
+    if (confirmation === undefined || confirmation === null || confirmation === '') {
+      const confirmationErrorMessage = 'You must select either Yes or No.'
+      return res.render('pages/deactivateAlertCode/confirmation', { deactivateAlertCode, confirmationErrorMessage })
+    }
+    if (confirmation === 'no') {
+      return res.redirect('/')
+    }
+    return res.redirect('/alertCode/deactivate/success')
+  }
+
+  public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
+    const { deactivateAlertCode } = req.session
+    return res.render('pages/deactivateAlertCode/success', { deactivateAlertCode })
+  }
 }

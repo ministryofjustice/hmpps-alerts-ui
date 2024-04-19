@@ -5,11 +5,11 @@ export default class AlertCodeDeactivationConfirmationPage extends Page {
     super(`Are you sure you want to deactivate alert code ${alertCode}?`)
   }
 
-  public selectCode(): PageElement {
-    return cy.get('#alertCode')
+  public selectYes(): PageElement {
+    return cy.get('#confirmation')
   }
 
   public continue(): PageElement {
-    return cy.get('[data-qa=alert-code]')
+    return cy.get('[data-qa=confirmation]')
   }
 }

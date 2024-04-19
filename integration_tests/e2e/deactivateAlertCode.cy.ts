@@ -3,6 +3,7 @@ import Page from '../pages/page'
 import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeForAlertCodeDeactivation'
 import SelectAlertCodeForDeactivationPage from '../pages/selectAlertCodeForDeactivationPage'
 import AlertCodeDeactivationConfirmationPage from '../pages/alertCodeDeactivationConfirmationPage'
+import DeactivateAlertCodeSuccessPage from '../pages/deactivateAlertCodeSuccessPage'
 
 context('Deactivate an alert code', () => {
   beforeEach(() => {
@@ -21,6 +22,9 @@ context('Deactivate an alert code', () => {
     const selectAlertCodePage = Page.verifyOnPage(SelectAlertCodeForDeactivationPage)
     selectAlertCodePage.selectCode().click()
     selectAlertCodePage.continue().click()
-    Page.verifyOnPageWithArgs(AlertCodeDeactivationConfirmationPage, 'AA')
+    const confirmationPage = Page.verifyOnPageWithArgs(AlertCodeDeactivationConfirmationPage, 'AA')
+    confirmationPage.selectYes().click()
+    confirmationPage.continue().click()
+    Page.verifyOnPage(DeactivateAlertCodeSuccessPage)
   })
 })

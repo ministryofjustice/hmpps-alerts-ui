@@ -88,19 +88,4 @@ describe('updateAlertType', () => {
         expect(res.text).toContain('Victim')
       })
   })
-  it('GET /alertType/updateDescription/submitDescription no codes should redirect', () => {
-    sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
-      req.session.updateAlertTypeCode = 'WRONG_CODE'
-    }
-    fakeApi.get('/alert-types').reply(200, alertTypes)
-    return request(app)
-      .get('/alertType/updateDescription/submitDescription')
-      .expect(302)
-      .expect('Location', '/errorPage')
-      .expect(res => {
-        expect(res.redirect).toBeTruthy()
-      })
-  })
 })

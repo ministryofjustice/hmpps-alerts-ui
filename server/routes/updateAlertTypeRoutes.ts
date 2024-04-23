@@ -38,10 +38,6 @@ export default class UpdateAlertTypeRoutes {
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
     const alertType = await this.getAlertTypeDetails(req)
-    if (alertType === undefined) {
-      req.session.errorMessage = `There is no alert type associated with code ${req.session.updateAlertTypeCode}`
-      return res.redirect('/errorPage')
-    }
     const { code, description } = alertType
     return res.render('pages/updateAlertType/submitDescription', { code, description })
   }

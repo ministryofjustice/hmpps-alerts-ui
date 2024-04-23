@@ -8,7 +8,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: "/alertType/update-description"
+        href: "/alertType/updateDescription"
     }) }}
 {% endblock %}
 {% block content %}
@@ -28,6 +28,7 @@
                             isPageHeading: true
                         },
                         value: description,
+                        id: "descriptionEntry",
                         name: "descriptionEntry"
                     }) }}
                     {{ govukButton({

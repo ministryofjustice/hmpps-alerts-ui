@@ -11,7 +11,7 @@ context('Update alert type description', () => {
     cy.task('stubGetAlertTypes')
   })
 
-  it('Deactivate an existing alert code - happy path', () => {
+  it('Update description of an alert type - happy path', () => {
     cy.signIn()
     IndexPage.goTo().updateAlertTypeLink().click()
     const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertType)

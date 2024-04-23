@@ -1,0 +1,51 @@
+import { Request, RequestHandler } from 'express'
+import AlertsApiClient from '../data/alertsApiClient'
+
+export default class UpdateAlertTypeRoutes {
+  constructor(private readonly alertsApiClient: AlertsApiClient) {}
+
+  public startPage: RequestHandler = async (req, res): Promise<void> => {
+    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(alertType => {
+      return {
+        value: alertType.code,
+        text: alertType.code,
+        hint: { text: alertType.description },
+      }
+    })
+    return res.render('pages/updateAlertType/index', { alertTypes })
+  }
+
+  public storeAlertType: RequestHandler = async (req, res): Promise<void> => {
+    const { alertType } = req.body
+    if (alertType === null || alertType === '' || alertType === undefined) {
+      const alertTypeErrorMessage = 'An alert type must be selected.'
+      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(at => {
+        return {
+          value: at.code,
+          text: at.code,
+          hint: { text: at.description },
+        }
+      })
+      return res.render('pages/updateAlertType/index', { alertTypes, alertTypeErrorMessage })
+    }
+    req.session.updateAlertTypeCode = alertType
+    return res.redirect('/alertType/update-description/submit-description')
+  }
+
+  public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
+    const alertType = await this.getAlertTypeDetails(req)
+    if (alertType === undefined) {
+      req.session.errorMessage = `There is no alert type associated with code ${req.session.updateAlertTypeCode}`
+      return res.redirect('/errorPage')
+    }
+    const { code, description } = alertType
+    return res.render('pages/updateAlertType/submitDescription', { code, description })
+  }
+
+  private getAlertTypeDetails = async (req: Request) => {
+    const { updateAlertTypeCode } = req.session
+    return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(
+      at => at.code === updateAlertTypeCode,
+    )
+  }
+}

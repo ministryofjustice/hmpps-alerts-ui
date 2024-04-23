@@ -29,7 +29,7 @@ export default class UpdateAlertTypeRoutes {
       return res.render('pages/updateAlertType/index', { alertTypes, alertTypeErrorMessage })
     }
     req.session.updateAlertTypeCode = alertType
-    return res.redirect('/alertType/update-description/submit-description')
+    return res.redirect('/alertType/updateDescription/submitDescription')
   }
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {

@@ -36,14 +36,14 @@ const alertTypes = [
 ]
 
 describe('updateAlertType', () => {
-  it('GET /alertType/update-description should render', () => {
+  it('GET /alertType/updateDescription should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertType/update-description')
+      .get('/alertType/updateDescription')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -53,23 +53,23 @@ describe('updateAlertType', () => {
         expect(res.text).toContain('Victim')
       })
   })
-  it('POST /alertType/update-description should redirect', () => {
+  it('POST /alertType/updateDescription should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alertType/update-description')
+      .post('/alertType/updateDescription')
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alertType/update-description/submit-description')
+      .expect('Location', '/alertType/updateDescription/submitDescription')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('GET /alertType/update-description/submit-description should render', () => {
+  it('GET /alertType/updateDescription/submitDescription should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
@@ -77,16 +77,16 @@ describe('updateAlertType', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertType/update-description/submit-description')
+      .get('/alertType/updateDescription/submitDescription')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Update alert type description')
-        expect(res.text).toContain('Input new description for alert type code')
+        expect(res.text).toContain('Enter new description for alert type code')
         expect(res.text).toContain('Victim')
       })
   })
-  it('GET /alertType/update-description/submit-description no codes should redirect', () => {
+  it('GET /alertType/updateDescription/submitDescription no codes should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
@@ -94,7 +94,7 @@ describe('updateAlertType', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertType/update-description/submit-description')
+      .get('/alertType/updateDescription/submitDescription')
       .expect(302)
       .expect('Location', '/errorPage')
       .expect(res => {

@@ -51,6 +51,7 @@ const stubGetAlertTypes = () => {
         {
           code: 'DB',
           description: 'A description',
+          isActive: true,
           alertCodes: [
             {
               code: 'AA',
@@ -61,6 +62,7 @@ const stubGetAlertTypes = () => {
         {
           code: 'AA',
           description: 'A description',
+          isActive: true,
         },
       ],
     },

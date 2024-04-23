@@ -5,13 +5,15 @@ export default class UpdateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
-    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(alertType => {
-      return {
-        value: alertType.code,
-        text: alertType.code,
-        hint: { text: alertType.description },
-      }
-    })
+    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+      .filter(at => at.isActive)
+      .map(alertType => {
+        return {
+          value: alertType.code,
+          text: alertType.code,
+          hint: { text: alertType.description },
+        }
+      })
     return res.render('pages/updateAlertType/index', { alertTypes })
   }
 
@@ -19,13 +21,15 @@ export default class UpdateAlertTypeRoutes {
     const { alertType } = req.body
     if (alertType === null || alertType === '' || alertType === undefined) {
       const alertTypeErrorMessage = 'An alert type must be selected.'
-      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(at => {
-        return {
-          value: at.code,
-          text: at.code,
-          hint: { text: at.description },
-        }
-      })
+      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+        .filter(at => at.isActive)
+        .map(at => {
+          return {
+            value: at.code,
+            text: at.code,
+            hint: { text: at.description },
+          }
+        })
       return res.render('pages/updateAlertType/index', { alertTypes, alertTypeErrorMessage })
     }
     req.session.updateAlertTypeCode = alertType
@@ -45,7 +49,7 @@ export default class UpdateAlertTypeRoutes {
   private getAlertTypeDetails = async (req: Request) => {
     const { updateAlertTypeCode } = req.session
     return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(
-      at => at.code === updateAlertTypeCode,
+      at => at.code === updateAlertTypeCode && at.isActive,
     )
   }
 }

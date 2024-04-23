@@ -27,11 +27,13 @@ const alertTypes = [
   {
     code: 'VI',
     description: 'Victim',
+    isActive: true,
     alertCodes: [{ code: 'AA', description: 'Alert code' }],
   } as AlertType,
   {
     code: 'AA',
     description: 'A type',
+    isActive: true,
   } as AlertType,
 ]
 

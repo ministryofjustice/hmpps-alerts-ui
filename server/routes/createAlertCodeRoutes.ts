@@ -5,25 +5,29 @@ export default class CreateAlertCodeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
-    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(alertType => {
-      return {
-        value: alertType.code,
-        text: alertType.code,
-        hint: { text: alertType.description },
-      }
-    })
-    return res.render('pages/createAlertCode/index', { alertTypes })
-  }
-
-  public submitAlertType: RequestHandler = async (req, res): Promise<void> => {
-    if (this.isNullOrEmpty(req.body.alertType)) {
-      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).map(alertType => {
+    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+      .filter(alertType => alertType.isActive)
+      .map(alertType => {
         return {
           value: alertType.code,
           text: alertType.code,
           hint: { text: alertType.description },
         }
       })
+    return res.render('pages/createAlertCode/index', { alertTypes })
+  }
+
+  public submitAlertType: RequestHandler = async (req, res): Promise<void> => {
+    if (this.isNullOrEmpty(req.body.alertType)) {
+      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+        .filter(alertType => alertType.isActive)
+        .map(alertType => {
+          return {
+            value: alertType.code,
+            text: alertType.code,
+            hint: { text: alertType.description },
+          }
+        })
       const alertTypeErrorMessage = 'An alert type must be selected'
       return res.render('pages/createAlertCode/index', { alertTypes, alertTypeErrorMessage })
     }

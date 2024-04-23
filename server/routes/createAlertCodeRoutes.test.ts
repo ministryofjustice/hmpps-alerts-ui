@@ -23,7 +23,7 @@ beforeEach(() => {
 afterEach(() => {
   jest.resetAllMocks()
 })
-const alertTypes = [{ code: 'VI', description: 'Victim' } as AlertType]
+const alertTypes = [{ code: 'VI', description: 'Victim', isActive: true } as AlertType]
 describe('createAlertCodeRoutes', () => {
   it('GET /alertCode/alertCode should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {

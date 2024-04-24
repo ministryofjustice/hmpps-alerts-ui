@@ -84,7 +84,7 @@ describe('updateAlertType', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Update alert type description')
-        expect(res.text).toContain('Enter new description for alert type code')
+        expect(res.text).toContain('Enter a new description for alert type code')
         expect(res.text).toContain('Victim')
       })
   })

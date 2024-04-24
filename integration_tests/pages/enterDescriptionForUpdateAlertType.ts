@@ -2,7 +2,7 @@ import Page, { PageElement } from './page'
 
 export default class EnterDescriptionForUpdateAlertType extends Page {
   constructor() {
-    super('Enter new description for alert type code')
+    super('Enter a new description for alert type code')
   }
 
   public descriptionField(): PageElement {

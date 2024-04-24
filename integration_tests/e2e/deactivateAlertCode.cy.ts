@@ -11,6 +11,7 @@ context('Deactivate an alert code', () => {
     cy.task('stubSignIn')
     cy.task('stubManageUser')
     cy.task('stubGetAlertTypes')
+    cy.task('stubDeactivateAlertCode')
   })
 
   it('Deactivate an existing alert code - happy path', () => {

@@ -234,6 +234,7 @@ describe('deactivateAlertCode', () => {
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
+    fakeApi.delete('/alert-codes/AA').reply(204)
     return request(app)
       .get('/alert-code/deactivate/success')
       .expect(200)
@@ -241,6 +242,21 @@ describe('deactivateAlertCode', () => {
       .expect(res => {
         expect(res.text).toContain('Alert code deactivated')
         expect(res.text).toContain('Alert code <strong>AA</strong> has been deactivated')
+      })
+  })
+  it('GET /alertCode/deactivate/success should redirect if error`', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertTypeCode = 'VI'
+      req.session.deactivateAlertCode = 'AA'
+    }
+    return request(app)
+      .get('/alertCode/deactivate/success')
+      .expect(302)
+      .expect('Location', '/errorPage')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
       })
   })
 })

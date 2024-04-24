@@ -25,14 +25,14 @@ afterEach(() => {
 })
 const alertTypes = [{ code: 'VI', description: 'Victim', isActive: true } as AlertType]
 describe('createAlertCodeRoutes', () => {
-  it('GET /alertCode/alertCode should render', () => {
+  it('GET /alert-code/create should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertCode/create')
+      .get('/alert-code/create')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -41,27 +41,27 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).toContain('Victim')
       })
   })
-  it('POST /alertCode/create should redirect', () => {
+  it('POST /alert-code/create should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alertCode/create')
+      .post('/alert-code/create')
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alertCode/alertCode')
+      .expect('Location', '/alert-code/alert-code')
   })
-  it('POST /alertCode/create should render with error', () => {
+  it('POST /alert-code/create should render with error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alertCode/create')
+      .post('/alert-code/create')
       .type('form')
       .send({ alertType: '' })
       .expect(200)
@@ -73,26 +73,26 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).toContain('An alert type must be selected')
       })
   })
-  it('GET /alertCode/alertCode should render', () => {
+  it('GET /alert-code/alert-code should render', () => {
     return request(app)
-      .get('/alertCode/alertCode')
+      .get('/alert-code/alert-code')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Add alert code details')
       })
   })
-  it('POST /alertCode/alertCode should redirect', () => {
+  it('POST /alert-code/alert-code should redirect', () => {
     return request(app)
-      .post('/alertCode/alertCode')
+      .post('/alert-code/alert-code')
       .type('form')
       .send({ alertCode: 'DB', alertDescription: 'A description' })
       .expect(302)
-      .expect('Location', '/alertCode/confirmation')
+      .expect('Location', '/alert-code/confirmation')
   })
-  it('POST /alertCode/alertCode should render both errors if no fields entered', () => {
+  it('POST /alert-code/alert-code should render both errors if no fields entered', () => {
     return request(app)
-      .post('/alertCode/alertCode')
+      .post('/alert-code/alert-code')
       .type('form')
       .send({})
       .expect(200)
@@ -103,9 +103,9 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).toContain('An alert description must be between 1 and 40 characters')
       })
   })
-  it('POST /alertCode/alertCode should render code error if no code entered', () => {
+  it('POST /alert-code/alert-code should render code error if no code entered', () => {
     return request(app)
-      .post('/alertCode/alertCode')
+      .post('/alert-code/alert-code')
       .type('form')
       .send({ alertCode: '', alertDescription: 'A description' })
       .expect(200)
@@ -117,9 +117,9 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).not.toContain('An alert description must be between 1 and 40 characters')
       })
   })
-  it('POST /alertCode/alertCode should render description error if no description entered', () => {
+  it('POST /alert-code/alert-code should render description error if no description entered', () => {
     return request(app)
-      .post('/alertCode/alertCode')
+      .post('/alert-code/alert-code')
       .type('form')
       .send({ alertCode: 'DB', alertDescription: '' })
       .expect(200)
@@ -131,14 +131,14 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).toContain('DB')
       })
   })
-  it('GET /alertCode/confirmation should render', () => {
+  it('GET /alert-code/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
     }
     return request(app)
-      .get('/alertCode/confirmation')
+      .get('/alert-code/confirmation')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -148,20 +148,20 @@ describe('createAlertCodeRoutes', () => {
         expect(res.text).toContain('BB')
       })
   })
-  it('POST /alertCode/confirmation should redirect', () => {
+  it('POST /alert-code/confirmation should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
     }
     return request(app)
-      .post('/alertCode/confirmation')
+      .post('/alert-code/confirmation')
       .type('form')
       .send({ parent: 'DB', code: 'AA', description: 'A description' })
       .expect(302)
-      .expect('Location', '/alertCode/success')
+      .expect('Location', '/alert-code/success')
   })
-  it('GET /alertCode/success should render', () => {
+  it('GET /alert-code/success should render', () => {
     fakeApi.post('/alert-codes').reply(201)
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
@@ -171,14 +171,14 @@ describe('createAlertCodeRoutes', () => {
       req.middleware.clientToken = '123'
     }
     return request(app)
-      .get('/alertCode/success')
+      .get('/alert-code/success')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Alert code created')
       })
   })
-  it('GET /alertCode/success should redirect to error page', () => {
+  it('GET /alert-code/success should redirect to error page', () => {
     fakeApi.post('/alert-codes').reply(405)
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
@@ -187,9 +187,9 @@ describe('createAlertCodeRoutes', () => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
-    return request(app).get('/alertCode/success').expect(302).expect('Location', '/errorPage')
+    return request(app).get('/alert-code/success').expect(302).expect('Location', '/error-page')
   })
-  it('GET /alertCode/success 409 should render code entry page', () => {
+  it('GET /alert-code/success 409 should render code entry page', () => {
     fakeApi.post('/alert-codes').reply(409)
     sessionSetup.sessionDoctor = (req: Request) => {
       req.session.alertCode = 'AA'
@@ -199,7 +199,7 @@ describe('createAlertCodeRoutes', () => {
       req.middleware.clientToken = '123'
     }
     return request(app)
-      .get('/alertCode/success')
+      .get('/alert-code/success')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {

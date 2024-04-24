@@ -31,43 +31,43 @@ export default function routes(service: Services): Router {
     resetSessionData(req)
     res.render('pages/index', { roles })
   })
-  get('/errorPage', (req, res, next) => {
+  get('/error-page', (req, res, next) => {
     const { errorMessage } = req.session
     res.render('pages/errorPage', { errorMessage })
   })
 
   const createAlertType = () => {
-    get('/alertType/create', createAlertTypeRoutes.startPage)
-    post('/alertType/create', createAlertTypeRoutes.submitAlertType)
-    get('/alertType/confirmation', createAlertTypeRoutes.loadConfirmation)
-    post('/alertType/confirmation', createAlertTypeRoutes.submitConfirmation)
-    get('/alertType/success', createAlertTypeRoutes.loadSuccess)
+    get('/alert-type/create', createAlertTypeRoutes.startPage)
+    post('/alert-type/create', createAlertTypeRoutes.submitAlertType)
+    get('/alert-type/confirmation', createAlertTypeRoutes.loadConfirmation)
+    post('/alert-type/confirmation', createAlertTypeRoutes.submitConfirmation)
+    get('/alert-type/success', createAlertTypeRoutes.loadSuccess)
   }
 
   const updateAlertType = () => {
-    get('/alertType/updateDescription', updateAlertTypeRoutes.startPage)
-    post('/alertType/updateDescription', updateAlertTypeRoutes.storeAlertType)
-    get('/alertType/updateDescription/submitDescription', updateAlertTypeRoutes.loadSubmitDescription)
+    get('/alert-type/update-description', updateAlertTypeRoutes.startPage)
+    post('/alert-type/update-description', updateAlertTypeRoutes.storeAlertType)
+    get('/alert-type/update-description/submit-description', updateAlertTypeRoutes.loadSubmitDescription)
   }
 
   const createAlertCode = () => {
-    get('/alertCode/create', createAlertCodeRoutes.startPage)
-    post('/alertCode/create', createAlertCodeRoutes.submitAlertType)
-    get('/alertCode/alertCode', createAlertCodeRoutes.loadAlertCode)
-    post('/alertCode/alertCode', createAlertCodeRoutes.submitAlertCode)
-    get('/alertCode/confirmation', createAlertCodeRoutes.loadConfirmation)
-    post('/alertCode/confirmation', createAlertCodeRoutes.submitConfirmation)
-    get('/alertCode/success', createAlertCodeRoutes.loadSuccess)
+    get('/alert-code/create', createAlertCodeRoutes.startPage)
+    post('/alert-code/create', createAlertCodeRoutes.submitAlertType)
+    get('/alert-code/alert-code', createAlertCodeRoutes.loadAlertCode)
+    post('/alert-code/alert-code', createAlertCodeRoutes.submitAlertCode)
+    get('/alert-code/confirmation', createAlertCodeRoutes.loadConfirmation)
+    post('/alert-code/confirmation', createAlertCodeRoutes.submitConfirmation)
+    get('/alert-code/success', createAlertCodeRoutes.loadSuccess)
   }
 
   const deactivateAlertCode = () => {
-    get('/alertCode/deactivate', deactivateAlertCodeRoutes.startPage)
-    post('/alertCode/deactivate', deactivateAlertCodeRoutes.submitStartPage)
-    get('/alertCode/deactivate/alertCode', deactivateAlertCodeRoutes.loadAlertCodesPage)
-    post('/alertCode/deactivate/alertCode', deactivateAlertCodeRoutes.submitAlertCodesPage)
-    get('/alertCode/deactivate/confirmation', deactivateAlertCodeRoutes.loadConfirmationPage)
-    post('/alertCode/deactivate/confirmation', deactivateAlertCodeRoutes.submitConfirmationPage)
-    get('/alertCode/deactivate/success', deactivateAlertCodeRoutes.loadSuccessPage)
+    get('/alert-code/deactivate', deactivateAlertCodeRoutes.startPage)
+    post('/alert-code/deactivate', deactivateAlertCodeRoutes.submitStartPage)
+    get('/alert-code/deactivate/alert-code', deactivateAlertCodeRoutes.loadAlertCodesPage)
+    post('/alert-code/deactivate/alert-code', deactivateAlertCodeRoutes.submitAlertCodesPage)
+    get('/alert-code/deactivate/confirmation', deactivateAlertCodeRoutes.loadConfirmationPage)
+    post('/alert-code/deactivate/confirmation', deactivateAlertCodeRoutes.submitConfirmationPage)
+    get('/alert-code/deactivate/success', deactivateAlertCodeRoutes.loadSuccessPage)
   }
 
   createAlertType()

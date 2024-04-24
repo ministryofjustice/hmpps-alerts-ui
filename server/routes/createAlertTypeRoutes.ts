@@ -17,7 +17,7 @@ export default class CreateAlertTypeRoutes {
     }
     req.session.alertTypeCode = alertTypeCode
     req.session.alertTypeDescription = alertTypeDescription
-    return res.redirect('/alertType/confirmation')
+    return res.redirect('/alert-type/confirmation')
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
@@ -26,7 +26,7 @@ export default class CreateAlertTypeRoutes {
   }
 
   public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    return res.redirect('/alertType/success')
+    return res.redirect('/alert-type/success')
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
@@ -47,7 +47,7 @@ export default class CreateAlertTypeRoutes {
             })
           default:
             req.session.errorMessage = 'Your alert type was not created'
-            return res.redirect('/errorPage')
+            return res.redirect('/error-page')
         }
       })
     return res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription, response })

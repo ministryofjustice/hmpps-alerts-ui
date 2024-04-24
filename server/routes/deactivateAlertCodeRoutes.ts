@@ -33,14 +33,14 @@ export default class DeactivateAlertCodeRoutes {
       return res.render('pages/deactivateAlertCode/index', { alertTypes, alertTypeErrorMessage })
     }
     req.session.deactivateAlertTypeCode = alertType
-    return res.redirect('/alertCode/deactivate/alertCode')
+    return res.redirect('/alert-code/deactivate/alert-code')
   }
 
   public loadAlertCodesPage: RequestHandler = async (req, res): Promise<void> => {
     const { alertType, codes } = await this.getAlertDetails(req)
     if (codes === undefined || codes.length === 0) {
       req.session.errorMessage = `There are no codes associated with alert type ${alertType.code}`
-      return res.redirect('/errorPage')
+      return res.redirect('/error-page')
     }
     return res.render('pages/deactivateAlertCode/alertCodes', { alertType, codes })
   }
@@ -71,7 +71,7 @@ export default class DeactivateAlertCodeRoutes {
       return res.render('pages/deactivateAlertCode/alertCodes', { alertType, codes, alertCodeErrorMessage })
     }
     req.session.deactivateAlertCode = alertCode
-    return res.redirect('/alertCode/deactivate/confirmation')
+    return res.redirect('/alert-code/deactivate/confirmation')
   }
 
   public loadConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
@@ -89,7 +89,7 @@ export default class DeactivateAlertCodeRoutes {
     if (confirmation === 'no') {
       return res.redirect('/')
     }
-    return res.redirect('/alertCode/deactivate/success')
+    return res.redirect('/alert-code/deactivate/success')
   }
 
   public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {

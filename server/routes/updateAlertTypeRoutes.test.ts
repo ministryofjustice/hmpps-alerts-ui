@@ -38,14 +38,14 @@ const alertTypes = [
 ]
 
 describe('updateAlertType', () => {
-  it('GET /alertType/updateDescription should render', () => {
+  it('GET /alert-type/update-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertType/updateDescription')
+      .get('/alert-type/update-description')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -55,23 +55,23 @@ describe('updateAlertType', () => {
         expect(res.text).toContain('Victim')
       })
   })
-  it('POST /alertType/updateDescription should redirect', () => {
+  it('POST /alert-type/update-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alertType/updateDescription')
+      .post('/alert-type/update-description')
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alertType/updateDescription/submitDescription')
+      .expect('Location', '/alert-type/update-description/submit-description')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('GET /alertType/updateDescription/submitDescription should render', () => {
+  it('GET /alert-type/update-description/submit-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
@@ -79,7 +79,7 @@ describe('updateAlertType', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alertType/updateDescription/submitDescription')
+      .get('/alert-type/update-description/submit-description')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {

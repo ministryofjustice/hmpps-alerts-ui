@@ -14,29 +14,29 @@ afterEach(() => {
 })
 
 describe('createAlertTypeRoutes', () => {
-  it('GET /alertType/create should render', () => {
+  it('GET /alert-type/create should render', () => {
     return request(app)
-      .get('/alertType/create')
+      .get('/alert-type/create')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('Create an alert type')
       })
   })
-  it('POST /alertType/create should submit if all fields entered', () => {
+  it('POST /alert-type/create should submit if all fields entered', () => {
     return request(app)
-      .post('/alertType/create')
+      .post('/alert-type/create')
       .type('form')
       .send({ alertTypeCode: 'DB', alertTypeDescription: 'Description' })
       .expect(302)
-      .expect('Location', '/alertType/confirmation')
+      .expect('Location', '/alert-type/confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('POST /alertType/create should render both errors if no fields entered', () => {
+  it('POST /alert-type/create should render both errors if no fields entered', () => {
     return request(app)
-      .post('/alertType/create')
+      .post('/alert-type/create')
       .type('form')
       .send({})
       .expect(200)
@@ -47,9 +47,9 @@ describe('createAlertTypeRoutes', () => {
         expect(res.text).toContain('An alert type description must be between 1 and 40 characters')
       })
   })
-  it('POST /alertType/create should render code error if no code entered', () => {
+  it('POST /alert-type/create should render code error if no code entered', () => {
     return request(app)
-      .post('/alertType/create')
+      .post('/alert-type/create')
       .type('form')
       .send({ alertTypeCode: '', alertTypeDescription: 'This is a unique description' })
       .expect(200)
@@ -61,9 +61,9 @@ describe('createAlertTypeRoutes', () => {
         expect(res.text).not.toContain('An alert type description must be between 1 and 40 characters')
       })
   })
-  it('POST /alertType/create should render description error if no description entered', () => {
+  it('POST /alert-type/create should render description error if no description entered', () => {
     return request(app)
-      .post('/alertType/create')
+      .post('/alert-type/create')
       .type('form')
       .send({ alertTypeCode: 'AA', alertTypeDescription: '' })
       .expect(200)
@@ -75,9 +75,9 @@ describe('createAlertTypeRoutes', () => {
         expect(res.text).toContain('AA')
       })
   })
-  it('GET /alertType/confirmation should render confirmation page', () => {
+  it('GET /alert-type/confirmation should render confirmation page', () => {
     return request(app)
-      .get('/alertType/confirmation')
+      .get('/alert-type/confirmation')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -85,11 +85,11 @@ describe('createAlertTypeRoutes', () => {
       })
   })
   // Update this test when check that the alert type has been saved (next ticket)
-  it('POST /alertType/confirmation should redirect to success page', () => {
+  it('POST /alert-type/confirmation should redirect to success page', () => {
     return request(app)
-      .post('/alertType/confirmation')
+      .post('/alert-type/confirmation')
       .expect(302)
-      .expect('Location', '/alertType/success')
+      .expect('Location', '/alert-type/success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })

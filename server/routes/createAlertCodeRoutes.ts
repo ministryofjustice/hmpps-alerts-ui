@@ -32,7 +32,7 @@ export default class CreateAlertCodeRoutes {
       return res.render('pages/createAlertCode/index', { alertTypes, alertTypeErrorMessage })
     }
     req.session.alertCodeParentType = req.body.alertType
-    return res.redirect('/alertCode/alertCode')
+    return res.redirect('/alert-code/alert-code')
   }
 
   public loadAlertCode: RequestHandler = async (req, res): Promise<void> => {
@@ -48,7 +48,7 @@ export default class CreateAlertCodeRoutes {
     }
     req.session.alertCode = alertCode
     req.session.alertDescription = alertDescription
-    return res.redirect('/alertCode/confirmation')
+    return res.redirect('/alert-code/confirmation')
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
@@ -57,7 +57,7 @@ export default class CreateAlertCodeRoutes {
   }
 
   public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    return res.redirect('/alertCode/success')
+    return res.redirect('/alert-code/success')
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
@@ -88,7 +88,7 @@ export default class CreateAlertCodeRoutes {
             })
           default:
             req.session.errorMessage = 'Your alert code was not created'
-            return res.redirect('/errorPage')
+            return res.redirect('/error-page')
         }
       })
   }

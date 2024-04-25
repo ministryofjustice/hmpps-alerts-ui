@@ -19,7 +19,7 @@ context('Update alert type description', () => {
     selectAlertTypePage.selectCode().click()
     selectAlertTypePage.continue().click()
     const enterDescriptionPage = Page.verifyOnPage(EnterDescriptionForUpdateAlertType)
-    enterDescriptionPage.descriptionField().type('New Description')
+    enterDescriptionPage.descriptionField().click().clear().type('New Description')
     enterDescriptionPage.continue().click()
     const confirmationPage = Page.verifyOnPageWithArgs(
       UpdateAlertTypeDescriptionConfirmationPage,

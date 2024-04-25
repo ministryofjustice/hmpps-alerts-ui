@@ -8,6 +8,7 @@ import CreateAlertCodeRoutes from './createAlertCodeRoutes'
 import DeactivateAlertCodeRoutes from './deactivateAlertCodeRoutes'
 import UpdateAlertTypeRoutes from './updateAlertTypeRoutes'
 import DeactivateAlertTypeRoutes from './deactivateAlertTypeRoutes'
+import UpdateAlertCodeRoutes from './updateAlertCodeRoutes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -18,6 +19,7 @@ export default function routes(service: Services): Router {
   const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
   const updateAlertTypeRoutes = new UpdateAlertTypeRoutes(alertsApiClient)
   const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
+  const updateAlertCodeRoutes = new UpdateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient)
   const resetSessionData = (req: Request) => {
@@ -66,6 +68,18 @@ export default function routes(service: Services): Router {
     get('/alert-code/success', createAlertCodeRoutes.loadSuccess)
   }
 
+  const updateAlertCode = () => {
+    get('/alert-code/update-description', updateAlertCodeRoutes.startPage)
+    post('/alert-code/update-description', updateAlertCodeRoutes.storeAlertType)
+    get('/alert-code/update-description/alert-code', updateAlertCodeRoutes.loadSelectAlertCode)
+    post('/alert-code/update-description/alert-code', updateAlertCodeRoutes.saveSelectAlertCode)
+    get('/alert-code/update-description/submit-description', updateAlertCodeRoutes.loadSubmitDescription)
+    post('/alert-code/update-description/submit-description', updateAlertCodeRoutes.saveSubmitDescription)
+    get('/alert-code/update-description/confirmation', updateAlertCodeRoutes.loadConfirmation)
+    post('/alert-code/update-description/confirmation', updateAlertCodeRoutes.submitConfirmationPage)
+    get('/alert-code/update-description/success', updateAlertCodeRoutes.loadSuccess)
+  }
+
   const deactivateAlertCode = () => {
     get('/alert-code/deactivate', deactivateAlertCodeRoutes.startPage)
     post('/alert-code/deactivate', deactivateAlertCodeRoutes.submitStartPage)
@@ -87,6 +101,7 @@ export default function routes(service: Services): Router {
   createAlertType()
   updateAlertType()
   createAlertCode()
+  updateAlertCode()
   deactivateAlertCode()
   deactivateAlertType()
   return router

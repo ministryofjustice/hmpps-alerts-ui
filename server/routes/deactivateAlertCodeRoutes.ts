@@ -104,7 +104,7 @@ export default class DeactivateAlertCodeRoutes {
       })
       .catch(_ => {
         req.session.errorMessage = 'Your alert code was not deactivated'
-        return res.redirect('/errorPage')
+        return res.redirect('/error-page')
       })
   }
 }

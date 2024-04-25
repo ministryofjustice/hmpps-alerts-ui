@@ -244,7 +244,7 @@ describe('deactivateAlertCode', () => {
         expect(res.text).toContain('Alert code <strong>AA</strong> has been deactivated')
       })
   })
-  it('GET /alertCode/deactivate/success should redirect if error`', () => {
+  it('GET /alert-code/deactivate/success should redirect if error`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
@@ -252,9 +252,9 @@ describe('deactivateAlertCode', () => {
       req.session.deactivateAlertCode = 'AA'
     }
     return request(app)
-      .get('/alertCode/deactivate/success')
+      .get('/alert-code/deactivate/success')
       .expect(302)
-      .expect('Location', '/errorPage')
+      .expect('Location', '/error-page')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })

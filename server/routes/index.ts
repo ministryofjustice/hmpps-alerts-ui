@@ -53,6 +53,7 @@ export default function routes(service: Services): Router {
     post('/alert-type/update-description/submit-description', updateAlertTypeRoutes.saveSubmitDescription)
     get('/alert-type/update-description/confirmation', updateAlertTypeRoutes.loadConfirmation)
     post('/alert-type/update-description/confirmation', updateAlertTypeRoutes.submitConfirmationPage)
+    get('/alert-type/update-description/success', updateAlertTypeRoutes.loadSuccess)
   }
 
   const createAlertCode = () => {

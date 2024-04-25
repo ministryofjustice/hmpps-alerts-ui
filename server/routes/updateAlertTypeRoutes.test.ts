@@ -88,4 +88,109 @@ describe('updateAlertType', () => {
         expect(res.text).toContain('Victim')
       })
   })
+  it('POST /alert-type/update-description/submit-description should redirect', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/update-description/submit-description')
+      .type('form')
+      .send({ descriptionEntry: 'New Description' })
+      .expect(302)
+      .expect('Location', '/alert-type/update-description/confirmation')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
+      })
+  })
+  it('POST /alert-type/update-description/submit-description should render both error if no description entered', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/update-description/submit-description')
+      .type('form')
+      .send({})
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain('An alert type description must be between 1 and 40 characters')
+      })
+  })
+  it('GET /alert-type/update-description/confirmation should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+      req.session.alertTypeDescription = 'New Description'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .get('/alert-type/update-description/confirmation')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain(
+          'Are you sure you want to change the description for alert type code &quot;VI&quot; to &quot;New Description&quot;?',
+        )
+      })
+  })
+  it('POST /alert-type/update-description/confirmation should redirect if "yes" selected', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/update-description/confirmation')
+      .type('form')
+      .send({ confirmation: 'yes' })
+      .expect(302)
+      .expect('Location', '/alert-type/update-description/success')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
+      })
+  })
+  it('POST /alert-type/update-description/confirmation should redirect if "no" selected', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/update-description/confirmation')
+      .type('form')
+      .send({ confirmation: 'no' })
+      .expect(302)
+      .expect('Location', '/')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
+      })
+  })
+  it('POST /alert-type/update-description/confirmation should render error if no confirmation selected', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/update-description/confirmation')
+      .type('form')
+      .send({})
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain('You must select either Yes or No.')
+      })
+  })
 })

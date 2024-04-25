@@ -10,6 +10,6 @@ export default class EnterDescriptionForUpdateAlertType extends Page {
   }
 
   public continue(): PageElement {
-    return cy.get('[data-qa=alert-type-code]')
+    return cy.get('[data-qa=alert-type-description]')
   }
 }

@@ -42,6 +42,46 @@ export default class UpdateAlertTypeRoutes {
     return res.render('pages/updateAlertType/submitDescription', { code, description })
   }
 
+  public saveSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
+    const { descriptionEntry } = req.body
+    if (!descriptionEntry || descriptionEntry.length === 0 || descriptionEntry > 40) {
+      const { code } = await this.getAlertTypeDetails(req)
+      return res.render('pages/updateAlertType/submitDescription', {
+        code,
+        description: descriptionEntry,
+        alertTypeDescriptionErrorMessage: 'An alert type description must be between 1 and 40 characters',
+      })
+    }
+    req.session.alertTypeDescription = descriptionEntry
+    return res.redirect('/alert-type/update-description/confirmation')
+  }
+
+  public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
+    const { updateAlertTypeCode, alertTypeDescription } = req.session
+    return res.render('pages/updateAlertType/confirmation', {
+      code: updateAlertTypeCode,
+      description: alertTypeDescription,
+    })
+  }
+
+  public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
+    const { confirmation } = req.body
+    const { updateAlertTypeCode, alertTypeDescription } = req.session
+
+    switch (confirmation) {
+      case 'no':
+        return res.redirect('/')
+      case 'yes':
+        return res.redirect('/alert-type/update-description/success')
+      default:
+        return res.render('pages/updateAlertType/confirmation', {
+          code: updateAlertTypeCode,
+          description: alertTypeDescription,
+          confirmationErrorMessage: 'You must select either Yes or No.',
+        })
+    }
+  }
+
   private getAlertTypeDetails = async (req: Request) => {
     const { updateAlertTypeCode } = req.session
     return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(

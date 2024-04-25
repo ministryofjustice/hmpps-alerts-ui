@@ -5,8 +5,8 @@ export default abstract class Page {
     return new constructor()
   }
 
-  static verifyOnPageWithArgs<T>(constructor: new (arg: string) => T, arg: string): T {
-    return new constructor(arg)
+  static verifyOnPageWithArgs<T>(constructor: new (...args: string[]) => T, ...args: string[]): T {
+    return new constructor(...args)
   }
 
   constructor(private readonly title: string) {

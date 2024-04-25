@@ -3,6 +3,7 @@ import Page from '../pages/page'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import EnterDescriptionForUpdateAlertType from '../pages/enterDescriptionForUpdateAlertType'
 import UpdateAlertTypeDescriptionConfirmationPage from '../pages/updateAlertTypeDescriptionConfirmationPage'
+import UpdateAlertTypeDescriptionSuccessPage from '../pages/updateAlertTypeDescriptionSuccessPage'
 
 context('Update alert type description', () => {
   beforeEach(() => {
@@ -28,5 +29,6 @@ context('Update alert type description', () => {
     )
     confirmationPage.selectYes().click()
     confirmationPage.continue().click()
+    Page.verifyOnPage(UpdateAlertTypeDescriptionSuccessPage)
   })
 })

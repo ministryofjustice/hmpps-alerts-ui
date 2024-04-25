@@ -193,4 +193,21 @@ describe('updateAlertType', () => {
         expect(res.text).toContain('You must select either Yes or No.')
       })
   })
+  it('GET /alert-type/update-description/success should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.updateAlertTypeCode = 'VI'
+      req.session.alertTypeDescription = 'New Description'
+    }
+    return request(app)
+      .get('/alert-type/update-description/success')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain(
+          'Alert type code: <strong>VI</strong> is updated with new description: <strong>New Description</strong>.',
+        )
+      })
+  })
 })

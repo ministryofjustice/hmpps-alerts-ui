@@ -26,4 +26,11 @@ describe('The alerts API client', () => {
       await alertsApiClient.createAlertCode('token', { code: 'CO', description: 'Description', parent: 'AA' })
     })
   })
+
+  describe('DELETE', () => {
+    it('should deactivate an alert code', async () => {
+      fakeAlertsApi.delete('/alert-codes/VI').reply(204)
+      await alertsApiClient.deactivateAlertCode('token', 'VI')
+    })
+  })
 })

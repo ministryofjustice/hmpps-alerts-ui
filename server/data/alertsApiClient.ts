@@ -24,4 +24,9 @@ export default class AlertsApiClient {
     logger.info(`Creating an alert code with body ${JSON.stringify(requestBody)}`)
     return AlertsApiClient.restClient(token).post({ path: '/alert-codes', data: requestBody })
   }
+
+  deactivateAlertCode(token: string, alertCode: string) {
+    logger.info(`Deactivating alert code ${alertCode}`)
+    return AlertsApiClient.restClient(token).delete({ path: `/alert-codes/${alertCode}` })
+  }
 }

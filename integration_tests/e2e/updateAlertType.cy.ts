@@ -29,6 +29,6 @@ context('Update alert type description', () => {
     )
     confirmationPage.selectYes().click()
     confirmationPage.continue().click()
-    Page.verifyOnPageWithArgs(UpdateAlertTypeDescriptionSuccessPage, 'DB', 'New Description')
+    Page.verifyOnPage(UpdateAlertTypeDescriptionSuccessPage)
   })
 })

@@ -2,6 +2,7 @@ import IndexPage from '../pages'
 import Page from '../pages/page'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import EnterDescriptionForUpdateAlertType from '../pages/enterDescriptionForUpdateAlertType'
+import UpdateAlertTypeDescriptionConfirmationPage from '../pages/updateAlertTypeDescriptionConfirmationPage'
 
 context('Update alert type description', () => {
   beforeEach(() => {
@@ -19,5 +20,13 @@ context('Update alert type description', () => {
     selectAlertTypePage.continue().click()
     const enterDescriptionPage = Page.verifyOnPage(EnterDescriptionForUpdateAlertType)
     enterDescriptionPage.descriptionField().type('New Description')
+    enterDescriptionPage.continue().click()
+    const confirmationPage = Page.verifyOnPageWithArgs(
+      UpdateAlertTypeDescriptionConfirmationPage,
+      'DB',
+      'New Description',
+    )
+    confirmationPage.selectYes().click()
+    confirmationPage.continue().click()
   })
 })

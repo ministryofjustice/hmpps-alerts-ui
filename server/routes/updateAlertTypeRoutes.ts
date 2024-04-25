@@ -64,6 +64,24 @@ export default class UpdateAlertTypeRoutes {
     })
   }
 
+  public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
+    const { confirmation } = req.body
+    const { updateAlertTypeCode, alertTypeDescription } = req.session
+
+    switch (confirmation) {
+      case 'no':
+        return res.redirect('/')
+      case 'yes':
+        return res.redirect('/alert-type/update-description/success')
+      default:
+        return res.render('pages/updateAlertType/confirmation', {
+          code: updateAlertTypeCode,
+          description: alertTypeDescription,
+          confirmationErrorMessage: 'You must select either Yes or No.',
+        })
+    }
+  }
+
   private getAlertTypeDetails = async (req: Request) => {
     const { updateAlertTypeCode } = req.session
     return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(

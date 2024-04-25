@@ -69,8 +69,24 @@ const stubGetAlertTypes = () => {
   })
 }
 
+const stubDeactivateAlertCode = () => {
+  return stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/alerts-api/alert-codes/AA',
+    },
+    response: {
+      status: 204,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
   stubCreateAlertCode,
+  stubDeactivateAlertCode,
 }

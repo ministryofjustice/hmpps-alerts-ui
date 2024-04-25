@@ -94,6 +94,17 @@ export default class DeactivateAlertCodeRoutes {
 
   public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
     const { deactivateAlertCode } = req.session
-    return res.render('pages/deactivateAlertCode/success', { deactivateAlertCode })
+    this.alertsApiClient
+      .deactivateAlertCode(req.middleware.clientToken, deactivateAlertCode)
+      .then(response => {
+        return res.render('pages/deactivateAlertCode/success', {
+          deactivateAlertCode,
+          response,
+        })
+      })
+      .catch(_ => {
+        req.session.errorMessage = 'Your alert code was not deactivated'
+        return res.redirect('/error-page')
+      })
   }
 }

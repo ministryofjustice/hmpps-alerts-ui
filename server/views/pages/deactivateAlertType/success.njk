@@ -1,0 +1,23 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = applicationName + " - Create alert type success" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+    <div class="govuk-!-margin-bottom-9">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {{ govukPanel({
+                    titleText: "Alert type deactivated",
+                    html: "Alert type <strong>"+deactivateAlertType+"</strong> has been deactivated"
+                }) }}
+                <div class="govuk-!-margin-top-8">
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="/">Return to Alerts Management</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

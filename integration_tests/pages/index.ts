@@ -18,6 +18,8 @@ export default class IndexPage extends Page {
 
   deactivateAlertCodeLink = (): PageElement => cy.get('[data-qa=deactivate-alert-code]')
 
+  deactivateAlertTypeLink = (): PageElement => cy.get('[data-qa=deactivate-alert-type]')
+
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
   headerPhaseBanner = (): PageElement => cy.get('[data-qa=header-phase-banner]')

@@ -68,7 +68,7 @@ export default class UpdateAlertCodeRoutes {
       return res.render('pages/updateAlertCode/submitDescription', {
         code,
         description: descriptionEntry,
-        alertTypeDescriptionErrorMessage: 'An alert code description must be between 1 and 40 characters',
+        alertCodeDescriptionErrorMessage: 'An alert code description must be between 1 and 40 characters',
       })
     }
     req.session.alertDescription = descriptionEntry

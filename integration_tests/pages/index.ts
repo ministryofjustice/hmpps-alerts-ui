@@ -16,6 +16,8 @@ export default class IndexPage extends Page {
 
   createAlertCodeLink = (): PageElement => cy.get('[data-qa=create-alert-code]')
 
+  updateAlertCodeLink = (): PageElement => cy.get('[data-qa=update-alert-code]')
+
   deactivateAlertCodeLink = (): PageElement => cy.get('[data-qa=deactivate-alert-code]')
 
   deactivateAlertTypeLink = (): PageElement => cy.get('[data-qa=deactivate-alert-type]')

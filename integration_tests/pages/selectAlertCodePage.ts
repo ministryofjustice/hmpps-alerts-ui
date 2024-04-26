@@ -1,6 +1,6 @@
 import Page, { PageElement } from './page'
 
-export default class SelectAlertCodeForDeactivationPage extends Page {
+export default class SelectAlertCodePage extends Page {
   constructor() {
     super('Select an alert code')
   }

@@ -84,10 +84,19 @@ export default class UpdateAlertTypeRoutes {
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { updateAlertTypeCode, alertTypeDescription } = req.session
-    return res.render('pages/updateAlertType/success', {
-      code: updateAlertTypeCode,
-      description: alertTypeDescription,
-    })
+
+    return this.alertsApiClient
+      .updateAlertType(req.middleware.clientToken, updateAlertTypeCode, { description: alertTypeDescription })
+      .then(alertType => {
+        return res.render('pages/updateAlertType/success', {
+          code: alertType.code,
+          description: alertType.description,
+        })
+      })
+      .catch(_ => {
+        req.session.errorMessage = 'Your alert type was not updated'
+        return res.redirect('/error-page')
+      })
   }
 
   private getAlertTypeDetails = async (req: Request) => {

@@ -36,12 +36,12 @@ export default class AlertsApiClient {
   }
 
   deactivateAlertType(token: string, alertCode: string) {
-    logger.info(`Deactivating alert code ${alertCode}`)
+    logger.info(`Deactivating alert type ${alertCode}`)
     return AlertsApiClient.restClient(token).delete({ path: `/alert-types/${alertCode}` })
   }
 
   updateAlertType(token: string, code: string, requestBody: UpdateAlertTypeRequest): Promise<AlertType> {
-    logger.info(`Updating alert code ${code}`)
+    logger.info(`Updating alert type ${code}`)
     return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${code}`, data: requestBody })
   }
 }

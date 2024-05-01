@@ -242,6 +242,7 @@ describe('updateAlertCode', () => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
     }
+    fakeApi.patch('/alert-codes/AA').reply(200, { code: 'AA', description: 'New Description' } as AlertType)
     return request(app)
       .get('/alert-code/update-description/success')
       .expect(200)
@@ -250,6 +251,23 @@ describe('updateAlertCode', () => {
         expect(res.text).toContain(
           'Alert code: <strong>AA</strong> is updated with new description: <strong>New Description</strong>.',
         )
+      })
+  })
+  it('GET /alert-code/update-description/success should redirect to error page if API fails', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.alertCodeParentType = 'VI'
+      req.session.alertCode = 'AA'
+      req.session.alertDescription = 'New Description'
+    }
+    fakeApi.patch('/alert-codes/VI').reply(404)
+    return request(app)
+      .get('/alert-code/update-description/success')
+      .expect(302)
+      .expect('Location', '/error-page')
+      .expect(res => {
+        expect(res.redirect).toBeTruthy()
       })
   })
 })

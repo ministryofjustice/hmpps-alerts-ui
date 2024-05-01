@@ -2,9 +2,11 @@ import RestClient from './restClient'
 import config from '../config'
 import logger from '../../logger'
 import {
+  AlertCode,
   AlertType,
   CreateAlertCodeRequest,
   CreateAlertTypeRequest,
+  UpdateAlertCodeRequest,
   UpdateAlertTypeRequest,
 } from '../@types/alerts/alertsApiTypes'
 
@@ -43,5 +45,10 @@ export default class AlertsApiClient {
   updateAlertType(token: string, code: string, requestBody: UpdateAlertTypeRequest): Promise<AlertType> {
     logger.info(`Updating alert type ${code}`)
     return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${code}`, data: requestBody })
+  }
+
+  updateAlertCode(token: string, code: string, requestBody: UpdateAlertCodeRequest): Promise<AlertCode> {
+    logger.info(`Updating alert code ${code}`)
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${code}`, data: requestBody })
   }
 }

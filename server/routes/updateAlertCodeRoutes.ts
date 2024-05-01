@@ -103,10 +103,18 @@ export default class UpdateAlertCodeRoutes {
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { alertCode, alertDescription } = req.session
-    return res.render('pages/updateAlertCode/success', {
-      code: alertCode,
-      description: alertDescription,
-    })
+    return this.alertsApiClient
+      .updateAlertCode(req.middleware.clientToken, alertCode, { description: alertDescription })
+      .then(ac => {
+        return res.render('pages/updateAlertCode/success', {
+          code: ac.code,
+          description: ac.description,
+        })
+      })
+      .catch(_ => {
+        req.session.errorMessage = 'Your alert code was not updated'
+        return res.redirect('/error-page')
+      })
   }
 
   private getAlertCode = async (req: Request) => {

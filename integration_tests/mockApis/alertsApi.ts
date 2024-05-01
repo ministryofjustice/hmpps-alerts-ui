@@ -119,6 +119,25 @@ const stubUpdateAlertType = () => {
   })
 }
 
+const stubUpdateAlertCode = () => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-code/AA',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'AA',
+        description: 'New Description',
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
@@ -126,4 +145,5 @@ export default {
   stubDeactivateAlertCode,
   stubDeactivateAlertType,
   stubUpdateAlertType,
+  stubUpdateAlertCode,
 }

@@ -98,10 +98,31 @@ const stubDeactivateAlertType = () => {
     },
   })
 }
+
+const stubUpdateAlertType = () => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-types/DB',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'DB',
+        description: 'New Description',
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
   stubCreateAlertCode,
   stubDeactivateAlertCode,
   stubDeactivateAlertType,
+  stubUpdateAlertType,
 }

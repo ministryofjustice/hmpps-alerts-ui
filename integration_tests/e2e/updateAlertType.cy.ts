@@ -11,6 +11,7 @@ context('Update alert type description', () => {
     cy.task('stubSignIn')
     cy.task('stubManageUser')
     cy.task('stubGetAlertTypes')
+    cy.task('stubUpdateAlertType')
   })
 
   it('Update description of an alert type - happy path', () => {

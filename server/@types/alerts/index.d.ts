@@ -62,6 +62,16 @@ export interface paths {
      */
     post: operations['migrateAlert']
   }
+  '/bulk-alerts': {
+    /**
+     * Create alerts for multiple people in bulk
+     * @description
+     *
+     * Requires one of the following roles:
+     * * ROLE_ALERTS_ADMIN
+     */
+    post: operations['bulkCreateAlerts']
+  }
   '/alerts': {
     /**
      * Create an alert
@@ -133,6 +143,34 @@ export interface paths {
      */
     patch: operations['updateAlertType']
   }
+  '/alert-codes/{alertCode}': {
+    /**
+     * Retrieve an alert code
+     * @description Retrieve an alert code, typically from the Alerts UI
+     *
+     * Requires one of the following roles:
+     * * ROLE_ALERTS_READER
+     * * ROLE_ALERTS_ADMIN
+     * * PRISON
+     */
+    get: operations['retrieveAlertCode']
+    /**
+     * Deactivate an alert code
+     * @description Deactivate an alert code, typically from the Alerts UI
+     *
+     * Requires one of the following roles:
+     * * ROLE_ALERTS_ADMIN
+     */
+    delete: operations['deactivateAlertCode']
+    /**
+     * Update alert code
+     * @description Set the properties of an alert code to the submitted value.
+     *
+     * Requires one of the following roles:
+     * * ROLE_ALERTS_ADMIN
+     */
+    patch: operations['updateAlertCode']
+  }
   '/prisoners/{prisonNumber}/alerts': {
     /**
      * Gets all the alerts for a prisoner by their prison number
@@ -182,26 +220,6 @@ export interface paths {
      */
     get: operations['retrieveAlertType']
   }
-  '/alert-codes/{alertCode}': {
-    /**
-     * Retrieve an alert code
-     * @description Retrieve an alert code, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     */
-    get: operations['retrieveAlertCode']
-    /**
-     * Deactivate an alert code
-     * @description Deactivate an alert code, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    delete: operations['deactivateAlertCode']
-  }
 }
 
 export type webhooks = Record<string, never>
@@ -237,6 +255,14 @@ export interface components {
        * @example Additional user comment on the alert comment thread
        */
       appendComment?: string
+    }
+    ErrorResponse: {
+      /** Format: int32 */
+      status: number
+      errorCode?: string
+      userMessage?: string
+      developerMessage?: string
+      moreInfo?: string
     }
     /** @description An alert associated with a person */
     Alert: {
@@ -363,14 +389,6 @@ export interface components {
        * @example Firstname Lastname
        */
       createdByDisplayName: string
-    }
-    ErrorResponse: {
-      /** Format: int32 */
-      status: number
-      errorCode?: string
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
     }
     /** @description The request body for migrating an alert from NOMIS to DPS */
     MigrateAlert: {
@@ -566,6 +584,92 @@ export interface components {
        */
       createdByDisplayName: string
     }
+    /** @description The request body for bulk creating alerts for multiple people */
+    BulkCreateAlerts: {
+      /**
+       * @description The prison numbers of the people to create alerts for. Also referred to as the offender number, offender id or NOMS id.
+       * @example A1234AA
+       */
+      prisonNumbers: string[]
+      /**
+       * @description The alert code for the alert. A person can only have one alert using each code active at any one time. The alert code must exist and be active.
+       * @example ABC
+       */
+      alertCode: string
+      /**
+       * @description The strategy to use when creating alerts in bulk
+       * @example ADD_MISSING
+       * @enum {string}
+       */
+      mode: 'ADD_MISSING' | 'EXPIRE_AND_REPLACE'
+      /**
+       * @description The strategy to use when cleaning up existing alerts for people supplied list of prison numbers
+       * @example KEEP_ALL
+       * @enum {string}
+       */
+      cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
+    }
+    /** @description A set of alerts created in bulk. Contains detailed information of the result of a bulk alert creation request. */
+    BulkAlert: {
+      /**
+       * Format: uuid
+       * @description The unique identifier assigned to the alerts created in bulk
+       * @example b49053d8-3f29-4b1e-a9c5-15bde8c6e6cf
+       */
+      bulkAlertUuid: string
+      request: components['schemas']['BulkCreateAlerts']
+      /**
+       * Format: date-time
+       * @description The date and time the alerts were created in bulk
+       */
+      requestedAt: string
+      /**
+       * @description The username of the user who created the alerts in bulk
+       * @example USER1234
+       */
+      requestedBy: string
+      /**
+       * @description The displayable name of the user who created the alerts in bulk
+       * @example Firstname Lastname
+       */
+      requestedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description The date and time the request to create alerts in bulk was completed
+       */
+      completedAt: string
+      /**
+       * @description Whether the request to create alerts in bulk was successful or not
+       * @example true
+       */
+      successful: boolean
+      /** @description Collection of displayable messages relating to the result of the bulk alert creation request as a whole */
+      messages: string[]
+      /** @description Collection of existing active alerts that were not modified and resulted in no additional alert being created for the associated prison number. */
+      existingActiveAlerts: components['schemas']['BulkAlertAlert'][]
+      /** @description Collection of new alerts that were created in bulk */
+      alertsCreated: components['schemas']['BulkAlertAlert'][]
+      /** @description Collection of existing alerts that were updated as a result of the bulk alert creation request. The message for updated alerts will contain what was updated for example changing the active from date. */
+      alertsUpdated: components['schemas']['BulkAlertAlert'][]
+      /** @description Collection of existing alerts that were made inactive as a result of the bulk alert creation request */
+      alertsExpired: components['schemas']['BulkAlertAlert'][]
+    }
+    /** @description Summary information of an alert affected by a bulk alert creation request */
+    BulkAlertAlert: {
+      /**
+       * Format: uuid
+       * @description The unique identifier assigned to the alert
+       * @example 8cdadcf3-b003-4116-9956-c99bd8df6a00
+       */
+      alertUuid: string
+      /**
+       * @description The prison number of the person the alert is for. Also referred to as the offender number, offender id or NOMS id.
+       * @example A1234AA
+       */
+      prisonNumber: string
+      /** @description Optional displayable message relating to the result of the bulk alert creation request specific to this alert. For example the description of the updates that were applied to this alert. */
+      message: string
+    }
     /** @description The alert data to use to create an alert in the service */
     CreateAlert: {
       /**
@@ -755,6 +859,14 @@ export interface components {
        */
       description: string
     }
+    /** @description The request body for updating the properties of an alert code */
+    UpdateAlertCodeRequest: {
+      /**
+       * @description The new property value(s) to be updated onto an alert code
+       * @example New description value for an alert code
+       */
+      description: string
+    }
     PageAlert: {
       /** Format: int32 */
       totalPages?: number
@@ -768,9 +880,9 @@ export interface components {
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
-      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
       empty?: boolean
     }
     PageableObject: {
@@ -778,11 +890,11 @@ export interface components {
       offset?: number
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
-      pageNumber?: number
-      /** Format: int32 */
       pageSize?: number
-      unpaged?: boolean
+      /** Format: int32 */
+      pageNumber?: number
       paged?: boolean
+      unpaged?: boolean
     }
     SortObject: {
       direction?: string
@@ -1071,6 +1183,54 @@ export interface operations {
       }
       /** @description Conflict, the person already has an active alert using the supplied alert code */
       409: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Create alerts for multiple people in bulk
+   * @description
+   *
+   * Requires one of the following roles:
+   * * ROLE_ALERTS_ADMIN
+   */
+  bulkCreateAlerts: {
+    parameters: {
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
+        Source?: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BulkCreateAlerts']
+      }
+    }
+    responses: {
+      /** @description Alerts created successfully */
+      201: {
+        content: {
+          'application/json': components['schemas']['BulkAlert']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -1400,6 +1560,139 @@ export interface operations {
     }
   }
   /**
+   * Retrieve an alert code
+   * @description Retrieve an alert code, typically from the Alerts UI
+   *
+   * Requires one of the following roles:
+   * * ROLE_ALERTS_READER
+   * * ROLE_ALERTS_ADMIN
+   * * PRISON
+   */
+  retrieveAlertCode: {
+    parameters: {
+      path: {
+        alertCode: string
+      }
+    }
+    responses: {
+      /** @description Alert code retrieved */
+      200: {
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Deactivate an alert code
+   * @description Deactivate an alert code, typically from the Alerts UI
+   *
+   * Requires one of the following roles:
+   * * ROLE_ALERTS_ADMIN
+   */
+  deactivateAlertCode: {
+    parameters: {
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertCode: string
+      }
+    }
+    responses: {
+      /** @description Alert code deactivated */
+      204: {
+        content: never
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Update alert code
+   * @description Set the properties of an alert code to the submitted value.
+   *
+   * Requires one of the following roles:
+   * * ROLE_ALERTS_ADMIN
+   */
+  updateAlertCode: {
+    parameters: {
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertCode: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAlertCodeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert code updated */
+      200: {
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Gets all the alerts for a prisoner by their prison number
    * @description
    *
@@ -1599,90 +1892,6 @@ export interface operations {
         }
       }
       /** @description Not found, the alert type was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Retrieve an alert code
-   * @description Retrieve an alert code, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
-  retrieveAlertCode: {
-    parameters: {
-      path: {
-        alertCode: string
-      }
-    }
-    responses: {
-      /** @description Alert code retrieved */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertCode']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert code was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Deactivate an alert code
-   * @description Deactivate an alert code, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  deactivateAlertCode: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-      path: {
-        alertCode: string
-      }
-    }
-    responses: {
-      /** @description Alert code deactivated */
-      204: {
-        content: never
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert code was is not found */
       404: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

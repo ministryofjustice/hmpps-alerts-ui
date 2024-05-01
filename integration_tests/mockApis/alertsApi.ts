@@ -123,7 +123,7 @@ const stubUpdateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-code/AA',
+      urlPattern: '/alerts-api/alert-codes/AA',
     },
     response: {
       status: 200,

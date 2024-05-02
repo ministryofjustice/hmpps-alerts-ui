@@ -74,7 +74,7 @@ const stubGetDeactivatedAlertTypes = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/alerts-api/alert-types',
+      urlPattern: '/alerts-api/alert-types.*',
     },
     response: {
       status: 200,

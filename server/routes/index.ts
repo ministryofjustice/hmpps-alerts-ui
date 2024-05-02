@@ -9,6 +9,7 @@ import DeactivateAlertCodeRoutes from './deactivateAlertCodeRoutes'
 import UpdateAlertTypeRoutes from './updateAlertTypeRoutes'
 import DeactivateAlertTypeRoutes from './deactivateAlertTypeRoutes'
 import UpdateAlertCodeRoutes from './updateAlertCodeRoutes'
+import ReactivateAlertTypeRoutes from './reactivteAlertTypeRoutes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -22,6 +23,8 @@ export default function routes(service: Services): Router {
   const updateAlertCodeRoutes = new UpdateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient)
+  const reactivateAlertTypeRoutes = new ReactivateAlertTypeRoutes(alertsApiClient)
+
   const resetSessionData = (req: Request) => {
     req.session.alertTypeCode = ''
     req.session.alertTypeDescription = ''
@@ -98,11 +101,19 @@ export default function routes(service: Services): Router {
     get('/alert-type/deactivate/success', deactivateAlertTypeRoutes.loadSuccessPage)
   }
 
+  const reactivateAlertType = () => {
+    get('/alert-type/reactivate', reactivateAlertTypeRoutes.startPage)
+    post('/alert-type/reactivate', reactivateAlertTypeRoutes.submitStartPage)
+    get('/alert-type/reactivate/confirmation', reactivateAlertTypeRoutes.loadConfirmationPage)
+    post('/alert-type/reactivate/confirmation', reactivateAlertTypeRoutes.submitConfirmationPage)
+    get('/alert-type/reactivate/success', reactivateAlertTypeRoutes.loadSuccessPage)
+  }
   createAlertType()
   updateAlertType()
   createAlertCode()
   updateAlertCode()
   deactivateAlertCode()
   deactivateAlertType()
+  reactivateAlertType()
   return router
 }

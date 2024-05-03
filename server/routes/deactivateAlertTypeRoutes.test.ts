@@ -159,7 +159,7 @@ describe('deactivateAlertCode', () => {
       req.middleware.clientToken = '123'
       req.session.deactivateAlertType = 'VI'
     }
-    fakeApi.delete('/alert-types/VI').reply(204)
+    fakeApi.patch('/alert-types/VI/deactivate').reply(200)
     return request(app)
       .get('/alert-type/deactivate/success')
       .expect(200)

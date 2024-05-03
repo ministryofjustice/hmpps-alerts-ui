@@ -73,13 +73,16 @@ const stubGetAlertTypes = () => {
 const stubDeactivateAlertCode = () => {
   return stubFor({
     request: {
-      method: 'DELETE',
-      urlPattern: '/alerts-api/alert-codes/AA',
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-codes/AA/deactivate',
     },
     response: {
-      status: 204,
+      status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'AA',
       },
     },
   })
@@ -88,13 +91,17 @@ const stubDeactivateAlertCode = () => {
 const stubDeactivateAlertType = () => {
   return stubFor({
     request: {
-      method: 'DELETE',
-      urlPattern: '/alerts-api/alert-types/DB',
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-types/DB/deactivate',
     },
     response: {
-      status: 204,
+      status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'DB',
+        description: 'New Description',
       },
     },
   })

@@ -234,7 +234,7 @@ describe('deactivateAlertCode', () => {
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
-    fakeApi.delete('/alert-codes/AA').reply(204)
+    fakeApi.patch('/alert-codes/AA/deactivate').reply(200)
     return request(app)
       .get('/alert-code/deactivate/success')
       .expect(200)

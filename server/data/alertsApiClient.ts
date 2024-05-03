@@ -36,12 +36,12 @@ export default class AlertsApiClient {
 
   deactivateAlertCode(token: string, alertCode: string) {
     logger.info(`Deactivating alert code ${alertCode}`)
-    return AlertsApiClient.restClient(token).delete({ path: `/alert-codes/${alertCode}` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${alertCode}/deactivate` })
   }
 
   deactivateAlertType(token: string, alertCode: string) {
     logger.info(`Deactivating alert type ${alertCode}`)
-    return AlertsApiClient.restClient(token).delete({ path: `/alert-types/${alertCode}` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${alertCode}/deactivate` })
   }
 
   reactivateAlertType(token: string, alertCode: string) {

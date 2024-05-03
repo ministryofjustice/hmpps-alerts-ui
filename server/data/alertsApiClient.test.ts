@@ -29,11 +29,11 @@ describe('The alerts API client', () => {
 
   describe('DELETE', () => {
     it('should deactivate an alert code', async () => {
-      fakeAlertsApi.delete('/alert-codes/VI').reply(204)
+      fakeAlertsApi.patch('/alert-codes/VI/deactivate').reply(200)
       await alertsApiClient.deactivateAlertCode('token', 'VI')
     })
     it('should deactivate an alert code', async () => {
-      fakeAlertsApi.delete('/alert-types/VI').reply(204)
+      fakeAlertsApi.patch('/alert-types/VI/deactivate').reply(200)
       await alertsApiClient.deactivateAlertType('token', 'VI')
     })
   })

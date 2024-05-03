@@ -70,6 +70,40 @@ const stubGetAlertTypes = () => {
   })
 }
 
+const stubGetDeactivatedAlertTypes = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/alert-types.*',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: [
+        {
+          code: 'DB',
+          description: 'A description',
+          isActive: false,
+          alertCodes: [
+            {
+              code: 'AA',
+              description: 'A description',
+              isActive: false,
+            },
+          ],
+        },
+        {
+          code: 'AA',
+          description: 'A description',
+          isActive: false,
+        },
+      ],
+    },
+  })
+}
+
 const stubDeactivateAlertCode = () => {
   return stubFor({
     request: {
@@ -102,6 +136,25 @@ const stubDeactivateAlertType = () => {
       jsonBody: {
         code: 'DB',
         description: 'New Description',
+      },
+    },
+  })
+}
+
+const stubReactivateAlertType = () => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-types/DB/reactivate',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'DB',
+        description: 'Description',
       },
     },
   })
@@ -148,9 +201,11 @@ const stubUpdateAlertCode = () => {
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
+  stubGetDeactivatedAlertTypes,
   stubCreateAlertCode,
   stubDeactivateAlertCode,
   stubDeactivateAlertType,
+  stubReactivateAlertType,
   stubUpdateAlertType,
   stubUpdateAlertCode,
 }

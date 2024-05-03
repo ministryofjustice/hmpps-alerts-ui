@@ -22,9 +22,11 @@ export default class AlertsApiClient {
     return AlertsApiClient.restClient(token).post({ path: '/alert-types', data: requestBody })
   }
 
-  retrieveAlertTypes(token: string): Promise<AlertType[]> {
+  retrieveAlertTypes(token: string, includeInactive: boolean = false): Promise<AlertType[]> {
     logger.info('Retrieving all alert types')
-    return AlertsApiClient.restClient(token).get({ path: '/alert-types' })
+    return AlertsApiClient.restClient(token).get({
+      path: `/alert-types${includeInactive ? '?includeInactive=true' : ''}`,
+    })
   }
 
   createAlertCode(token: string, requestBody: CreateAlertCodeRequest) {
@@ -40,6 +42,11 @@ export default class AlertsApiClient {
   deactivateAlertType(token: string, alertCode: string) {
     logger.info(`Deactivating alert type ${alertCode}`)
     return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${alertCode}/deactivate` })
+  }
+
+  reactivateAlertType(token: string, alertCode: string) {
+    logger.info(`Reactivating alert type ${alertCode}`)
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${alertCode}/reactivate` })
   }
 
   updateAlertType(token: string, code: string, requestBody: UpdateAlertTypeRequest): Promise<AlertType> {

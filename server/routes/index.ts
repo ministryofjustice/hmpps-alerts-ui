@@ -10,6 +10,7 @@ import UpdateAlertTypeRoutes from './updateAlertTypeRoutes'
 import DeactivateAlertTypeRoutes from './deactivateAlertTypeRoutes'
 import UpdateAlertCodeRoutes from './updateAlertCodeRoutes'
 import ReactivateAlertTypeRoutes from './reactivteAlertTypeRoutes'
+import ReactivateAlertCodeRoutes from './reactivateAlertCodeRoutes'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(service: Services): Router {
@@ -22,6 +23,7 @@ export default function routes(service: Services): Router {
   const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
   const updateAlertCodeRoutes = new UpdateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient)
+  const reactivateAlertCodeRoutes = new ReactivateAlertCodeRoutes(alertsApiClient)
   const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient)
   const reactivateAlertTypeRoutes = new ReactivateAlertTypeRoutes(alertsApiClient)
 
@@ -93,6 +95,16 @@ export default function routes(service: Services): Router {
     get('/alert-code/deactivate/success', deactivateAlertCodeRoutes.loadSuccessPage)
   }
 
+  const reactivateAlertCode = () => {
+    get('/alert-code/reactivate', reactivateAlertCodeRoutes.startPage)
+    post('/alert-code/reactivate', reactivateAlertCodeRoutes.submitStartPage)
+    get('/alert-code/reactivate/alert-code', reactivateAlertCodeRoutes.loadAlertCodesPage)
+    post('/alert-code/reactivate/alert-code', reactivateAlertCodeRoutes.submitAlertCodesPage)
+    get('/alert-code/reactivate/confirmation', reactivateAlertCodeRoutes.loadConfirmationPage)
+    post('/alert-code/reactivate/confirmation', reactivateAlertCodeRoutes.submitConfirmationPage)
+    get('/alert-code/reactivate/success', reactivateAlertCodeRoutes.loadSuccessPage)
+  }
+
   const deactivateAlertType = () => {
     get('/alert-type/deactivate', deactivateAlertTypeRoutes.startPage)
     post('/alert-type/deactivate', deactivateAlertTypeRoutes.submitStartPage)
@@ -113,6 +125,7 @@ export default function routes(service: Services): Router {
   createAlertCode()
   updateAlertCode()
   deactivateAlertCode()
+  reactivateAlertCode()
   deactivateAlertType()
   reactivateAlertType()
   return router

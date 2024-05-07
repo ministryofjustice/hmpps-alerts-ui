@@ -15,6 +15,7 @@ declare module 'express-session' {
     errorMessage: string
     deactivateAlertTypeCode: string
     deactivateAlertCode: string
+    reactivateAlertCode: string
     deactivateAlertType: string
     reactivateAlertType: string
     updateAlertTypeCode: string

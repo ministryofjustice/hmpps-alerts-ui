@@ -2,11 +2,12 @@ import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Sign In', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -66,7 +67,7 @@ context('Sign In', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { name: 'bobby brown', roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
 
     cy.signIn()
 

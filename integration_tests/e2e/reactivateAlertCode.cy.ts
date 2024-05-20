@@ -4,12 +4,12 @@ import SelectAlertCodePage from '../pages/selectAlertCodePage'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AlertCodeReactivationConfirmationPage from '../pages/alertCodeReactivationConfirmationPage'
 import ReactivateAlertCodeSuccessPage from '../pages/reactivateAlertCodeSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Reactivate an alert code', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetDeactivatedAlertCodes')
     cy.task('stubReactivateAlertCode')
   })

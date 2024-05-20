@@ -3,12 +3,12 @@ import AddAnAlertType from '../pages/addAnAlertType'
 import Page from '../pages/page'
 import AddAnAlertTypeConfirmationPage from '../pages/addAnAlertTypeConfirmationPage'
 import AlertTypeSuccessPage from '../pages/alertTypeSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Create an alert type', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubCreateAlertType')
   })
 

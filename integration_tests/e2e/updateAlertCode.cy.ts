@@ -5,12 +5,12 @@ import SelectAlertCodePage from '../pages/selectAlertCodePage'
 import EnterDescriptionForUpdateAlertCode from '../pages/enterDescriptionForUpdateAlertCode'
 import UpdateAlertCodeDescriptionConfirmationPage from '../pages/updateAlertCodeDescriptionConfirmationPage'
 import UpdateAlertCodeDescriptionSuccessPage from '../pages/updateAlertCodeDescriptionSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Update alert code description', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetAlertTypes')
     cy.task('stubUpdateAlertCode')
   })

@@ -3,12 +3,12 @@ import Page from '../pages/page'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AlertTypeReactivationConfirmationPage from '../pages/alertTypeReactivationConfirmationPage'
 import ReactivateAlertTypeSuccessPage from '../pages/reactivateAlertTypeSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Reactivate an alert type', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubVerifyToken', true)
-    cy.task('stubSignIn', { name: 'bobby brown' })
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetDeactivatedAlertTypes')
     cy.task('stubReactivateAlertType')
   })

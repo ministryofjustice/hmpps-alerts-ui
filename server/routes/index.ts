@@ -37,7 +37,9 @@ export default function routes({ auditService }: Services): Router {
   }
 
   get('/', async (req, res, next) => {
+    // sample function call for the new AuditService. disabled by default.
     await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
+
     const { userRoles: roles } = res.locals.user
     resetSessionData(req)
     res.render('pages/index', { roles })

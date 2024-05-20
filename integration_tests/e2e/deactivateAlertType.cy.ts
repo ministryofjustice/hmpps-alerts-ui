@@ -7,8 +7,8 @@ import DeactivateAlertTypeSuccessPage from '../pages/deactivateAlertTypeSuccessP
 context('Deactivate an alert type', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubVerifyToken', true)
+    cy.task('stubSignIn', { name: 'bobby brown' })
     cy.task('stubGetAlertTypes')
     cy.task('stubDeactivateAlertType')
   })

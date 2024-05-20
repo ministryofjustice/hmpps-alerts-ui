@@ -7,8 +7,8 @@ import ReactivateAlertTypeSuccessPage from '../pages/reactivateAlertTypeSuccessP
 context('Reactivate an alert type', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubVerifyToken', true)
+    cy.task('stubSignIn', { name: 'bobby brown' })
     cy.task('stubGetDeactivatedAlertTypes')
     cy.task('stubReactivateAlertType')
   })

@@ -8,8 +8,8 @@ import ReactivateAlertCodeSuccessPage from '../pages/reactivateAlertCodeSuccessP
 context('Reactivate an alert code', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubVerifyToken', true)
+    cy.task('stubSignIn', { name: 'bobby brown' })
     cy.task('stubGetDeactivatedAlertCodes')
     cy.task('stubReactivateAlertCode')
   })

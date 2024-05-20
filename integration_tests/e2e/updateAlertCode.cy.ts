@@ -9,8 +9,8 @@ import UpdateAlertCodeDescriptionSuccessPage from '../pages/updateAlertCodeDescr
 context('Update alert code description', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubVerifyToken', true)
+    cy.task('stubSignIn', { name: 'bobby brown' })
     cy.task('stubGetAlertTypes')
     cy.task('stubUpdateAlertCode')
   })

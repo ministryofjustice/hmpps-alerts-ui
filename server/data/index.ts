@@ -10,22 +10,25 @@ const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
-import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
-import ManageUsersApiClient from './manageUsersApiClient'
+import HmppsAuthClient from './hmppsAuthClient'
 import { createRedisClient } from './redisClient'
-import TokenStore from './tokenStore/tokenStore'
 import AlertsApiClient from './alertsApiClient'
+import RedisTokenStore from './tokenStore/redisTokenStore'
+import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
+import config from '../config'
+import HmppsAuditClient from './hmppsAuditClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
-  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
-  manageUsersApiClient: new ManageUsersApiClient(),
-  systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
+  hmppsAuthClient: new HmppsAuthClient(
+    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
+  ),
   alertsApiClient: new AlertsApiClient(),
+  hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { HmppsAuthClient, RestClientBuilder, ManageUsersApiClient }
+export { HmppsAuthClient, RestClientBuilder, HmppsAuditClient }

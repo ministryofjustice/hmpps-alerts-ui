@@ -1,14 +1,19 @@
 import express, { Express } from 'express'
-import cookieSession from 'cookie-session'
 import { NotFound } from 'http-errors'
+import { v4 as uuidv4 } from 'uuid'
 
+import cookieSession from 'cookie-session'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
+import AuditService from '../../services/auditService'
+import { HmppsUser } from '../../interfaces/hmppsUser'
 import SessionSetup from './sessionSetup'
+
+jest.mock('../../services/auditService')
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -18,15 +23,15 @@ const testAppInfo: ApplicationInfo = {
   branchName: 'main',
 }
 
-export const user: Express.User = {
+export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
   token: 'token',
   username: 'user1',
   displayName: 'First Last',
-  active: true,
-  activeCaseLoadId: 'MDI',
-  authSource: 'NOMIS',
+  authSource: 'nomis',
+  staffId: 1234,
+  userRoles: [],
 }
 
 export const flashProvider = jest.fn()
@@ -34,7 +39,7 @@ export const flashProvider = jest.fn()
 function appSetup(
   services: Services,
   production: boolean,
-  userSupplier: () => Express.User,
+  userSupplier: () => HmppsUser,
   sessionSetup: SessionSetup = new SessionSetup(),
 ): Express {
   const app = express()
@@ -44,12 +49,16 @@ function appSetup(
   nunjucksSetup(app, testAppInfo)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
-    req.user = userSupplier()
+    req.user = userSupplier() as Express.User
     req.flash = flashProvider
     res.locals = {
-      user: { ...req.user },
+      user: { ...req.user } as HmppsUser,
     }
     sessionSetup.sessionDoctor(req)
+    next()
+  })
+  app.use((req, res, next) => {
+    req.id = uuidv4()
     next()
   })
   app.use(express.json())
@@ -63,14 +72,16 @@ function appSetup(
 
 export function appWithAllRoutes({
   production = false,
-  services = {},
+  services = {
+    auditService: new AuditService(null) as jest.Mocked<AuditService>,
+  },
   userSupplier = () => user,
   sessionSetup = new SessionSetup(),
 }: {
   production?: boolean
   services?: Partial<Services>
-  userSupplier?: () => Express.User
   sessionSetup?: SessionSetup
+  userSupplier?: () => HmppsUser
 }): Express {
   auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier, sessionSetup)

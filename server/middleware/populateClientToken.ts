@@ -3,14 +3,15 @@ import logger from '../../logger'
 import { dataAccess } from '../data'
 
 export default function populateClientToken(): RequestHandler {
+  const { hmppsAuthClient } = dataAccess()
+
   return async (req, res, next) => {
     if (!req.middleware) {
       req.middleware = { ...req.middleware }
     }
     try {
-      const { systemToken } = dataAccess()
       if (res.locals.user) {
-        const clientToken = await systemToken(res.locals.user.username)
+        const clientToken = await hmppsAuthClient.getSystemClientToken(res.locals.user.username)
         if (clientToken) {
           req.middleware.clientToken = clientToken
         } else {

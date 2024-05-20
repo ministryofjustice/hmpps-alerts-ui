@@ -55,18 +55,3 @@ export default class HmppsAuthClient {
     return newToken.body.access_token
   }
 }
-
-export const systemTokenBuilder =
-  (tokenStore: TokenStore) =>
-  async (username?: string): Promise<string> => {
-    const key = username || '%ANONYMOUS%'
-    const token = await tokenStore.getToken(key)
-    if (token) {
-      return token
-    }
-    const newToken = await getSystemClientTokenFromHmppsAuth(username)
-    await tokenStore.setToken(key, newToken.body.access_token, newToken.body.expires_in - 60)
-    // set TTL slightly less than expiry of token. Async but no need to wait
-
-    return newToken.body.access_token
-  }

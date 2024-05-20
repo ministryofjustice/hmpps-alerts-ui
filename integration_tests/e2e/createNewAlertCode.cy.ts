@@ -4,12 +4,12 @@ import AddAnAlertCode from '../pages/addAnAlertCode'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AddAnAlertCodeConfirmationPage from '../pages/addAnAlertCodeConfirmationPage'
 import AlertCodeSuccessPage from '../pages/alertCodeSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Create an alert code', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetAlertTypes')
     cy.task('stubCreateAlertCode')
   })

@@ -11,9 +11,10 @@ import DeactivateAlertTypeRoutes from './deactivateAlertTypeRoutes'
 import UpdateAlertCodeRoutes from './updateAlertCodeRoutes'
 import ReactivateAlertTypeRoutes from './reactivteAlertTypeRoutes'
 import ReactivateAlertCodeRoutes from './reactivateAlertCodeRoutes'
+import { Page } from '../services/auditService'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes({ auditService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
@@ -35,8 +36,11 @@ export default function routes(service: Services): Router {
     req.session.alertDescription = ''
   }
 
-  get('/', (req, res, next) => {
-    const { roles } = res.locals.user
+  get('/', async (req, res, next) => {
+    // sample function call for the new AuditService. disabled by default.
+    await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
+
+    const { userRoles: roles } = res.locals.user
     resetSessionData(req)
     res.render('pages/index', { roles })
   })
@@ -128,5 +132,6 @@ export default function routes(service: Services): Router {
   reactivateAlertCode()
   deactivateAlertType()
   reactivateAlertType()
+
   return router
 }

@@ -3,12 +3,17 @@ import { Response } from 'superagent'
 
 import { stubFor, getMatchingRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
-import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
-const createToken = (roles: string[] = []) => {
+interface UserToken {
+  name?: string
+  roles?: string[]
+}
+
+const createToken = (userToken: UserToken) => {
   // authorities in the session are always prefixed by ROLE.
-  const authorities = roles.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`))
+  const authorities = userToken.roles?.map(role => (role.startsWith('ROLE_') ? role : `ROLE_${role}`)) || []
   const payload = {
+    name: userToken.name || 'john smith',
     user_name: 'USER1',
     scope: ['read'],
     auth_source: 'nomis',
@@ -98,7 +103,7 @@ const manageDetails = () =>
     },
   })
 
-const token = (roles: string[] = [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER]) =>
+const token = (userToken: UserToken) =>
   stubFor({
     request: {
       method: 'POST',
@@ -111,7 +116,7 @@ const token = (roles: string[] = [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MAN
         Location: 'http://localhost:3007/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(roles),
+        access_token: createToken(userToken),
         token_type: 'bearer',
         user_name: 'USER1',
         expires_in: 599,
@@ -120,10 +125,11 @@ const token = (roles: string[] = [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MAN
       },
     },
   })
+
 export default {
   getSignInUrl,
   stubAuthPing: ping,
   stubAuthManageDetails: manageDetails,
-  stubSignIn: (roles: string[]): Promise<[Response, Response, Response, Response, Response]> =>
-    Promise.all([favicon(), redirect(), signOut(), token(roles), tokenVerification.stubVerifyToken()]),
+  stubSignIn: (userToken: UserToken = {}): Promise<[Response, Response, Response, Response, Response]> =>
+    Promise.all([favicon(), redirect(), signOut(), token(userToken), tokenVerification.stubVerifyToken()]),
 }

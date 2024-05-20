@@ -3,12 +3,12 @@ import Page from '../pages/page'
 import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeForAlertCodeDeactivation'
 import AlertTypeDeactivationConfirmationPage from '../pages/alertTypeDeactivationConfirmationPage'
 import DeactivateAlertTypeSuccessPage from '../pages/deactivateAlertTypeSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Deactivate an alert type', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetAlertTypes')
     cy.task('stubDeactivateAlertType')
   })

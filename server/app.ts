@@ -39,7 +39,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
-  app.use(setUpCurrentUser(services))
+  app.use(setUpCurrentUser())
+
   app.use(populateClientToken())
   app.use(routes(services))
 

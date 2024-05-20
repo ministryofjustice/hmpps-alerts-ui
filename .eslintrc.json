@@ -34,7 +34,7 @@
       ],
       "rules": {
         "no-shadow": "off",
-        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-shadow": ["error"],
         "@typescript-eslint/no-use-before-define": 0,
         "class-methods-use-this": 0,
         "no-useless-constructor": 0,
@@ -53,8 +53,7 @@
             "trailingComma": "all",
             "singleQuote": true,
             "printWidth": 120,
-            "semi": false,
-            "arrowParens": "avoid"
+            "semi": false
           }
         ]
       }
@@ -88,15 +87,7 @@
     "comma-dangle": ["error", "always-multiline"],
     "import/no-extraneous-dependencies": [
       "error",
-      {
-        "devDependencies": [
-          "**/*.test.js",
-          "**/*.test.ts",
-          "**/testutils/**",
-          "cypress.config.ts",
-          "test/setupTests.ts"
-        ]
-      }
+      { "devDependencies": ["**/*.test.js", "**/*.test.ts", "**/testutils/**", "cypress.config.ts"] }
     ],
     "no-only-tests/no-only-tests": "error",
     "prettier/prettier": [
@@ -105,8 +96,7 @@
         "trailingComma": "all",
         "singleQuote": true,
         "printWidth": 120,
-        "semi": false,
-        "arrowParens": "avoid"
+        "semi": false
       }
     ],
     "no-empty-function": ["error", { "allow": ["constructors", "arrowFunctions"] }]

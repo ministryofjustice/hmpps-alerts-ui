@@ -4,12 +4,12 @@ import SelectAnAlertType from '../pages/selectAnAlertType'
 import EnterDescriptionForUpdateAlertType from '../pages/enterDescriptionForUpdateAlertType'
 import UpdateAlertTypeDescriptionConfirmationPage from '../pages/updateAlertTypeDescriptionConfirmationPage'
 import UpdateAlertTypeDescriptionSuccessPage from '../pages/updateAlertTypeDescriptionSuccessPage'
+import AuthorisedRoles from '../../server/authentication/authorisedRoles'
 
 context('Update alert type description', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubManageUser')
+    cy.task('stubSignIn', { roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER] })
     cy.task('stubGetAlertTypes')
     cy.task('stubUpdateAlertType')
   })

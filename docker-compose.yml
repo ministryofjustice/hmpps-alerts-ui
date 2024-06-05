@@ -37,6 +37,9 @@ services:
     environment:
       - PRODUCT_ID=UNASSIGNED
       - REDIS_ENABLED=false
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ALERTS_API_URL=http://localhost:8080
       - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       # These will need to match new creds in the seed auth service auth

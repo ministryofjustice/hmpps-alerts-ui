@@ -99,8 +99,8 @@ describe('createAlertCodeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).toContain('An alert code must be between 1 and 12 characters')
-        expect(res.text).toContain('An alert description must be between 1 and 40 characters')
+        expect(res.text).toContain('An alert code must be an uppercase series of letters between 1-12 characters long')
+        expect(res.text).toContain('An alert code description must be between 1 and 40 characters')
       })
   })
   it('POST /alert-code/alert-code should render code error if no code entered', () => {
@@ -112,9 +112,9 @@ describe('createAlertCodeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).toContain('An alert code must be between 1 and 12 characters')
+        expect(res.text).toContain('An alert code must be an uppercase series of letters between 1-12 characters long')
         expect(res.text).toContain('A description')
-        expect(res.text).not.toContain('An alert description must be between 1 and 40 characters')
+        expect(res.text).not.toContain('An alert code description must be between 1 and 40 characters')
       })
   })
   it('POST /alert-code/alert-code should render description error if no description entered', () => {
@@ -126,8 +126,10 @@ describe('createAlertCodeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).not.toContain('An alert code must be between 1 and 12 characters')
-        expect(res.text).toContain('An alert description must be between 1 and 40 characters')
+        expect(res.text).not.toContain(
+          'An alert code must be an uppercase series of letters between 1-12 characters long',
+        )
+        expect(res.text).toContain('An alert code description must be between 1 and 40 characters')
         expect(res.text).toContain('DB')
       })
   })

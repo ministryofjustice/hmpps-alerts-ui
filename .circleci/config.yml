@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@8
   slack: circleci/slack@4.12.5
-  codecov: codecov/codecov@4
+  codecov: codecov/codecov@3 # v4 doesnt upload coverage, complaining about a lack of token
 
 parameters:
   alerts-slack-channel:

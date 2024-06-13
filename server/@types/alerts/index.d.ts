@@ -3,6 +3,8 @@
  * Do not make direct changes to the file.
  */
 
+import { CreateAlertCodeRequest, UpdateAlertCodeRequest } from '../../@schemas/AlertCodeRequests'
+
 export interface paths {
   '/alerts/{alertUuid}': {
     /**
@@ -834,23 +836,7 @@ export interface components {
       alertCodes: components['schemas']['AlertCode'][]
     }
     /** @description The request body for creating a new alert code */
-    CreateAlertCodeRequest: {
-      /**
-       * @description The short code for the alert code
-       * @example A
-       */
-      code: string
-      /**
-       * @description The description of the alert code
-       * @example Alert code description
-       */
-      description: string
-      /**
-       * @description The short code for the parent type
-       * @example A
-       */
-      parent: string
-    }
+    CreateAlertCodeRequest: CreateAlertCodeRequest
     /** @description The request body for updating the properties of an alert type */
     UpdateAlertTypeRequest: {
       /**
@@ -860,13 +846,7 @@ export interface components {
       description: string
     }
     /** @description The request body for updating the properties of an alert code */
-    UpdateAlertCodeRequest: {
-      /**
-       * @description The new property value(s) to be updated onto an alert code
-       * @example New description value for an alert code
-       */
-      description: string
-    }
+    UpdateAlertCodeRequest: UpdateAlertCodeRequest
     PageAlert: {
       /** Format: int32 */
       totalPages?: number

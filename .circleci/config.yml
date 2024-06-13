@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@8
   slack: circleci/slack@4.12.5
+  codecov: codecov/codecov@4
 
 parameters:
   alerts-slack-channel:
@@ -69,6 +70,7 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
+      - codecov/upload
 
   integration_test:
     executor:

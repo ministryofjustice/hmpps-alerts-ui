@@ -42,6 +42,7 @@
         }
       ]
     },
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}"
     ],

@@ -43,7 +43,9 @@ describe('createAlertTypeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).toContain('An alert type code must be between 1 and 12 characters')
+        expect(res.text).toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
         expect(res.text).toContain('An alert type description must be between 1 and 40 characters')
       })
   })
@@ -56,7 +58,41 @@ describe('createAlertTypeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).toContain('An alert type code must be between 1 and 12 characters')
+        expect(res.text).toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
+        expect(res.text).toContain('This is a unique description')
+        expect(res.text).not.toContain('An alert type description must be between 1 and 40 characters')
+      })
+  })
+  it('POST /alert-type/create should render code error if invalid code entered', () => {
+    return request(app)
+      .post('/alert-type/create')
+      .type('form')
+      .send({ alertTypeCode: 'abcd', alertTypeDescription: 'This is a unique description' })
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
+        expect(res.text).toContain('This is a unique description')
+        expect(res.text).not.toContain('An alert type description must be between 1 and 40 characters')
+      })
+  })
+  it('POST /alert-type/create should render code error if too long code entered', () => {
+    return request(app)
+      .post('/alert-type/create')
+      .type('form')
+      .send({ alertTypeCode: 'ABCDABCDABCDE', alertTypeDescription: 'This is a unique description' })
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
         expect(res.text).toContain('This is a unique description')
         expect(res.text).not.toContain('An alert type description must be between 1 and 40 characters')
       })
@@ -70,7 +106,25 @@ describe('createAlertTypeRoutes', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('There is a problem')
-        expect(res.text).not.toContain('An alert type code must be between 1 and 12 characters')
+        expect(res.text).not.toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
+        expect(res.text).toContain('An alert type description must be between 1 and 40 characters')
+        expect(res.text).toContain('AA')
+      })
+  })
+  it('POST /alert-type/create should render description error if too long a description entered', () => {
+    return request(app)
+      .post('/alert-type/create')
+      .type('form')
+      .send({ alertTypeCode: 'AA', alertTypeDescription: 'n'.repeat(41) })
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).not.toContain(
+          'An alert type code must be an uppercase series of letters between 1-12 characters long',
+        )
         expect(res.text).toContain('An alert type description must be between 1 and 40 characters')
         expect(res.text).toContain('AA')
       })

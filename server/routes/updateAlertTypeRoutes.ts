@@ -1,5 +1,6 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
+import { UpdateAlertTypeRequestSchema } from '../@schemas/AlertTypeRequests'
 
 export default class UpdateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
@@ -44,16 +45,29 @@ export default class UpdateAlertTypeRoutes {
 
   public saveSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
     const { descriptionEntry } = req.body
-    if (!descriptionEntry || descriptionEntry.length === 0 || descriptionEntry > 40) {
+    const validationMessages = this.validationMessages(req)
+    if (validationMessages.alertTypeDescriptionErrorMessage) {
       const { code } = await this.getAlertTypeDetails(req)
       return res.render('pages/updateAlertType/submitDescription', {
+        ...validationMessages,
         code,
-        description: descriptionEntry,
-        alertTypeDescriptionErrorMessage: 'An alert type description must be between 1 and 40 characters',
       })
     }
     req.session.alertTypeDescription = descriptionEntry
     return res.redirect('/alert-type/update-description/confirmation')
+  }
+
+  private validationMessages(req: Request) {
+    const { descriptionEntry } = req.body
+
+    const schemaCheck = UpdateAlertTypeRequestSchema.safeParse({
+      description: descriptionEntry,
+    })
+    if (schemaCheck.success) {
+      return { description: schemaCheck.data.description }
+    }
+    const errors = schemaCheck.error.flatten().fieldErrors
+    return { description: descriptionEntry, alertTypeDescriptionErrorMessage: errors.description?.[0] }
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {

@@ -161,6 +161,25 @@ describe('updateAlertCode', () => {
         expect(res.text).toContain('An alert code description must be between 1 and 40 characters')
       })
   })
+  it('POST /alert-code/update-description/submit-description should render error if too long a description entered', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.alertCodeParentType = 'VI'
+      req.session.alertCode = 'AA'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-code/update-description/submit-description')
+      .type('form')
+      .send({ descriptionEntry: 'n'.repeat(41) })
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('There is a problem')
+        expect(res.text).toContain('An alert code description must be between 1 and 40 characters')
+      })
+  })
   it('GET /alert-code/update-description/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}

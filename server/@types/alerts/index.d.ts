@@ -4,6 +4,7 @@
  */
 
 import { CreateAlertCodeRequest, UpdateAlertCodeRequest } from '../../@schemas/AlertCodeRequests'
+import { CreateAlertTypeRequest, UpdateAlertTypeRequest } from '../../@schemas/AlertTypeRequests'
 
 export interface paths {
   '/alerts/{alertUuid}': {
@@ -708,18 +709,7 @@ export interface components {
       activeTo?: string
     }
     /** @description The request body for creating a new alert type */
-    CreateAlertTypeRequest: {
-      /**
-       * @description The short code for the alert type
-       * @example A
-       */
-      code: string
-      /**
-       * @description The description of the alert type
-       * @example Alert type description
-       */
-      description: string
-    }
+    CreateAlertTypeRequest: CreateAlertTypeRequest
     /** @description An alert code used to categorise alerts */
     AlertCode: {
       /**
@@ -838,13 +828,7 @@ export interface components {
     /** @description The request body for creating a new alert code */
     CreateAlertCodeRequest: CreateAlertCodeRequest
     /** @description The request body for updating the properties of an alert type */
-    UpdateAlertTypeRequest: {
-      /**
-       * @description The new property value(s) to be updated onto an alert type
-       * @example New description value for an alert type
-       */
-      description: string
-    }
+    UpdateAlertTypeRequest: UpdateAlertTypeRequest
     /** @description The request body for updating the properties of an alert code */
     UpdateAlertCodeRequest: UpdateAlertCodeRequest
     PageAlert: {

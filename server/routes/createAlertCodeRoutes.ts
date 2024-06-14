@@ -1,5 +1,6 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
+import { CreateAlertCodeRequestSchema } from '../@schemas/AlertCodeRequests'
 
 export default class CreateAlertCodeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
@@ -98,15 +99,22 @@ export default class CreateAlertCodeRoutes {
   }
 
   private validationMessages(req: Request) {
-    const { alertCode, alertDescription } = req.body
-    let alertCodeErrorMessage
-    let alertDescriptionErrorMessage
-    if (this.isNullOrEmpty(alertCode) || alertCode.length > 12) {
-      alertCodeErrorMessage = 'An alert code must be between 1 and 12 characters'
+    const { alertCode, alertDescription, parent } = req.body
+
+    const schemaCheck = CreateAlertCodeRequestSchema.safeParse({
+      code: alertCode,
+      description: alertDescription,
+      parent,
+    })
+    if (schemaCheck.success) {
+      return { alertCode, alertDescription }
     }
-    if (this.isNullOrEmpty(alertDescription) || alertDescription.length > 40) {
-      alertDescriptionErrorMessage = 'An alert description must be between 1 and 40 characters'
+    const errors = schemaCheck.error.flatten().fieldErrors
+    return {
+      alertCode,
+      alertDescription,
+      alertCodeErrorMessage: errors.code?.[0],
+      alertDescriptionErrorMessage: errors.description?.[0],
     }
-    return { alertCode, alertDescription, alertCodeErrorMessage, alertDescriptionErrorMessage }
   }
 }

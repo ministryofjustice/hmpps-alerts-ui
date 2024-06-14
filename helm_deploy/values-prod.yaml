@@ -13,4 +13,4 @@ generic-service:
     ALERTS_API_URL: "https://alerts-api.hmpps.service.justice.gov.uk"
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service
+  alertSeverity: hmpps-alerts-api-prod # sent to Slack channel #move-and-improve-alerts

@@ -1,5 +1,4 @@
 import { Request, RequestHandler } from 'express'
-import { ZodError } from 'zod'
 import AlertsApiClient from '../data/alertsApiClient'
 import { CreateAlertCodeRequestSchema } from '../@schemas/AlertCodeRequests'
 

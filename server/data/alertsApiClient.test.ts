@@ -37,4 +37,37 @@ describe('The alerts API client', () => {
       await alertsApiClient.deactivateAlertType('token', 'VI')
     })
   })
+
+  describe('Encode codes in URLs', () => {
+    it('should activate alert type', async () => {
+      const type = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-types/${encodeURIComponent(type)}/reactivate`).reply(201)
+      await alertsApiClient.reactivateAlertType('token', type)
+    })
+    it('should activate an alert code', async () => {
+      const code = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-codes/${encodeURIComponent(code)}/reactivate`).reply(201)
+      await alertsApiClient.reactivateAlertCode('token', code)
+    })
+    it('should deactivate alert type', async () => {
+      const type = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-types/${encodeURIComponent(type)}/deactivate`).reply(200)
+      await alertsApiClient.deactivateAlertType('token', type)
+    })
+    it('should deactivate an alert code', async () => {
+      const code = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-codes/${encodeURIComponent(code)}/deactivate`).reply(200)
+      await alertsApiClient.deactivateAlertCode('token', code)
+    })
+    it('should update type description', async () => {
+      const type = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-types/${encodeURIComponent(type)}`).reply(200)
+      await alertsApiClient.updateAlertType('token', type, { description: 'Description was updated' })
+    })
+    it('should update code description', async () => {
+      const code = "&'+-.<=>"
+      fakeAlertsApi.patch(`/alert-codes/${encodeURIComponent(code)}`).reply(200)
+      await alertsApiClient.updateAlertCode('token', code, { description: 'Description was updated' })
+    })
+  })
 })

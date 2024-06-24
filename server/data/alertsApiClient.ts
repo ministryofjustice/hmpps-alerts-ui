@@ -36,31 +36,37 @@ export default class AlertsApiClient {
 
   deactivateAlertCode(token: string, alertCode: string) {
     logger.info(`Deactivating alert code ${alertCode}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${alertCode}/deactivate` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/deactivate` })
   }
 
   reactivateAlertCode(token: string, alertCode: string) {
     logger.info(`Reactivating alert code ${alertCode}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${alertCode}/reactivate` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/reactivate` })
   }
 
   deactivateAlertType(token: string, alertCode: string) {
     logger.info(`Deactivating alert type ${alertCode}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${alertCode}/deactivate` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/deactivate` })
   }
 
   reactivateAlertType(token: string, alertCode: string) {
     logger.info(`Reactivating alert type ${alertCode}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${alertCode}/reactivate` })
+    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/reactivate` })
   }
 
   updateAlertType(token: string, code: string, requestBody: UpdateAlertTypeRequest): Promise<AlertType> {
     logger.info(`Updating alert type ${code}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-types/${code}`, data: requestBody })
+    return AlertsApiClient.restClient(token).patch({
+      path: `/alert-types/${encodeURIComponent(code)}`,
+      data: requestBody,
+    })
   }
 
   updateAlertCode(token: string, code: string, requestBody: UpdateAlertCodeRequest): Promise<AlertCode> {
     logger.info(`Updating alert code ${code}`)
-    return AlertsApiClient.restClient(token).patch({ path: `/alert-codes/${code}`, data: requestBody })
+    return AlertsApiClient.restClient(token).patch({
+      path: `/alert-codes/${encodeURIComponent(code)}`,
+      data: requestBody,
+    })
   }
 }

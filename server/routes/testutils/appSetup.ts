@@ -2,7 +2,6 @@ import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 import { v4 as uuidv4 } from 'uuid'
 
-import cookieSession from 'cookie-session'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -11,6 +10,7 @@ import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
 import AuditService from '../../services/auditService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
+import setUpWebSession from '../../middleware/setUpWebSession'
 import SessionSetup from './sessionSetup'
 
 jest.mock('../../services/auditService')
@@ -47,7 +47,7 @@ function appSetup(
   app.set('view engine', 'njk')
 
   nunjucksSetup(app, testAppInfo)
-  app.use(cookieSession({ keys: [''] }))
+  app.use(setUpWebSession())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
     req.flash = flashProvider

@@ -7,21 +7,12 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
-import type { ApplicationInfo } from '../../applicationInfo'
 import AuditService from '../../services/auditService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import SessionSetup from './sessionSetup'
 
 jest.mock('../../services/auditService')
-
-const testAppInfo: ApplicationInfo = {
-  applicationName: 'test',
-  buildNumber: '1',
-  gitRef: 'long ref',
-  gitShortHash: 'short ref',
-  branchName: 'main',
-}
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
@@ -46,7 +37,7 @@ function appSetup(
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, testAppInfo)
+  nunjucksSetup(app)
   app.use(setUpWebSession())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User

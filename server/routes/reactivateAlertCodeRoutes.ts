@@ -6,7 +6,7 @@ export default class ReactivateAlertCodeRoutes {
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-      .filter(at => at.isActive && at.alertCodes?.find(ac => !ac.isActive))
+      .filter(at => at.alertCodes?.find(ac => !ac.isActive))
       .map(alertType => {
         return {
           value: alertType.code,
@@ -22,7 +22,7 @@ export default class ReactivateAlertCodeRoutes {
     if (alertType === null || alertType === '' || alertType === undefined) {
       const alertTypeErrorMessage = 'An alert type must be selected.'
       const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-        .filter(at => at.isActive && at.alertCodes?.find(ac => !ac.isActive))
+        .filter(at => at.alertCodes?.find(ac => !ac.isActive))
         .map(at => {
           return {
             value: at.code,
@@ -48,7 +48,7 @@ export default class ReactivateAlertCodeRoutes {
   private getAlertDetails = async (req: Request) => {
     const { deactivateAlertTypeCode } = req.session
     const alertType = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true)).find(
-      at => at.code === deactivateAlertTypeCode && at.isActive,
+      at => at.code === deactivateAlertTypeCode,
     )
     let codes
     if (alertType?.alertCodes !== undefined && alertType.alertCodes.length !== 0) {

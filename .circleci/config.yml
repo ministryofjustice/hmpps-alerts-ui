@@ -10,12 +10,12 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: dps_alerts_security
+    default: move-and-improve-alerts-non-prod
 
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: dps-releases
+    default: move-and-improve-alerts-non-prod
 
   node-version:
     type: string
@@ -177,7 +177,7 @@ workflows:
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
           slack_notification: true
-          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+          slack_channel_name: move-and-improve-alerts
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-prod

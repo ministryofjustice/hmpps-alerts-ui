@@ -3,6 +3,7 @@ import { NotFound } from 'http-errors'
 import { v4 as uuidv4 } from 'uuid'
 
 import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import flash from 'connect-flash'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -28,8 +29,6 @@ export const user: HmppsUser = {
   userRoles: [],
 }
 
-export const flashProvider = jest.fn()
-
 function appSetup(
   services: Services,
   production: boolean,
@@ -42,9 +41,9 @@ function appSetup(
 
   nunjucksSetup(app)
   app.use(setUpWebSession())
+  app.use(flash())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
-    req.flash = flashProvider
     res.locals = {
       user: { ...req.user } as HmppsUser,
     }

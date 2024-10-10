@@ -2,6 +2,8 @@ import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 import { v4 as uuidv4 } from 'uuid'
 
+import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import flash from 'connect-flash'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -10,6 +12,9 @@ import AuditService from '../../services/auditService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import SessionSetup from './sessionSetup'
+import logger from '../../../logger'
+import config from '../../config'
+import populateValidationErrors from '../../middleware/populateValidationErrors'
 
 jest.mock('../../services/auditService')
 
@@ -24,8 +29,6 @@ export const user: HmppsUser = {
   userRoles: [],
 }
 
-export const flashProvider = jest.fn()
-
 function appSetup(
   services: Services,
   production: boolean,
@@ -38,9 +41,9 @@ function appSetup(
 
   nunjucksSetup(app)
   app.use(setUpWebSession())
+  app.use(flash())
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
-    req.flash = flashProvider
     res.locals = {
       user: { ...req.user } as HmppsUser,
     }
@@ -53,6 +56,16 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.use(populateValidationErrors())
+  app.get(
+    '*',
+    dpsComponents.getPageComponents({
+      logger,
+      includeMeta: true,
+      dpsUrl: config.serviceUrls.digitalPrison,
+      timeoutOptions: { response: 50, deadline: 50 },
+    }),
+  )
   app.use(routes(services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))

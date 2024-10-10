@@ -1,5 +1,5 @@
 import express from 'express'
-
+import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
 import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -20,6 +20,9 @@ import routes from './routes'
 import type { Services } from './services'
 import AuthorisedRoles from './authentication/authorisedRoles'
 import populateClientToken from './middleware/populateClientToken'
+import logger from '../logger'
+import config from './config'
+import populateValidationErrors from './middleware/populateValidationErrors'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -38,8 +41,22 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
-
   app.use(populateClientToken())
+  app.use(populateValidationErrors())
+
+  app.get(
+    '*',
+    dpsComponents.getPageComponents({
+      logger,
+      includeMeta: true,
+      dpsUrl: config.serviceUrls.digitalPrison,
+      timeoutOptions: {
+        response: config.apis.componentApi.timeout.response,
+        deadline: config.apis.componentApi.timeout.deadline,
+      },
+    }),
+  )
+
   app.use(routes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

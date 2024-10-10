@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import AlertsApiClient from '../data/alertsApiClient'
+import AlertsApiClient from '../../../data/alertsApiClient'
 
 export default class ReactivateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}

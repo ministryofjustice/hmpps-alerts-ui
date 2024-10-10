@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from 'express'
-import AlertsApiClient from '../data/alertsApiClient'
-import { UpdateAlertTypeRequestSchema } from '../@schemas/AlertTypeRequests'
+import AlertsApiClient from '../../../data/alertsApiClient'
+import { UpdateAlertTypeRequestSchema } from '../../../@schemas/AlertTypeRequests'
 
 export default class UpdateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}

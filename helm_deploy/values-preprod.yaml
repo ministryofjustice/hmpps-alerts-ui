@@ -15,9 +15,12 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
-    ENVIRONMENT_NAME: PRE-PRODUCTION
+    ENVIRONMENT_NAME: PRE-PRODUCTION # Phase banner tag label
     AUDIT_ENABLED: "false"
     ALERTS_API_URL: "https://alerts-api-preprod.hmpps.service.justice.gov.uk"
+    COMPONENT_API_URL: "https://frontend-components-preprod.hmpps.service.justice.gov.uk"
+    COMMON_COMPONENTS_ENABLED: true
+    DPS_HOME_PAGE_URL: "https://digital-preprod.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod # sent to Slack channel #move-and-improve-alerts-non-prod

@@ -1,10 +1,10 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from './testutils/appSetup'
-import config from '../config'
-import { AlertType } from '../@types/alerts/alertsApiTypes'
-import SessionSetup from './testutils/sessionSetup'
+import { appWithAllRoutes } from '../../testutils/appSetup'
+import config from '../../../config'
+import { AlertType } from '../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup
@@ -27,108 +27,108 @@ const alertTypes = [
   {
     code: 'VI',
     description: 'Victim',
-    isActive: false,
+    isActive: true,
     alertCodes: [{ code: 'AA', description: 'Alert code' }],
   } as AlertType,
   {
     code: 'AA',
     description: 'A type',
-    isActive: false,
+    isActive: true,
   } as AlertType,
 ]
 
-describe('reactivateAlertCode', () => {
-  it('GET /alert-type/reactivate should render', () => {
-    sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
-    }
-    fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
-    return request(app)
-      .get('/alert-type/reactivate')
-      .expect(200)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Reactivate an alert type')
-        expect(res.text).toContain('Select an alert type')
-        expect(res.text).toContain('Victim')
-      })
-  })
-  it('POST /alert-type/reactivate should redirect', () => {
+describe('deactivateAlertCode', () => {
+  it('GET /alert-type/deactivate should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-type/reactivate')
+      .get('/alert-type/deactivate')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert type')
+        expect(res.text).toContain('Select an alert type')
+        expect(res.text).toContain('Victim')
+      })
+  })
+  it('POST /alert-type/deactivate should redirect', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+    }
+    fakeApi.get('/alert-types').reply(200, alertTypes)
+    return request(app)
+      .post('/alert-type/deactivate')
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-type/reactivate/confirmation')
+      .expect('Location', '/alert-type/deactivate/confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('GET /alert-type/reactivate/confirmation should render', () => {
-    sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
-    }
-    return request(app)
-      .get('/alert-type/reactivate/confirmation')
-      .expect(200)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Reactivate an alert type')
-        expect(res.text).toContain('Are you sure you want to reactivate alert type VI?')
-      })
-  })
-  it('POST /alert-type/reactivate/confirmation with nothing selected should render error', () => {
-    sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
-    }
-    return request(app)
-      .post('/alert-type/reactivate/confirmation')
-      .type('form')
-      .send({})
-      .expect(200)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Reactivate an alert type')
-        expect(res.text).toContain('You must select either Yes or No.')
-        expect(res.text).toContain('Are you sure you want to reactivate alert type VI?')
-      })
-  })
-  it('POST /alert-type/reactivate/confirmation with confirmation as an empty string should render error', () => {
-    sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
-    }
-    return request(app)
-      .post('/alert-type/reactivate/confirmation')
-      .type('form')
-      .send({ confirmation: '' })
-      .expect(200)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('Reactivate an alert type')
-        expect(res.text).toContain('You must select either Yes or No.')
-        expect(res.text).toContain('Are you sure you want to reactivate alert type VI?')
-      })
-  })
-  it('POST /alert-type/reactivate/confirmation with confirmation as "no" should redirect to the home page`', () => {
+  it('GET /alert-type/deactivate/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
       req.session.deactivateAlertType = 'VI'
     }
     return request(app)
-      .post('/alert-type/reactivate/confirmation')
+      .get('/alert-type/deactivate/confirmation')
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert type')
+        expect(res.text).toContain('Are you sure you want to deactivate alert type VI?')
+      })
+  })
+  it('POST /alert-type/deactivate/confirmation with nothing selected should render error', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertType = 'VI'
+    }
+    return request(app)
+      .post('/alert-type/deactivate/confirmation')
+      .type('form')
+      .send({})
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert type')
+        expect(res.text).toContain('You must select either Yes or No.')
+        expect(res.text).toContain('Are you sure you want to deactivate alert type VI?')
+      })
+  })
+  it('POST /alert-type/deactivate/confirmation with confirmation as an empty string should render error', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertType = 'VI'
+    }
+    return request(app)
+      .post('/alert-type/deactivate/confirmation')
+      .type('form')
+      .send({ confirmation: '' })
+      .expect(200)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Deactivate an alert type')
+        expect(res.text).toContain('You must select either Yes or No.')
+        expect(res.text).toContain('Are you sure you want to deactivate alert type VI?')
+      })
+  })
+  it('POST /alert-type/deactivate/confirmation with confirmation as "no" should redirect to the home page`', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = {}
+      req.middleware.clientToken = '123'
+      req.session.deactivateAlertType = 'VI'
+    }
+    return request(app)
+      .post('/alert-type/deactivate/confirmation')
       .type('form')
       .send({ confirmation: 'no' })
       .expect(302)
@@ -137,46 +137,46 @@ describe('reactivateAlertCode', () => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('POST /alert-type/reactivate/confirmation with confirmation as "yes" should redirect to the success page`', () => {
+  it('POST /alert-type/deactivate/confirmation with confirmation as "yes" should redirect to the success page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
+      req.session.deactivateAlertType = 'VI'
     }
     return request(app)
-      .post('/alert-type/reactivate/confirmation')
+      .post('/alert-type/deactivate/confirmation')
       .type('form')
       .send({ confirmation: 'yes' })
       .expect(302)
-      .expect('Location', '/alert-type/reactivate/success')
+      .expect('Location', '/alert-type/deactivate/success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
-  it('GET /alert-type/reactivate/success should render`', () => {
+  it('GET /alert-type/deactivate/success should render`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
+      req.session.deactivateAlertType = 'VI'
     }
-    fakeApi.patch('/alert-types/VI/reactivate').reply(204)
+    fakeApi.patch('/alert-types/VI/deactivate').reply(200)
     return request(app)
-      .get('/alert-type/reactivate/success')
+      .get('/alert-type/deactivate/success')
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
-        expect(res.text).toContain('Alert type reactivated')
-        expect(res.text).toContain('Alert type <strong>VI</strong> has been reactivated')
+        expect(res.text).toContain('Alert type deactivated')
+        expect(res.text).toContain('Alert type <strong>VI</strong> has been deactivated')
       })
   })
-  it('GET /alert-type/reactivate/success should redirect if error`', () => {
+  it('GET /alert-type/deactivate/success should redirect if error`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = {}
       req.middleware.clientToken = '123'
-      req.session.reactivateAlertType = 'VI'
+      req.session.deactivateAlertType = 'VI'
     }
     return request(app)
-      .get('/alert-type/reactivate/success')
+      .get('/alert-type/deactivate/success')
       .expect(302)
       .expect('Location', '/error-page')
       .expect(res => {

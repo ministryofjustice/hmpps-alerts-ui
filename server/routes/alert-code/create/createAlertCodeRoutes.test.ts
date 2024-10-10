@@ -1,10 +1,10 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from './testutils/appSetup'
-import config from '../config'
-import { AlertType } from '../@types/alerts/alertsApiTypes'
-import SessionSetup from './testutils/sessionSetup'
+import { appWithAllRoutes } from '../../testutils/appSetup'
+import config from '../../../config'
+import { AlertType } from '../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup

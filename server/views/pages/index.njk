@@ -1,3 +1,4 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = "Maintain alerts reference data - Prisoner Alerts" %}
@@ -6,8 +7,16 @@
 {% set backUrl = digitalPrisonServicesUrl %}
 {% set backLinkLabel = 'Digital Prison Services' %}
 
-{% block content %}
+{% block pageHeader %}
+  {% if successMessage %}
+    {{ govukNotificationBanner({
+      text: successMessage,
+      type: "success"
+    }) }}
+  {% endif %}
+{% endblock %}
 
+{% block content %}
   <div class="browse__header-wrapper govuk-!-margin-bottom-9">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -23,5 +32,4 @@
   {% if roles and roles.includes('ALERTS_REFERENCE_DATA_MANAGER') %}
     {% include "./partials/referenceDataPanels.njk" %}
   {% endif %}
-
 {% endblock %}

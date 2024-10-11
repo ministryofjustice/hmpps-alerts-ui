@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from 'express'
 import z, { RefinementCtx } from 'zod'
-import { isValid, isBefore, parseISO, isAfter, isEqual } from 'date-fns'
+import { isValid, isBefore, parseISO, isAfter, isEqual, subDays, addDays } from 'date-fns'
 import { FLASH_KEY__FORM_RESPONSES, FLASH_KEY__VALIDATION_ERRORS } from '../utils/constants'
 
 export type fieldErrors = {
@@ -86,12 +86,13 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory): RequestHandler =
       )
     }
     req.flash(FLASH_KEY__VALIDATION_ERRORS, JSON.stringify(deduplicatedFieldErrors))
-    return res.redirect('back')
+
+    return res.redirect(req.originalUrl)
   }
 }
 
-const validateDateBase = (requiredErr: string, invalidErr: string) => {
-  return z
+const validateDateBase = (requiredErr: string, invalidErr: string) =>
+  z
     .string({ message: requiredErr })
     .min(1, { message: requiredErr })
     .transform(value => value.split(/[-/]/).reverse())
@@ -105,10 +106,33 @@ const validateDateBase = (requiredErr: string, invalidErr: string) => {
     .superRefine((date, ctx) => {
       return isValid(date) || ctx.addIssue({ code: z.ZodIssueCode.custom, message: invalidErr })
     })
-}
+
+const validateDateOptional = (invalidErr: string) =>
+  z
+    .string()
+    .transform(val => {
+      if (val) {
+        const value = val.split(/[-/]/).reverse()
+        // Prefix month and date with a 0 if needed
+        const month = value[1]?.length === 2 ? value[1] : `0${value[1]}`
+        const date = value[2]?.length === 2 ? value[2] : `0${value[2]}`
+        const dateString = `${value[0]}-${month}-${date}T00:00:00Z` // We put a full timestamp on it so it gets parsed as UTC time and the date doesn't get changed due to locale
+        return parseISO(dateString)
+      }
+      return null
+    })
+    .superRefine((date, ctx) => {
+      if (date && !isValid(date)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: invalidErr })
+      }
+    })
 
 export const validateTransformDate = (requiredErr: string, invalidErr: string) => {
   return validateDateBase(requiredErr, invalidErr).transform(date => date.toISOString().substring(0, 10))
+}
+
+export const validateTransformOptionalDate = (invalidErr: string) => {
+  return validateDateOptional(invalidErr).transform(date => (date ? date.toISOString().substring(0, 10) : null))
 }
 
 export const validateTransformPastDate = (requiredErr: string, invalidErr: string, maxErr: string) => {
@@ -130,6 +154,31 @@ export const validateTransformFutureDate = (requiredErr: string, invalidErr: str
       return (
         isAfter(date, today) || isEqual(date, today) || ctx.addIssue({ code: z.ZodIssueCode.custom, message: maxErr })
       )
+    })
+    .transform(date => date.toISOString().substring(0, 10))
+}
+
+export const validateTransformDateInRange = (
+  requiredErr: string,
+  invalidErr: string,
+  maxErr: string,
+  pastDays: number,
+  futureDays: number,
+) => {
+  return validateDateBase(requiredErr, invalidErr)
+    .superRefine((date, ctx) => {
+      const today = new Date()
+      today.setHours(0)
+      today.setMinutes(0)
+      today.setSeconds(0)
+      today.setMilliseconds(0)
+
+      const past = subDays(today, pastDays)
+      const future = addDays(today, futureDays + 1)
+
+      if (isBefore(date, past) || isAfter(date, future) || isEqual(date, future)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: maxErr })
+      }
     })
     .transform(date => date.toISOString().substring(0, 10))
 }

@@ -5,3 +5,9 @@
 .govuk-panel-confirmation-error {
   background: darkred;
 }
+
+.single-row-textarea {
+  resize: none!important;
+  white-space: nowrap!important;
+  overflow-x: hidden!important;
+}

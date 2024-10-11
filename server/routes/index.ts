@@ -5,8 +5,9 @@ import type { Services } from '../services'
 import { Page } from '../services/auditService'
 import AlertCodeRoutes from './alert-code/routes'
 import AlertTypeRoutes from './alert-type/routes'
+import AddAnyAlertRoutes from './add-any-alert/routes'
+import { FLASH_KEY__SUCCESS_MESSAGE } from '../utils/constants'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes({ auditService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -26,15 +27,16 @@ export default function routes({ auditService }: Services): Router {
 
     const { userRoles: roles } = res.locals.user
     resetSessionData(req)
-    res.render('pages/index', { roles })
+    res.render('pages/index', { roles, successMessage: req.flash(FLASH_KEY__SUCCESS_MESSAGE)[0] })
   })
   get('/error-page', (req, res, next) => {
     const { errorMessage } = req.session
     res.render('pages/errorPage', { errorMessage })
   })
 
-  router.use(AlertCodeRoutes(alertsApiClient))
-  router.use(AlertTypeRoutes(alertsApiClient))
+  router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
+  router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
+  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient))
 
   return router
 }

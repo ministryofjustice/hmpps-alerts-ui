@@ -7,6 +7,7 @@ import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
 import { buildErrorSummaryList, findError } from '../middleware/validationMiddleware'
+import { addDefaultSelectedValue, setSelected } from './viewUtils'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -30,6 +31,7 @@ export default function nunjucksSetup(app: express.Express): void {
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),
+      path.join(__dirname, '../../server/routes'),
       'node_modules/govuk-frontend/dist/',
       'node_modules/@ministryofjustice/frontend/',
       'node_modules/@ministryofjustice/hmpps-connect-dps-components/dist/assets/',
@@ -41,6 +43,8 @@ export default function nunjucksSetup(app: express.Express): void {
   )
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('findError', findError)
+  njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
+  njkEnv.addFilter('setSelected', setSelected)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
 }

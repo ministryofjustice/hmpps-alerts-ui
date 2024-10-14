@@ -30,8 +30,7 @@ export const schemaFactory =
         .transform(async (val: string, ctx: RefinementCtx) => {
           try {
             return await prisonerSearchApiClient.getPrisonerDetails(req.middleware.clientToken, val)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {
+          } catch {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `The prison number ‘${val}’ was not recognised`,

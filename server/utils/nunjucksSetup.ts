@@ -6,7 +6,7 @@ import fs from 'fs'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
-import { buildErrorSummaryList, findError } from '../middleware/validationMiddleware'
+import { buildErrorSummaryList, customErrorOrderBuilder, findError } from '../middleware/validationMiddleware'
 import { addDefaultSelectedValue, setSelected } from './viewUtils'
 
 export default function nunjucksSetup(app: express.Express): void {
@@ -43,6 +43,7 @@ export default function nunjucksSetup(app: express.Express): void {
   )
   njkEnv.addFilter('buildErrorSummaryList', buildErrorSummaryList)
   njkEnv.addFilter('findError', findError)
+  njkEnv.addFilter('customErrorOrderBuilder', customErrorOrderBuilder)
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
   njkEnv.addFilter('setSelected', setSelected)
   njkEnv.addFilter('initialiseName', initialiseName)

@@ -1,4 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
@@ -9,6 +10,8 @@
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% set backLinkLabel = "Manage prisoner alerts" %}
 {% set backUrl = "/" %}
+
+{% set customErrorOrder = ['prisonNumber', 'alertType', 'alertCode', 'description', 'activeFrom', 'activeTo'] %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -21,21 +24,15 @@
         <div class="govuk-grid-column-two-thirds">
             <form method="post" novalidate="novalidate" autocomplete="off">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                {{ govukCharacterCount({
+                {{ govukInput({
                     label: {
                         text: "Enter prison number",
                         classes: "govuk-label--s"
                     },
-                    maxlength: 7,
-                    rows: 1,
-                    threshold: "100",
                     id: "prisonNumber",
                     name: "prisonNumber",
                     value: prisonNumber,
-                    classes: "govuk-input--width-10 single-row-textarea",
-                    formGroup: {
-                      classes: "govuk-!-static-margin-bottom-2"
-                    },
+                    classes: "govuk-input--width-10",
                     errorMessage: validationErrors | findError('prisonNumber')
                 }) }}
                 {{ govukSelect({

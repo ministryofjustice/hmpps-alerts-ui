@@ -16,6 +16,7 @@ export default class AddAnyAlertController extends BaseController {
       ...(alertType ? { type: alertType as string } : {}),
     })
     res.render('add-any-alert/view', {
+      successMessage: req.flash(FLASH_KEY__SUCCESS_MESSAGE)[0],
       prisonNumber: res.locals.formResponses?.prisonNumber,
       alertType,
       alertCode,
@@ -50,7 +51,7 @@ export default class AddAnyAlertController extends BaseController {
     }
   }
 
-  POST = (_req: Request, res: Response) => {
-    res.redirect('/')
+  POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
+    res.redirect(`/add-any-alert?alertType=${req.body.alertType.code}&alertCode=${req.body.alertCode.code}`)
   }
 }

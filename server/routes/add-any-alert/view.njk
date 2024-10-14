@@ -4,6 +4,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% extends "partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Create alert code" %}
@@ -12,6 +13,15 @@
 {% set backUrl = "/" %}
 
 {% set customErrorOrder = ['prisonNumber', 'alertType', 'alertCode', 'description', 'activeFrom', 'activeTo'] %}
+
+{% block pageHeader %}
+    {% if successMessage %}
+        {{ govukNotificationBanner({
+            text: successMessage,
+            type: "success"
+        }) }}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">

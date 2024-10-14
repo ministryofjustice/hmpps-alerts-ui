@@ -27,7 +27,7 @@ export default function routes({ auditService }: Services): Router {
 
     const { userRoles: roles } = res.locals.user
     resetSessionData(req)
-    res.render('pages/index', { roles, successMessage: req.flash(FLASH_KEY__SUCCESS_MESSAGE)[0] })
+    res.render('pages/index', { roles })
   })
   get('/error-page', (req, res, next) => {
     const { errorMessage } = req.session

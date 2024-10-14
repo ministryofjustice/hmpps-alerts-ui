@@ -5,12 +5,12 @@ import type { Services } from '../services'
 import { Page } from '../services/auditService'
 import AlertCodeRoutes from './alert-code/routes'
 import AlertTypeRoutes from './alert-type/routes'
+import AddAnyAlertRoutes from './add-any-alert/routes'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes({ auditService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const { alertsApiClient } = dataAccess()
+  const { alertsApiClient, prisonerSearchApiClient } = dataAccess()
 
   const resetSessionData = (req: Request) => {
     req.session.alertTypeCode = ''
@@ -33,8 +33,9 @@ export default function routes({ auditService }: Services): Router {
     res.render('pages/errorPage', { errorMessage })
   })
 
-  router.use(AlertCodeRoutes(alertsApiClient))
-  router.use(AlertTypeRoutes(alertsApiClient))
+  router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
+  router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
+  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient))
 
   return router
 }

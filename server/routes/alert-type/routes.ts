@@ -6,6 +6,8 @@ import CreateAlertTypeRoutes from './create/createAlertTypeRoutes'
 import UpdateAlertTypeRoutes from './update-description/updateAlertTypeRoutes'
 import DeactivateAlertTypeRoutes from './deactivate/deactivateAlertTypeRoutes'
 import ReactivateAlertTypeRoutes from './reactivate/reactivteAlertTypeRoutes'
+import authorisationMiddleware from '../../middleware/authorisationMiddleware'
+import AuthorisedRoles from '../../authentication/authorisedRoles'
 
 export default function AlertTypeRoutes(alertsApiClient: AlertsApiClient) {
   const router = Router({ mergeParams: true })
@@ -17,35 +19,37 @@ export default function AlertTypeRoutes(alertsApiClient: AlertsApiClient) {
   const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient)
   const reactivateAlertTypeRoutes = new ReactivateAlertTypeRoutes(alertsApiClient)
 
+  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
+
   // createAlertType
-  get('/alert-type/create', createAlertTypeRoutes.startPage)
-  post('/alert-type/create', createAlertTypeRoutes.submitAlertType)
-  get('/alert-type/confirmation', createAlertTypeRoutes.loadConfirmation)
-  post('/alert-type/confirmation', createAlertTypeRoutes.submitConfirmation)
-  get('/alert-type/success', createAlertTypeRoutes.loadSuccess)
+  get('/create', createAlertTypeRoutes.startPage)
+  post('/create', createAlertTypeRoutes.submitAlertType)
+  get('/confirmation', createAlertTypeRoutes.loadConfirmation)
+  post('/confirmation', createAlertTypeRoutes.submitConfirmation)
+  get('/success', createAlertTypeRoutes.loadSuccess)
 
   // updateAlertType
-  get('/alert-type/update-description', updateAlertTypeRoutes.startPage)
-  post('/alert-type/update-description', updateAlertTypeRoutes.storeAlertType)
-  get('/alert-type/update-description/submit-description', updateAlertTypeRoutes.loadSubmitDescription)
-  post('/alert-type/update-description/submit-description', updateAlertTypeRoutes.saveSubmitDescription)
-  get('/alert-type/update-description/confirmation', updateAlertTypeRoutes.loadConfirmation)
-  post('/alert-type/update-description/confirmation', updateAlertTypeRoutes.submitConfirmationPage)
-  get('/alert-type/update-description/success', updateAlertTypeRoutes.loadSuccess)
+  get('/update-description', updateAlertTypeRoutes.startPage)
+  post('/update-description', updateAlertTypeRoutes.storeAlertType)
+  get('/update-description/submit-description', updateAlertTypeRoutes.loadSubmitDescription)
+  post('/update-description/submit-description', updateAlertTypeRoutes.saveSubmitDescription)
+  get('/update-description/confirmation', updateAlertTypeRoutes.loadConfirmation)
+  post('/update-description/confirmation', updateAlertTypeRoutes.submitConfirmationPage)
+  get('/update-description/success', updateAlertTypeRoutes.loadSuccess)
 
   // deactivateAlertType
-  get('/alert-type/deactivate', deactivateAlertTypeRoutes.startPage)
-  post('/alert-type/deactivate', deactivateAlertTypeRoutes.submitStartPage)
-  get('/alert-type/deactivate/confirmation', deactivateAlertTypeRoutes.loadConfirmationPage)
-  post('/alert-type/deactivate/confirmation', deactivateAlertTypeRoutes.submitConfirmationPage)
-  get('/alert-type/deactivate/success', deactivateAlertTypeRoutes.loadSuccessPage)
+  get('/deactivate', deactivateAlertTypeRoutes.startPage)
+  post('/deactivate', deactivateAlertTypeRoutes.submitStartPage)
+  get('/deactivate/confirmation', deactivateAlertTypeRoutes.loadConfirmationPage)
+  post('/deactivate/confirmation', deactivateAlertTypeRoutes.submitConfirmationPage)
+  get('/deactivate/success', deactivateAlertTypeRoutes.loadSuccessPage)
 
   // reactivateAlertType
-  get('/alert-type/reactivate', reactivateAlertTypeRoutes.startPage)
-  post('/alert-type/reactivate', reactivateAlertTypeRoutes.submitStartPage)
-  get('/alert-type/reactivate/confirmation', reactivateAlertTypeRoutes.loadConfirmationPage)
-  post('/alert-type/reactivate/confirmation', reactivateAlertTypeRoutes.submitConfirmationPage)
-  get('/alert-type/reactivate/success', reactivateAlertTypeRoutes.loadSuccessPage)
+  get('/reactivate', reactivateAlertTypeRoutes.startPage)
+  post('/reactivate', reactivateAlertTypeRoutes.submitStartPage)
+  get('/reactivate/confirmation', reactivateAlertTypeRoutes.loadConfirmationPage)
+  post('/reactivate/confirmation', reactivateAlertTypeRoutes.submitConfirmationPage)
+  get('/reactivate/success', reactivateAlertTypeRoutes.loadSuccessPage)
 
   return router
 }

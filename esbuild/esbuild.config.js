@@ -25,6 +25,10 @@ const buildConfig = {
         from: path.join(cwd, 'server/views/**/*'),
         to: path.join(cwd, 'dist/server/views'),
       },
+      {
+        from: path.join(cwd, 'server/routes/**/*'),
+        to: path.join(cwd, 'dist/server/routes'),
+      },
     ],
   },
 
@@ -35,6 +39,10 @@ const buildConfig = {
       {
         from: path.join(cwd, 'assets/images/**/*'),
         to: path.join(cwd, 'dist/assets/images'),
+      },
+      {
+        from: path.join(cwd, 'assets/js/extra/**/*'),
+        to: path.join(cwd, 'dist/assets/js/extra'),
       },
     ],
     clear: glob.sync([path.join(cwd, 'dist/assets/{css,js}')]),

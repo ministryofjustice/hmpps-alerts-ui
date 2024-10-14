@@ -1,0 +1,127 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Add any alert - Prisoner Alerts" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% set backLinkLabel = "Manage prisoner alerts" %}
+{% set backUrl = "/" %}
+
+{% set customErrorOrder = ['prisonNumber', 'alertType', 'alertCode', 'description', 'activeFrom', 'activeTo'] %}
+
+{% block pageHeader %}
+    {% if successMessage %}
+        {{ govukNotificationBanner({
+            text: successMessage,
+            type: "success"
+        }) }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 id="addCaseNote">Add an alert</h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post" novalidate="novalidate" autocomplete="off">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {{ govukInput({
+                    label: {
+                        text: "Enter prison number",
+                        classes: "govuk-label--s"
+                    },
+                    id: "prisonNumber",
+                    name: "prisonNumber",
+                    value: prisonNumber,
+                    classes: "govuk-input--width-10",
+                    errorMessage: validationErrors | findError('prisonNumber')
+                }) }}
+                {{ govukSelect({
+                    id: "alertType",
+                    name: "alertType",
+                    label: {
+                        text: "Type of alert",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('alertType'),
+                    items: alertTypes | addDefaultSelectedValue('Choose alert type') | setSelected(alertType)
+                }) }}
+
+                {{ govukSelect({
+                    id: "alertCode",
+                    name: "alertCode",
+                    label: {
+                        text: "Alert",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('alertCode'),
+                    items: alertCodes | addDefaultSelectedValue('Choose alert code') | setSelected(alertCode)
+                }) }}
+
+                {{ govukCharacterCount({
+                    name: "description",
+                    id: "description",
+                    maxlength: 1000,
+                    rows: 10,
+                    value: description,
+                    errorMessage: validationErrors | findError('description'),
+                    label: {
+                        text: "Why are you creating this alert?",
+                        classes: "govuk-!-font-weight-bold govuk-!-margin-top-8"
+                    }
+                }) }}
+
+                {{ mojDatePicker({
+                    id: "activeFrom",
+                    name: "activeFrom",
+                    label: {
+                        text: "Alert start date",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('activeFrom'),
+                    classes: 'hmpps-datepicker--fixed-width',
+                    value: activeFrom,
+                    minDate: todayMinus8,
+                    maxDate: today
+                }) }}
+
+                {{ mojDatePicker({
+                    id: "activeTo",
+                    name: "activeTo",
+                    label: {
+                        text: "Alert end date (optional)",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('activeTo'),
+                    classes: 'hmpps-datepicker--fixed-width',
+                    value: activeTo,
+                    minDate: todayMinus8
+                }) }}
+
+                <div class="govuk-button-group govuk-!-display-none-print">
+                    {{ govukButton({
+                        text: "Add alert",
+                        type: "submit",
+                        preventDoubleClick: true,
+                        attributes: { "data-qa": "add-alert-submit-button" }
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block additionalScripts %}
+    <script id="typeCodeMap" type="application/json">{{ typeCodeMap | dump | safe }}</script>
+    <script src="/assets/js/extra/alerts.js"></script>
+{% endblock %}

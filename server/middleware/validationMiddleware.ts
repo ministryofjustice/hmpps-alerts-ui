@@ -36,8 +36,8 @@ const zObjectStrict = <T = object>(shape: T) => z.object({ _csrf: z.string().opt
  * more info regarding this issue and workaround on: https://github.com/colinhacks/zod/issues/479#issuecomment-2067278879
  */
 const zodAlwaysRefine = <T extends z.ZodTypeAny>(zodType: T) =>
-  z.any().transform((val, ctx) => {
-    const res = zodType.safeParse(val)
+  z.any().transform(async (val, ctx) => {
+    const res = await zodType.safeParseAsync(val)
     if (!res.success) res.error.issues.forEach(ctx.addIssue)
     return res.data || val
   }) as unknown as T
@@ -69,7 +69,7 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory): RequestHandler =
       return next()
     }
     const resolvedSchema = typeof schema === 'function' ? await schema(req, res) : schema
-    const result = resolvedSchema.safeParse(normaliseNewLines(req.body))
+    const result = await resolvedSchema.safeParseAsync(normaliseNewLines(req.body))
     if (result.success) {
       req.body = result.data
       return next()

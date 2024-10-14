@@ -5,6 +5,7 @@ import {
   AlertCode,
   AlertType,
   CreateAlertCodeRequest,
+  CreateAlertRequest,
   CreateAlertTypeRequest,
   UpdateAlertCodeRequest,
   UpdateAlertTypeRequest,
@@ -66,6 +67,13 @@ export default class AlertsApiClient {
     logger.info(`Updating alert code ${code}`)
     return AlertsApiClient.restClient(token).patch({
       path: `/alert-codes/${encodeURIComponent(code)}`,
+      data: requestBody,
+    })
+  }
+
+  createAlert(token: string, requestBody: CreateAlertRequest) {
+    return AlertsApiClient.restClient(token).post({
+      path: `/prisoners/${requestBody.prisonNumber}/alerts`,
       data: requestBody,
     })
   }

@@ -6,3 +6,4 @@ export type CreateAlertTypeRequest = components['schemas']['CreateAlertTypeReque
 export type CreateAlertCodeRequest = components['schemas']['CreateAlertCodeRequest']
 export type UpdateAlertTypeRequest = components['schemas']['UpdateAlertTypeRequest']
 export type UpdateAlertCodeRequest = components['schemas']['UpdateAlertCodeRequest']
+export type CreateAlertRequest = components['schemas']['CreateAlert']

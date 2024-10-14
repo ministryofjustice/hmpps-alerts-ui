@@ -11,7 +11,7 @@ import { FLASH_KEY__SUCCESS_MESSAGE } from '../utils/constants'
 export default function routes({ auditService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const { alertsApiClient } = dataAccess()
+  const { alertsApiClient, prisonerSearchApiClient } = dataAccess()
 
   const resetSessionData = (req: Request) => {
     req.session.alertTypeCode = ''
@@ -36,7 +36,7 @@ export default function routes({ auditService }: Services): Router {
 
   router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
   router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
-  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient))
+  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient))
 
   return router
 }

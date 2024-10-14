@@ -5,13 +5,15 @@ function initDynamicDropdowns() {
   const typeCodeMap = JSON.parse(document.getElementById('typeCodeMap').textContent)
 
   document.addEventListener('DOMContentLoaded', event => {
-    descriptionGroupElement.hidden = alertTypeElement.value === 'DOCGM'
+    descriptionGroupElement.hidden = alertCodeElement.value === 'DOCGM'
+  })
+
+  alertCodeElement.addEventListener('change', async () => {
+    descriptionGroupElement.hidden = alertCodeElement.value === 'DOCGM'
   })
 
   alertTypeElement.addEventListener('change', async () => {
     alertCodeElement.length = 1
-
-    descriptionGroupElement.hidden = alertTypeElement.value === 'DOCGM'
 
     if (alertTypeElement.value === '') return
 

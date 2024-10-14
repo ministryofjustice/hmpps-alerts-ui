@@ -1,7 +1,9 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import BaseController from '../common/controller'
 import { pastDateStringGBFormat, todayStringGBFormat } from '../../utils/datetimeUtils'
 import { FLASH_KEY__SUCCESS_MESSAGE } from '../../utils/constants'
+import { SchemaType } from './schemas'
+import { firstNameSpaceLastName } from '../../utils/miniProfileUtils'
 
 export default class AddAnyAlertController extends BaseController {
   GET = async (req: Request, res: Response) => {
@@ -28,8 +30,27 @@ export default class AddAnyAlertController extends BaseController {
     })
   }
 
-  POST = (req: Request, res: Response) => {
-    req.flash(FLASH_KEY__SUCCESS_MESSAGE, `You’ve created a ‘${req.body.alertCode}’ alert for ${req.body.prisonNumber}`)
+  checkSubmitToAPI = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+    try {
+      await this.alertsApiService.createAlert(req.middleware.clientToken, {
+        prisonNumber: req.body.prisonNumber.prisonerNumber,
+        alertCode: req.body.alertCode.code,
+        description: req.body.description ?? undefined,
+        activeFrom: req.body.activeFrom ?? undefined,
+        activeTo: req.body.activeTo ?? undefined,
+        authorisedBy: res.locals.user.displayName,
+      })
+      req.flash(
+        FLASH_KEY__SUCCESS_MESSAGE,
+        `You’ve created a ‘${req.body.alertCode.description}’ alert for ${firstNameSpaceLastName(req.body.prisonNumber)}`,
+      )
+      next()
+    } catch (e) {
+      next(e)
+    }
+  }
+
+  POST = (_req: Request, res: Response) => {
     res.redirect('/')
   }
 }

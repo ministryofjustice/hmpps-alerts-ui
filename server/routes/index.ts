@@ -6,7 +6,6 @@ import { Page } from '../services/auditService'
 import AlertCodeRoutes from './alert-code/routes'
 import AlertTypeRoutes from './alert-type/routes'
 import AddAnyAlertRoutes from './add-any-alert/routes'
-import { FLASH_KEY__SUCCESS_MESSAGE } from '../utils/constants'
 
 export default function routes({ auditService }: Services): Router {
   const router = Router()

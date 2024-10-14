@@ -49,7 +49,7 @@ export const schemaFactory =
         0,
       ),
       activeTo: validateTransformOptionalDate('The alert end date must be a real date'),
-    }).superRefine((val, ctx) => {
+    }).superRefine(async (val, ctx) => {
       if (val.alertCode?.code !== 'DOCGM' && (val.alertCode as unknown as string) !== 'DOCGM' && !val.description) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -63,6 +63,20 @@ export const schemaFactory =
           message: 'The alert end date must be after the alert start date',
           path: ['activeTo'],
         })
+      }
+      if (val.alertCode?.code && val.prisonNumber?.prisonerNumber) {
+        const existingActiveAlerts = await alertsApiClient.getPrisonerActiveAlertForAlertCode(
+          req.middleware.clientToken,
+          val.prisonNumber.prisonerNumber,
+          val.alertCode.code,
+        )
+        if (existingActiveAlerts.totalElements) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'The prisoner already has this active alert',
+            path: ['alertCode'],
+          })
+        }
       }
     })
   }

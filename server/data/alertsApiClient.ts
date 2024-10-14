@@ -7,6 +7,7 @@ import {
   CreateAlertCodeRequest,
   CreateAlertRequest,
   CreateAlertTypeRequest,
+  PageAlert,
   UpdateAlertCodeRequest,
   UpdateAlertTypeRequest,
 } from '../@types/alerts/alertsApiTypes'
@@ -75,6 +76,12 @@ export default class AlertsApiClient {
     return AlertsApiClient.restClient(token).post({
       path: `/prisoners/${requestBody.prisonNumber}/alerts`,
       data: requestBody,
+    })
+  }
+
+  getPrisonerActiveAlertForAlertCode(token: string, prisonNumber: string, code: string): Promise<PageAlert> {
+    return AlertsApiClient.restClient(token).get({
+      path: `/prisoners/${prisonNumber}/alerts?isActive=true&alertCode=${code}`,
     })
   }
 }

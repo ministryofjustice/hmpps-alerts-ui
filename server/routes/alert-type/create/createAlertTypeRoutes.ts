@@ -26,7 +26,7 @@ export default class CreateAlertTypeRoutes {
     return res.render('pages/createAlertType/confirmation', { alertTypeCode, alertTypeDescription })
   }
 
-  public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
+  public submitConfirmation: RequestHandler = async (_req, res): Promise<void> => {
     return res.redirect('/alert-type/success')
   }
 
@@ -34,8 +34,8 @@ export default class CreateAlertTypeRoutes {
     const { alertTypeCode, alertTypeDescription } = req.session
     const response = await this.alertsApiClient
       .createAlertType(req.middleware.clientToken, {
-        code: alertTypeCode,
-        description: alertTypeDescription,
+        code: alertTypeCode!,
+        description: alertTypeDescription!,
       })
       .catch(err => {
         const alertTypeCodeErrorMessage = `Alert type with code '${alertTypeCode}' already exists`

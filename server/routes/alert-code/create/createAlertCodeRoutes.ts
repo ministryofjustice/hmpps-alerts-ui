@@ -57,7 +57,7 @@ export default class CreateAlertCodeRoutes {
     return res.render('pages/createAlertCode/confirmation', { alertCode, alertDescription, alertCodeParentType })
   }
 
-  public submitConfirmation: RequestHandler = async (req, res): Promise<void> => {
+  public submitConfirmation: RequestHandler = async (_req, res): Promise<void> => {
     return res.redirect('/alert-code/success')
   }
 
@@ -65,9 +65,9 @@ export default class CreateAlertCodeRoutes {
     const { alertCode, alertDescription, alertCodeParentType } = req.session
     this.alertsApiClient
       .createAlertCode(req.middleware.clientToken, {
-        code: alertCode,
-        description: alertDescription,
-        parent: alertCodeParentType,
+        code: alertCode!,
+        description: alertDescription!,
+        parent: alertCodeParentType!,
       })
       .then(response => {
         return res.render('pages/createAlertCode/success', {

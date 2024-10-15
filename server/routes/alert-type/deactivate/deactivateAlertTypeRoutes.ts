@@ -57,7 +57,7 @@ export default class DeactivateAlertTypeRoutes {
   public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
     const { deactivateAlertType } = req.session
     this.alertsApiClient
-      .deactivateAlertType(req.middleware.clientToken, deactivateAlertType)
+      .deactivateAlertType(req.middleware.clientToken, deactivateAlertType!)
       .then(response => {
         return res.render('pages/deactivateAlertType/success', {
           deactivateAlertType,

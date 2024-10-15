@@ -20,7 +20,7 @@ export default function routes({ auditService }: Services): Router {
     req.session.alertDescription = ''
   }
 
-  get('/', async (req, res, next) => {
+  get('/', async (req, res) => {
     // sample function call for the new AuditService. disabled by default.
     await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
 
@@ -28,7 +28,7 @@ export default function routes({ auditService }: Services): Router {
     resetSessionData(req)
     res.render('pages/index', { roles })
   })
-  get('/error-page', (req, res, next) => {
+  get('/error-page', (req, res) => {
     const { errorMessage } = req.session
     res.render('pages/errorPage', { errorMessage })
   })

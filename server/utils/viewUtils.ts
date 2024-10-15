@@ -2,10 +2,12 @@ interface SelectOption {
   text: string
   value: string | number
   selected?: boolean
-  attributes?: {
-    hidden?: 'hidden'
-    disabled?: 'disabled'
-  }
+  attributes?:
+    | {
+        hidden?: 'hidden'
+        disabled?: 'disabled'
+      }
+    | undefined
 }
 
 export const addDefaultSelectedValue = (

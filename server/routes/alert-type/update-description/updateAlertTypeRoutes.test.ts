@@ -40,8 +40,7 @@ const alertTypes = [
 describe('updateAlertType', () => {
   it('GET /alert-type/update-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -57,8 +56,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -73,8 +71,7 @@ describe('updateAlertType', () => {
   })
   it('GET /alert-type/update-description/submit-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -90,8 +87,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description/submit-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -107,8 +103,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description/submit-description should render both error if no description entered', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -125,8 +120,7 @@ describe('updateAlertType', () => {
   })
   it('GET /alert-type/update-description/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
       req.session.alertTypeDescription = 'New Description'
     }
@@ -143,8 +137,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description/confirmation should redirect if "yes" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -160,8 +153,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description/confirmation should redirect if "no" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -177,8 +169,7 @@ describe('updateAlertType', () => {
   })
   it('POST /alert-type/update-description/confirmation should render error if no confirmation selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -195,8 +186,7 @@ describe('updateAlertType', () => {
   })
   it('GET /alert-type/update-description/success should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
       req.session.alertTypeDescription = 'New Description'
     }
@@ -214,8 +204,7 @@ describe('updateAlertType', () => {
 
   it('GET /alert-type/update-description/success should redirect to error page if API fails', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.updateAlertTypeCode = 'VI'
       req.session.alertTypeDescription = 'New Description'
     }

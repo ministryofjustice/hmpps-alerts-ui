@@ -39,7 +39,7 @@ export default class UpdateAlertTypeRoutes {
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
     const alertType = await this.getAlertTypeDetails(req)
-    const { code, description } = alertType
+    const { code, description } = alertType!
     return res.render('pages/updateAlertType/submitDescription', { code, description })
   }
 
@@ -47,7 +47,7 @@ export default class UpdateAlertTypeRoutes {
     const { descriptionEntry } = req.body
     const validationMessages = this.validationMessages(req)
     if (validationMessages.alertTypeDescriptionErrorMessage) {
-      const { code } = await this.getAlertTypeDetails(req)
+      const { code } = (await this.getAlertTypeDetails(req))!
       return res.render('pages/updateAlertType/submitDescription', {
         ...validationMessages,
         code,
@@ -100,7 +100,7 @@ export default class UpdateAlertTypeRoutes {
     const { updateAlertTypeCode, alertTypeDescription } = req.session
 
     return this.alertsApiClient
-      .updateAlertType(req.middleware.clientToken, updateAlertTypeCode, { description: alertTypeDescription })
+      .updateAlertType(req.middleware.clientToken, updateAlertTypeCode!, { description: alertTypeDescription! })
       .then(alertType => {
         return res.render('pages/updateAlertType/success', {
           code: alertType.code,

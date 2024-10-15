@@ -32,11 +32,28 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
-      middleware?: { clientToken?: string }
+      middleware: { clientToken: string }
     }
 
     interface Locals {
       user: HmppsUser
+      validationErrors?: fieldErrors
+      digitalPrisonServicesUrl: string
+      breadcrumbs: Breadcrumbs
+      prisoner?: PrisonerSummary
+      formResponses?: { [key: string]: string }
+      appInsightsConnectionString?: string
+      appInsightsApplicationName?: string
+      buildNumber?: string
+      asset_path: string
+      applicationName: string
+      environmentName: string
+      environmentNameColour: string
+      csrfToken: string
+      cspNonce: string
+      message: string
+      stack: string | undefined | null
+      status: number
     }
   }
 }

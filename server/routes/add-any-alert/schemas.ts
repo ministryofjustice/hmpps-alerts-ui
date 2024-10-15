@@ -9,6 +9,7 @@ import {
 } from '../../middleware/validationMiddleware'
 import AlertsApiClient from '../../data/alertsApiClient'
 import PrisonerSearchApiClient from '../../data/prisonerSearchApiClient'
+import { firstNameSpaceLastName } from '../../utils/miniProfileUtils'
 
 export const schemaFactory =
   (alertsApiClient: AlertsApiClient, prisonerSearchApiClient: PrisonerSearchApiClient) => async (req: Request) => {
@@ -73,7 +74,7 @@ export const schemaFactory =
         if (existingActiveAlerts.totalElements) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'The prisoner already has this active alert',
+            message: `${firstNameSpaceLastName(val.prisonNumber)} already has the ‘${val.alertCode.description}’ alert active`,
             path: ['alertCode'],
           })
         }

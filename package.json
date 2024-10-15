@@ -14,7 +14,7 @@
     "start-feature:dev": "concurrently -k -p \"[{name}]\" -n \"ESBuild,Node\" -c \"yellow.bold,cyan.bold\" \"node esbuild/esbuild.config.js  --build --watch \" \"node esbuild/esbuild.config.js --dev-test-server\"",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --cache --max-warnings 0 --fix",
-    "typecheck": "tsc && tsc -p integration_tests",
+    "typecheck": "tsc && tsc -p integration_tests && tsc -p server/routes",
     "test": "jest",
     "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
@@ -41,7 +41,7 @@
       "server/**/*.{ts,js,jsx,mjs}"
     ],
     "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
+      "<rootDir>/(server|job)/**/?(*.)(test).{ts,js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "reporters": [
@@ -110,6 +110,7 @@
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.1",
+    "@testing-library/cypress": "^10.0.2",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",

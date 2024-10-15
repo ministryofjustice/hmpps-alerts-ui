@@ -57,7 +57,7 @@ export default class ReactivateAlertTypeRoutes {
   public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
     const { reactivateAlertType } = req.session
     this.alertsApiClient
-      .reactivateAlertType(req.middleware.clientToken, reactivateAlertType)
+      .reactivateAlertType(req.middleware.clientToken, reactivateAlertType!)
       .then(response => {
         return res.render('pages/reactivateAlertType/success', {
           reactivateAlertType,

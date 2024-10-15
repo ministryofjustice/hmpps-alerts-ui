@@ -14,7 +14,7 @@
     "start-feature:dev": "concurrently -k -p \"[{name}]\" -n \"ESBuild,Node\" -c \"yellow.bold,cyan.bold\" \"node esbuild/esbuild.config.js  --build --watch \" \"node esbuild/esbuild.config.js --dev-test-server\"",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --cache --max-warnings 0 --fix",
-    "typecheck": "tsc && tsc -p integration_tests",
+    "typecheck": "tsc",
     "test": "jest",
     "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
@@ -28,22 +28,15 @@
     "npm": "^10"
   },
   "jest": {
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "isolatedModules": true
-        }
-      ]
-    },
     "collectCoverage": true,
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}"
     ],
-    "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
+    "coverageDirectory": "test_results/jest/",
+    "coverageReporters": [
+      "json",
+      "lcov"
     ],
-    "testEnvironment": "node",
     "reporters": [
       "default",
       [
@@ -59,12 +52,8 @@
         }
       ]
     ],
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "node",
-      "ts"
+    "projects": [
+      "./server"
     ]
   },
   "lint-staged": {
@@ -110,6 +99,8 @@
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.1",
+    "@testing-library/cypress": "^10.0.2",
+    "@testing-library/jest-dom": "^6.5.0",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.7.5",
@@ -130,6 +121,7 @@
     "@typescript-eslint/parser": "^8.8.1",
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.0.2",
+    "chai": "^5.1.1",
     "chokidar": "^3.6.0",
     "concurrently": "^9.0.1",
     "cypress": "^13.15.0",

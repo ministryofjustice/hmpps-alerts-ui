@@ -15,8 +15,20 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "typeRoots": ["./server/@types", "./node_modules/@types"]
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "inlineSources": true,
+    "lib": ["dom", "es2015.promise", "DOM.Iterable", "ESNext"],
+    "types": ["jest"],
+    "sourceRoot": "/"
   },
+  "include": ["**/*.js", "**/*.ts"],
   "exclude": [
     "node_modules",
     "assets/**/*.js",
@@ -24,7 +36,7 @@
     "dist",
     "cypress.config.ts",
     "esbuild",
-    "coverage"
-  ],
-  "include": ["**/*.js", "**/*.ts"]
+    "coverage",
+    "**/*.cy.ts"
+  ]
 }

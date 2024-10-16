@@ -40,8 +40,7 @@ const alertTypes = [
 describe('deactivateAlertCode', () => {
   it('GET /alert-code/deactivate should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -59,8 +58,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -75,8 +73,7 @@ describe('deactivateAlertCode', () => {
   })
   it('GET /alert-code/deactivate/alert-code should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -92,8 +89,7 @@ describe('deactivateAlertCode', () => {
   })
   it('GET /alert-code/deactivate/alert-code no codes should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'AA'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -107,8 +103,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/alert-code should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -123,8 +118,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/alert-code no alert code shows error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -141,8 +135,7 @@ describe('deactivateAlertCode', () => {
   })
   it('GET /alert-code/deactivate/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -157,8 +150,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/confirmation with nothing selected should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -176,8 +168,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/confirmation with confirmation as an empty string should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -195,8 +186,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/confirmation with confirmation as "no" should redirect to the home page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -212,8 +202,7 @@ describe('deactivateAlertCode', () => {
   })
   it('POST /alert-code/deactivate/confirmation with confirmation as "yes" should redirect to the success page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -229,8 +218,7 @@ describe('deactivateAlertCode', () => {
   })
   it('GET /alert-code/deactivate/success should render`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }
@@ -246,8 +234,7 @@ describe('deactivateAlertCode', () => {
   })
   it('GET /alert-code/deactivate/success should redirect if error`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.deactivateAlertTypeCode = 'VI'
       req.session.deactivateAlertCode = 'AA'
     }

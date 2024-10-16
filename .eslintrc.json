@@ -99,6 +99,7 @@
         "semi": false
       }
     ],
-    "no-empty-function": ["error", { "allow": ["constructors", "arrowFunctions"] }]
+    "no-empty-function": ["error", { "allow": ["constructors", "arrowFunctions"] }],
+    "dot-notation": 0
   }
 }

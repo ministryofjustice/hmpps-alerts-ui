@@ -40,8 +40,7 @@ const alertTypes = [
 describe('updateAlertCode', () => {
   it('GET /alert-code/update-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -59,8 +58,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -75,8 +73,7 @@ describe('updateAlertCode', () => {
   })
   it('GET /alert-code/update-description/alert-code should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -92,8 +89,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/alert-code should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
@@ -109,8 +105,7 @@ describe('updateAlertCode', () => {
   })
   it('GET /alert-code/update-description/submit-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
     }
@@ -127,8 +122,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/submit-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
     }
@@ -144,8 +138,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/submit-description should render error if no description entered', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
     }
@@ -163,8 +156,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/submit-description should render error if too long a description entered', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
     }
@@ -182,8 +174,7 @@ describe('updateAlertCode', () => {
   })
   it('GET /alert-code/update-description/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
@@ -200,8 +191,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/confirmation should redirect if "yes" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
@@ -218,8 +208,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/confirmation should redirect if "no" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
@@ -236,8 +225,7 @@ describe('updateAlertCode', () => {
   })
   it('POST /alert-code/update-description/confirmation should render error if no confirmation selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
@@ -255,8 +243,7 @@ describe('updateAlertCode', () => {
   })
   it('GET /alert-code/update-description/success should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'
@@ -274,8 +261,7 @@ describe('updateAlertCode', () => {
   })
   it('GET /alert-code/update-description/success should redirect to error page if API fails', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
       req.session.alertCodeParentType = 'VI'
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'New Description'

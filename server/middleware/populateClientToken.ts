@@ -6,14 +6,14 @@ export default function populateClientToken(): RequestHandler {
   const { hmppsAuthClient } = dataAccess()
 
   return async (req, res, next) => {
-    if (!req.middleware) {
-      req.middleware = { ...req.middleware }
-    }
     try {
       if (res.locals.user) {
         const clientToken = await hmppsAuthClient.getSystemClientToken(res.locals.user.username)
         if (clientToken) {
-          req.middleware.clientToken = clientToken
+          req.middleware = {
+            ...(req.middleware ?? {}),
+            clientToken,
+          }
         } else {
           logger.info('No client token available')
         }

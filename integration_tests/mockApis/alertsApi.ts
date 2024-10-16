@@ -40,7 +40,7 @@ const stubGetAlertTypes = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/alerts-api/alert-types',
+      urlPattern: '/alerts-api/alert-types.*',
     },
     response: {
       status: 200,
@@ -50,12 +50,12 @@ const stubGetAlertTypes = () => {
       jsonBody: [
         {
           code: 'DB',
-          description: 'A description',
+          description: 'DB description',
           isActive: true,
           alertCodes: [
             {
               code: 'AA',
-              description: 'A description',
+              description: 'AA description',
               isActive: true,
             },
           ],
@@ -64,6 +64,7 @@ const stubGetAlertTypes = () => {
           code: 'AA',
           description: 'A description',
           isActive: true,
+          alertCodes: [],
         },
       ],
     },
@@ -250,6 +251,60 @@ const stubUpdateAlertCode = () => {
   })
 }
 
+const stubCreateAlert = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts',
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        code: 'AA',
+      },
+    },
+  })
+}
+
+const stubGetPrisonerAlertsNotFound = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts.*',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        totalElements: 0,
+      },
+    },
+  })
+}
+
+const stubGetPrisonerAlertsFound = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts.*',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        totalElements: 1,
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
@@ -262,4 +317,7 @@ export default {
   stubReactivateAlertType,
   stubUpdateAlertType,
   stubUpdateAlertCode,
+  stubCreateAlert,
+  stubGetPrisonerAlertsNotFound,
+  stubGetPrisonerAlertsFound,
 }

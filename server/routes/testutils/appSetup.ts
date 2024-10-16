@@ -15,6 +15,7 @@ import SessionSetup from './sessionSetup'
 import logger from '../../../logger'
 import config from '../../config'
 import populateValidationErrors from '../../middleware/populateValidationErrors'
+import { HmppsAuditClient } from '../../data'
 
 jest.mock('../../services/auditService')
 
@@ -46,12 +47,13 @@ function appSetup(
   app.use((req, res, next) => {
     req.user = userSupplier() as Express.User
     res.locals = {
+      ...res.locals,
       user: { ...req.user } as HmppsUser,
     }
     sessionSetup.sessionDoctor(req)
     next()
   })
-  app.use((req, res, next) => {
+  app.use((req, _res, next) => {
     req.id = uuidv4()
     next()
   })
@@ -68,7 +70,7 @@ function appSetup(
     }),
   )
   app.use(routes(services))
-  app.use((req, res, next) => next(new NotFound()))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
   return app
@@ -77,7 +79,7 @@ function appSetup(
 export function appWithAllRoutes({
   production = false,
   services = {
-    auditService: new AuditService(null) as jest.Mocked<AuditService>,
+    auditService: new AuditService(null as unknown as HmppsAuditClient) as jest.Mocked<AuditService>,
   },
   userSupplier = () => user,
   sessionSetup = new SessionSetup(),

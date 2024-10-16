@@ -27,8 +27,7 @@ const alertTypes = [{ code: 'VI', description: 'Victim', isActive: true } as Ale
 describe('createAlertCodeRoutes', () => {
   it('GET /alert-code/create should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -43,8 +42,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/create should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -56,8 +54,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/create should render with error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
@@ -213,8 +210,7 @@ describe('createAlertCodeRoutes', () => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     return request(app)
       .get('/alert-code/success')
@@ -230,8 +226,7 @@ describe('createAlertCodeRoutes', () => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     return request(app).get('/alert-code/success').expect(302).expect('Location', '/error-page')
   })
@@ -241,8 +236,7 @@ describe('createAlertCodeRoutes', () => {
       req.session.alertCode = 'AA'
       req.session.alertDescription = 'A description'
       req.session.alertCodeParentType = 'BB'
-      req.middleware = {}
-      req.middleware.clientToken = '123'
+      req.middleware = { clientToken: '123' }
     }
     return request(app)
       .get('/alert-code/success')

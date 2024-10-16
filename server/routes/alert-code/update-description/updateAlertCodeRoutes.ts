@@ -40,7 +40,7 @@ export default class UpdateAlertCodeRoutes {
   public loadSelectAlertCode: RequestHandler = async (req, res): Promise<void> => {
     const { alertType, codes } = await this.getAlertCode(req)
     if (!codes?.length) {
-      req.session.errorMessage = `There are no codes associated with alert type ${alertType.code}`
+      req.session.errorMessage = `There are no codes associated with alert type ${alertType!.code}`
       return res.redirect('/error-page')
     }
     return res.render('pages/updateAlertCode/alertCode', { alertType, codes })
@@ -58,7 +58,7 @@ export default class UpdateAlertCodeRoutes {
   }
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
-    const { code, description } = await this.getAlertCodeDetails(req)
+    const { code, description } = (await this.getAlertCodeDetails(req))!
     return res.render('pages/updateAlertCode/submitDescription', { code, description })
   }
 
@@ -66,7 +66,7 @@ export default class UpdateAlertCodeRoutes {
     const { descriptionEntry } = req.body
     const validationMessages = this.validationMessages(req)
     if (validationMessages.alertCodeDescriptionErrorMessage) {
-      const { code } = await this.getAlertCodeDetails(req)
+      const { code } = (await this.getAlertCodeDetails(req))!
       return res.render('pages/updateAlertCode/submitDescription', {
         ...validationMessages,
         code,
@@ -118,7 +118,7 @@ export default class UpdateAlertCodeRoutes {
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
     const { alertCode, alertDescription } = req.session
     return this.alertsApiClient
-      .updateAlertCode(req.middleware.clientToken, alertCode, { description: alertDescription })
+      .updateAlertCode(req.middleware.clientToken, alertCode!, { description: alertDescription! })
       .then(ac => {
         return res.render('pages/updateAlertCode/success', {
           code: ac.code,

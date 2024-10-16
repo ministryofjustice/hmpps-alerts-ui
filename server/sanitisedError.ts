@@ -5,7 +5,7 @@ export interface SanitisedError extends Error {
   status?: number
   headers?: unknown
   data?: unknown
-  stack: string
+  stack?: string
   message: string
 }
 
@@ -14,7 +14,9 @@ export type UnsanitisedError = ResponseError
 export default function sanitise(error: UnsanitisedError): SanitisedError {
   const e = new Error() as SanitisedError
   e.message = error.message
-  e.stack = error.stack
+  if (error.stack) {
+    e.stack = error.stack
+  }
   if (error.response) {
     e.text = error.response.text
     e.status = error.response.status

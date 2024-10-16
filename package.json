@@ -117,6 +117,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@jgoz/esbuild-plugin-typecheck": "^4.0.1",
     "@testing-library/cypress": "^10.0.2",
     "@types/bunyan": "^1.8.11",

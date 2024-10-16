@@ -6,15 +6,14 @@ orbs:
   codecov: codecov/codecov@3 # v4 doesnt upload coverage, complaining about a lack of token
 
 parameters:
-  alerts-slack-channel:
+  team-slack-channel-prod:
     type: string
-    # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
-    # This is to avoid a general alert dumping ground that no-one then monitors
-    default: move-and-improve-alerts-non-prod
+    # Slack channel to notify the development team about production issues or events
+    default: move-and-improve-alerts
 
-  releases-slack-channel:
+  team-slack-channel-non-prod:
     type: string
-    # Normally dps-releases for most teams / projects
+    # Slack channel to notify the development team about non-production issues or events
     default: move-and-improve-alerts-non-prod
 
   node-version:
@@ -70,13 +69,17 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
-      - codecov/upload
+      - persist_to_workspace:
+          root: .
+          paths: test_results
 
-  integration_test:
+  integration_tests:
     executor:
       name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
       redis_tag: "6.2"
+    parallelism: 2
+    resource_class: large
     steps:
       - checkout
       - attach_workspace:
@@ -101,14 +104,15 @@ jobs:
           name: Wait for node app to start
           command: sleep 5
       - run:
-          name: integration tests
-          command: npm run int-test
+          name: Integration tests
+          command: circleci tests glob "**/*.cy.ts" | circleci tests run --command="xargs npx cypress run --reporter cypress-circleci-reporter --spec" --verbose --split-by=timings
       - store_test_results:
           path: test_results
       - store_artifacts:
           path: integration_tests/videos
       - store_artifacts:
           path: integration_tests/screenshots
+      - codecov/upload
 
 workflows:
   version: 2
@@ -121,9 +125,10 @@ workflows:
       - unit_test:
           requires:
             - build
-      - integration_test:
+      - integration_tests:
           requires:
             - build
+            - unit_test
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -145,8 +150,7 @@ workflows:
                 - main
           requires:
             - helm_lint
-            - unit_test
-            - integration_test
+            - integration_tests
             - build_docker
           helm_timeout: 5m
       - request-preprod-approval:
@@ -160,6 +164,8 @@ workflows:
           jira_env_type: staging
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
+          slack_notification: true
+          slack_channel_name: << pipeline.parameters.team-slack-channel-non-prod >>
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-preprod
@@ -178,7 +184,7 @@ workflows:
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
           slack_notification: true
-          slack_channel_name: move-and-improve-alerts
+          slack_channel_name: << pipeline.parameters.team-slack-channel-prod >>
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-prod
@@ -196,16 +202,16 @@ workflows:
                 - main
     jobs:
       - hmpps/npm_security_audit:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.team-slack-channel-non-prod >>
           node_tag: << pipeline.parameters.node-version >>
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.team-slack-channel-non-prod >>
           context:
             - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.team-slack-channel-non-prod >>
           context:
             - veracode-credentials
             - hmpps-common-vars
@@ -219,7 +225,7 @@ workflows:
                 - main
     jobs:
       - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          slack_channel: << pipeline.parameters.team-slack-channel-non-prod >>
           context:
             - veracode-credentials
             - hmpps-common-vars

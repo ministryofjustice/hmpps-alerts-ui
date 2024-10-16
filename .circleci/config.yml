@@ -150,7 +150,7 @@ workflows:
                 - main
           requires:
             - helm_lint
-            - integration_test
+            - integration_tests
             - build_docker
           helm_timeout: 5m
       - request-preprod-approval:

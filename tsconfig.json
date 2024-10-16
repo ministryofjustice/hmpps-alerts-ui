@@ -37,6 +37,8 @@
     "cypress.config.ts",
     "esbuild",
     "coverage",
-    "**/*.cy.ts"
+    "**/*.cy.ts",
+    "test_results",
+    "codecov_reports"
   ]
 }

@@ -74,7 +74,7 @@ export default class AlertsApiClient {
 
   createAlert(token: string, requestBody: CreateAlertRequest) {
     return AlertsApiClient.restClient(token).post({
-      path: `/prisoners/${requestBody.prisonNumber}/alerts`,
+      path: `/prisoners/${requestBody.prisonNumber}/alerts?allowInactiveCode=true`,
       data: requestBody,
     })
   }

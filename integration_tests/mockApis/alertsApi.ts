@@ -255,7 +255,7 @@ const stubCreateAlert = () => {
   return stubFor({
     request: {
       method: 'POST',
-      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts',
+      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts?allowInactiveCode=true',
     },
     response: {
       status: 201,

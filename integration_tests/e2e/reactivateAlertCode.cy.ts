@@ -1,10 +1,10 @@
-import IndexPage from '../pages'
 import Page from '../pages/page'
 import SelectAlertCodePage from '../pages/selectAlertCodePage'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AlertCodeReactivationConfirmationPage from '../pages/alertCodeReactivationConfirmationPage'
 import ReactivateAlertCodeSuccessPage from '../pages/reactivateAlertCodeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Reactivate an alert code', () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ context('Reactivate an alert code', () => {
 
   it('Deactivate an existing alert code - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().reactivateAlertCodeLink().click()
+    ReferenceDataHomepage.goTo().reactivateAlertCodeLink().click()
     const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertType)
     selectAlertTypePage.selectCode().click()
     selectAlertTypePage.continue().click()

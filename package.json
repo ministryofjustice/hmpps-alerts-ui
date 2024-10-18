@@ -70,6 +70,15 @@
       "json",
       "node",
       "ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      ".*.test.ts",
+      "node_modules",
+      "server/@types",
+      ".*jest.config.js",
+      "server/app.ts",
+      "server/index.ts",
+      ".*.cy.ts"
     ]
   },
   "lint-staged": {

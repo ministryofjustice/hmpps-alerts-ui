@@ -1,9 +1,9 @@
-import IndexPage from '../pages'
 import AddAnAlertType from '../pages/addAnAlertType'
 import Page from '../pages/page'
 import AddAnAlertTypeConfirmationPage from '../pages/addAnAlertTypeConfirmationPage'
 import AlertTypeSuccessPage from '../pages/alertTypeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Create an alert type', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ context('Create an alert type', () => {
 
   it('Create a new alert type - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().createAlertTypeLink().click()
+    ReferenceDataHomepage.goTo().createAlertTypeLink().click()
     const addAlertPage = Page.verifyOnPage(AddAnAlertType)
     addAlertPage.codeInput().type('ABC')
     addAlertPage.descriptionInput().type('This is a description')

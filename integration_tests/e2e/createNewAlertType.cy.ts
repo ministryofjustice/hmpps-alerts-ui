@@ -1,4 +1,3 @@
-import IndexPage from '../pages'
 import AddAnAlertType from '../pages/addAnAlertType'
 import Page from '../pages/page'
 import AddAnAlertTypeConfirmationPage from '../pages/addAnAlertTypeConfirmationPage'

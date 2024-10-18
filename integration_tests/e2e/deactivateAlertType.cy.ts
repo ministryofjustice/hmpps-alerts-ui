@@ -1,4 +1,3 @@
-import IndexPage from '../pages'
 import Page from '../pages/page'
 import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeForAlertCodeDeactivation'
 import AlertTypeDeactivationConfirmationPage from '../pages/alertTypeDeactivationConfirmationPage'

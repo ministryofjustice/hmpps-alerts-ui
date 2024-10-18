@@ -4,6 +4,7 @@ import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeF
 import AlertTypeDeactivationConfirmationPage from '../pages/alertTypeDeactivationConfirmationPage'
 import DeactivateAlertTypeSuccessPage from '../pages/deactivateAlertTypeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Deactivate an alert type', () => {
   beforeEach(() => {
@@ -15,7 +16,7 @@ context('Deactivate an alert type', () => {
 
   it('Deactivate an existing alert type - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().deactivateAlertTypeLink().click()
+    ReferenceDataHomepage.goTo().deactivateAlertTypeLink().click()
     const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertTypeForAlertCodeDeactivation)
     selectAlertTypePage.selectCode().click()
     selectAlertTypePage.continue().click()

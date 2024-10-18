@@ -1,10 +1,10 @@
-import IndexPage from '../pages'
 import Page from '../pages/page'
 import AddAnAlertCode from '../pages/addAnAlertCode'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AddAnAlertCodeConfirmationPage from '../pages/addAnAlertCodeConfirmationPage'
 import AlertCodeSuccessPage from '../pages/alertCodeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Create an alert code', () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ context('Create an alert code', () => {
 
   it('Create a new alert code - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().createAlertCodeLink().click()
+    ReferenceDataHomepage.goTo().createAlertCodeLink().click()
     const selectAlertType = Page.verifyOnPage(SelectAnAlertType)
     selectAlertType.selectCode().check({ force: true })
     selectAlertType.selectCode().should('be.checked')

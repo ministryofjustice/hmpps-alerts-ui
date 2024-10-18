@@ -1,9 +1,9 @@
-import IndexPage from '../pages'
 import Page from '../pages/page'
 import SelectAnAlertType from '../pages/selectAnAlertType'
 import AlertTypeReactivationConfirmationPage from '../pages/alertTypeReactivationConfirmationPage'
 import ReactivateAlertTypeSuccessPage from '../pages/reactivateAlertTypeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Reactivate an alert type', () => {
   beforeEach(() => {
@@ -15,7 +15,7 @@ context('Reactivate an alert type', () => {
 
   it('Reactivate a reactivated alert type - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().reactivateAlertTypeLink().click()
+    ReferenceDataHomepage.goTo().reactivateAlertTypeLink().click()
     const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertType)
     selectAlertTypePage.selectCode().click()
     selectAlertTypePage.continue().click()

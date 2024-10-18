@@ -5,6 +5,7 @@ import EnterDescriptionForUpdateAlertType from '../pages/enterDescriptionForUpda
 import UpdateAlertTypeDescriptionConfirmationPage from '../pages/updateAlertTypeDescriptionConfirmationPage'
 import UpdateAlertTypeDescriptionSuccessPage from '../pages/updateAlertTypeDescriptionSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Update alert type description', () => {
   beforeEach(() => {
@@ -16,7 +17,7 @@ context('Update alert type description', () => {
 
   it('Update description of an alert type - happy path', () => {
     cy.signIn()
-    IndexPage.goTo().updateAlertTypeLink().click()
+    ReferenceDataHomepage.goTo().updateAlertTypeLink().click()
     const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertType)
     selectAlertTypePage.selectCode().click()
     selectAlertTypePage.continue().click()

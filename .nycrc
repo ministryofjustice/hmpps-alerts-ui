@@ -11,7 +11,7 @@
     "**/*.d.ts",
     "test{,s}/**",
     "test{,-*}.{js,cjs,mjs,ts,tsx,jsx}",
-    "*.cy.ts",
+    "**/*.cy.ts",
     "**/*{.,-}test.{js,cjs,mjs,ts,tsx,jsx}",
     "**/__tests__/**",
     "**/{ava,babel,nyc}.config.{js,cjs,mjs}",

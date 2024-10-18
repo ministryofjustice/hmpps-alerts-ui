@@ -1,7 +1,16 @@
 .govuk-main-wrapper {
-  min-height: 600px;
+  min-height: 500px;
 }
 
 .govuk-panel-confirmation-error {
   background: darkred;
+}
+
+.homepage-content {
+  padding: 50px 0;
+  background: #f0f4f5;
+  min-height: 500px;
+  position: absolute;
+  left: 0;
+  width: 100vw;
 }

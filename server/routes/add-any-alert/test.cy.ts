@@ -1,7 +1,7 @@
 import AuthorisedRoles from '../../authentication/authorisedRoles'
 import { todayStringGBFormat } from '../../utils/datetimeUtils'
 
-context('Deactivate an alert type', () => {
+context('test /add-any-alert screen', () => {
   const getContinueButton = () => cy.findByRole('button', { name: /Add alert/ })
   const getPrisonNumberInput = () => cy.findByRole('textbox', { name: 'Enter prison number' })
   const getAlertTypeInput = () => cy.findByRole('combobox', { name: /Type of alert/ })

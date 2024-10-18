@@ -1,0 +1,69 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Prisoner Alerts" %}
+{% set mainClasses = "govuk-!-padding-top-6" %}
+
+{% set backUrl = digitalPrisonServicesUrl %}
+{% set backLinkLabel = 'Digital Prison Services' %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">
+    Manage prisoner alerts
+  </h1>
+
+  <div class="homepage-content">
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="card-group govuk-grid-row">
+
+            {% if false and roles and roles.includes('BULK_ALERTS') %}
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/prison-bulk-alerts">Manage alerts in bulk for your prison</a>
+                  </h2>
+                  <p class="govuk-body card__description">Add and update alerts for anyone resident in your prison.</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if false and roles and roles.includes('MANAGE_SECURE_ALERTS') %}
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/bulk-alerts">Manage alerts in bulk for the prison estate</a>
+                  </h2>
+                  <p class="govuk-body card__description">Add and update alerts for all individuals in the prison estate, including those currently in the community.</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if roles and roles.includes('MANAGE_SECURE_ALERTS') %}
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/add-any-alert">Add alert for prison number</a>
+                  </h2>
+                  <p class="govuk-body card__description">Add any alert, including those made inactive, for any prison number in the database.</p>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if roles and roles.includes('ALERTS_REFERENCE_DATA_MANAGER') %}
+              <div class="govuk-grid-column-one-third card-group__item">
+                <div class="card card--clickable">
+                  <h2 class="govuk-heading-m card__heading">
+                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/manage-reference-data">Maintain alerts reference data</a>
+                  </h2>
+                  <p class="govuk-body card__description">Edit alerts and alert types and make different alerts active and inactive.</p>
+                </div>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

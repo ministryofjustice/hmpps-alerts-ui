@@ -14,7 +14,7 @@ export default function AddAnyAlertRoutes(
   const { router, get, post } = BaseRouter()
   const controller = new AddAnyAlertController(alertsApiClient)
 
-  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS], false))
+  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS], false))
 
   get('/', controller.GET)
   post(

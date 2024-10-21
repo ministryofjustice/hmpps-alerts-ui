@@ -50,7 +50,7 @@ context('test /manage-reference-data screen', () => {
 
   it('shows unauthorised message if user does not have the required role', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     navigateToTestPage()
     cy.findByText('You are not authorised to use this application.').should('be.visible')

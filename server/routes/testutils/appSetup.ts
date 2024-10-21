@@ -28,7 +28,7 @@ export const user: HmppsUser = {
   displayName: 'First Last',
   authSource: 'nomis',
   staffId: 1234,
-  userRoles: ['ROLE_ALERTS_REFERENCE_DATA_MANAGER', 'ROLE_MANAGE_SECURE_ALERTS'],
+  userRoles: ['ROLE_ALERTS_REFERENCE_DATA_MANAGER', 'ROLE_BULK_PRISON_ESTATE_ALERTS'],
 }
 
 function appSetup(

@@ -17,7 +17,7 @@ context('test /add-any-alert screen', () => {
 
   it('create an alert - happy path', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
 
     cy.task('stubGetPrisoner')
@@ -41,7 +41,7 @@ context('test /add-any-alert screen', () => {
     cy.findByText('You’ve created a ‘AA description’ alert for Testname User').should('be.visible')
   })
 
-  it('shows unauthorised message if user does not have MANAGE_SECURE_ALERTS role', () => {
+  it('shows unauthorised message if user does not have BULK_PRISON_ESTATE_ALERTS role', () => {
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
@@ -53,7 +53,7 @@ context('test /add-any-alert screen', () => {
 
   it('shows validation errors', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
 
     navigateToTestPage()
@@ -99,7 +99,7 @@ context('test /add-any-alert screen', () => {
 
   it('shows error if no prisoner found for prison number', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetPrisoner500')
 
@@ -117,7 +117,7 @@ context('test /add-any-alert screen', () => {
 
   it('shows error if prisoner has an active alert of the same code', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetPrisoner')
     cy.task('stubGetPrisonerAlertsFound')

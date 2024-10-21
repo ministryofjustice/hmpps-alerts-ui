@@ -7,7 +7,7 @@ context('test / homepage', () => {
 
   it('shows all tiles when user has all required roles', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS, AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS, AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
     navigateToTestPage()
 
@@ -38,9 +38,9 @@ context('test / homepage', () => {
       .and('to.match', /\/manage-reference-data$/)
   })
 
-  it('shows only add alert tile if user only has ROLE_MANAGE_SECURE_ALERTS', () => {
+  it('shows only add alert tile if user only has ROLE_BULK_PRISON_ESTATE_ALERTS', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_MANAGE_SECURE_ALERTS],
+      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     navigateToTestPage()
 

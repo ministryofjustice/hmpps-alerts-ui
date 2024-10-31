@@ -1,11 +1,13 @@
 import {
+  Contracts,
   defaultClient,
   DistributedTracingModes,
   getCorrelationContext,
   setup,
   TelemetryClient,
 } from 'applicationinsights'
-import { RequestHandler } from 'express'
+import { Request, RequestHandler } from 'express'
+import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
 import type { ApplicationInfo } from '../applicationInfo'
 
 export function initialiseAppInsights(): void {
@@ -15,6 +17,26 @@ export function initialiseAppInsights(): void {
 
     setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
   }
+}
+
+function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) {
+  const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString['Request']
+  if (isRequest) {
+    const { username, activeCaseLoadId } =
+      (contextObjects?.['http.ServerRequest'] as Request | undefined)?.res?.locals?.user || {}
+    if (username && activeCaseLoadId) {
+      const properties = envelope.data.baseData?.['properties']
+      // eslint-disable-next-line no-param-reassign
+      envelope.data.baseData ??= {}
+      // eslint-disable-next-line no-param-reassign
+      envelope.data.baseData['properties'] = {
+        username,
+        activeCaseLoadId,
+        ...properties,
+      }
+    }
+  }
+  return true
 }
 
 export function buildAppInsightsClient(
@@ -35,6 +57,7 @@ export function buildAppInsightsClient(
       }
       return true
     })
+    defaultClient.addTelemetryProcessor(addUserDataToRequests)
 
     return defaultClient
   }

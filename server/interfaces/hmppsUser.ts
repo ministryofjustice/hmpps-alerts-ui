@@ -56,4 +56,15 @@ export interface AzureADUser extends BaseUser {
   authSource: 'azuread'
 }
 
-export type HmppsUser = PrisonUser | ProbationUser | ExternalUser | AzureADUser
+export type HmppsUser = (PrisonUser | ProbationUser | ExternalUser | AzureADUser) & {
+  caseloads: CaseLoad[] | undefined
+  activeCaseLoadId?: string | undefined
+}
+
+export interface CaseLoad {
+  caseLoadId: string
+  description: string
+  type: string
+  caseloadFunction: string
+  currentlyActive: boolean
+}

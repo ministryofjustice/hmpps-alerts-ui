@@ -1,4 +1,4 @@
-import { HmppsUser } from '../../interfaces/hmppsUser'
+import { CaseLoad, HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -54,6 +54,17 @@ export declare global {
       message: string
       stack: string | undefined | null
       status: number
+      feComponentsMeta?: {
+        activeCaseLoad: CaseLoad
+        caseLoads: CaseLoad[]
+        services: {
+          id: string
+          heading: string
+          description: string
+          href: string
+          navEnabled: boolean
+        }[]
+      }
     }
   }
 }

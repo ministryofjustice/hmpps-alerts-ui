@@ -24,6 +24,7 @@ import populateClientToken from './middleware/populateClientToken'
 import logger from '../logger'
 import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
+import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -62,6 +63,8 @@ export default function createApp(services: Services): express.Application {
       },
     }),
   )
+
+  app.use(checkPopulateUserCaseloads())
 
   app.use(routes(services))
 

@@ -1,0 +1,60 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Select alert - Manage alerts in bulk for the prison estate" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1>Select alert</h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post" novalidate="novalidate" autocomplete="off">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {{ govukSelect({
+                    id: "alertType",
+                    name: "alertType",
+                    label: {
+                        text: "Type of alert",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('alertType'),
+                    items: alertTypes | addDefaultSelectedValue('Choose alert type') | setSelected(alertType)
+                }) }}
+
+                {{ govukSelect({
+                    id: "alertCode",
+                    name: "alertCode",
+                    label: {
+                        text: "Alert",
+                        classes: "govuk-!-font-weight-bold"
+                    },
+                    errorMessage: validationErrors | findError('alertCode'),
+                    items: alertCodes | addDefaultSelectedValue('Choose alert code') | setSelected(alertCode)
+                }) }}
+
+                <div class="govuk-button-group govuk-!-display-none-print">
+                    {{ govukButton({
+                        text: "Continue",
+                        preventDoubleClick: true
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block additionalScripts %}
+    <script id="typeCodeMap" type="application/json">{{ typeCodeMap | dump | safe }}</script>
+    <script src="/assets/js/extra/alerts.js"></script>
+{% endblock %}

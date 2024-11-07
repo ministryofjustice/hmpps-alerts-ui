@@ -46,7 +46,11 @@ export default class BaseController {
     includeInactive?: boolean
   }) => {
     const types = await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, includeInactive)
-    const alertTypes = this.mapActiveSortedAlertTypes(types, undefined, includeInactive)
+    const alertTypes = this.mapActiveSortedAlertTypes(
+      types.filter(t => t.alertCodes.length),
+      undefined,
+      includeInactive,
+    )
 
     const typeCodeMap: { [key: string]: { value: string; text: string }[] } = types.reduce(
       (ts, t) => ({

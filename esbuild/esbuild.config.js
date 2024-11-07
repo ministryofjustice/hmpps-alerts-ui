@@ -68,17 +68,25 @@ const main = () => {
 
   if (args.includes('--dev-server')) {
     let serverProcess = null
-    chokidar.watch(['dist']).on('all', () => {
-      if (serverProcess) serverProcess.kill()
-      serverProcess = spawn('node', ['--env-file=.env', 'dist/server.js'], { stdio: 'inherit' })
-    })
+    chokidar
+      .watch(['dist'], {
+        ignored: ['**/*.cy.ts'],
+      })
+      .on('all', () => {
+        if (serverProcess) serverProcess.kill()
+        serverProcess = spawn('node', ['--env-file=.env', 'dist/server.js'], { stdio: 'inherit' })
+      })
   }
   if (args.includes('--dev-test-server')) {
     let serverProcess = null
-    chokidar.watch(['dist']).on('all', () => {
-      if (serverProcess) serverProcess.kill()
-      serverProcess = spawn('node', ['--env-file=feature.env', 'dist/server.js'], { stdio: 'inherit' })
-    })
+    chokidar
+      .watch(['dist'], {
+        ignored: ['**/*.cy.ts'],
+      })
+      .on('all', () => {
+        if (serverProcess) serverProcess.kill()
+        serverProcess = spawn('node', ['--env-file=feature.env', 'dist/server.js'], { stdio: 'inherit' })
+      })
   }
 
   if (args.includes('--watch')) {
@@ -90,7 +98,7 @@ const main = () => {
 
     // App
     chokidar
-      .watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts'] })
+      .watch(['server/**/*'], { ...chokidarOptions, ignored: ['**/*.test.ts', '**/*.cy.ts'] })
       .on('all', () => buildApp(buildConfig).catch(e => process.stderr.write(`${e}\n`)))
   }
 }

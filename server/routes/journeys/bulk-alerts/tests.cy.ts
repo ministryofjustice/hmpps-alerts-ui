@@ -51,7 +51,7 @@ context('test /bulk-alerts screen', () => {
   }
 
   const validatePageContents = () => {
-    cy.title().should('equal', 'Select alert - Manage alerts in bulk for the prison estate - DPS')
+    cy.title().should('equal', 'Select alert - Upload alerts in bulk - DPS')
     cy.findByRole('heading', { name: /Select alert/i }).should('be.visible')
     getContinueButton().should('be.visible')
     getAlertTypeInput().should('be.visible')

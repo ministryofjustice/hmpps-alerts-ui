@@ -1,4 +1,5 @@
 import { CaseLoad, HmppsUser } from '../../interfaces/hmppsUser'
+import { AlertCode, AlertType } from '../alerts/alertsApiTypes'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -17,8 +18,28 @@ export declare module 'express-session' {
     deactivateAlertType: string
     reactivateAlertType: string
     updateAlertTypeCode: string
+    journeyDataMap: JourneyDataMap
   }
 }
+
+type JourneyDataMap = {
+  [key: string]: JourneyData
+}
+
+export type JourneyData = {
+  instanceUnixEpoch: number
+  isCheckAnswers?: boolean
+  journeyCompleted?: boolean
+  bulkAlert?: BulkAlertJourney
+}
+
+type BulkAlertJourney = Partial<{
+  alertType: Omit<AlertType, 'alertCodes'>
+  alertCode: AlertCode
+  description: string
+  prisonNumbers: string[]
+  cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
+}>
 
 export declare global {
   namespace Express {
@@ -33,6 +54,7 @@ export declare global {
       id: string
       logout(done: (err: unknown) => void): void
       middleware: { clientToken: string }
+      journeyData: JourneyData
     }
 
     interface Locals {

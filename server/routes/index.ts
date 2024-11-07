@@ -7,11 +7,17 @@ import AlertCodeRoutes from './alert-code/routes'
 import AlertTypeRoutes from './alert-type/routes'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
+import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
+import redirectCheckAnswersMiddleware from '../middleware/redirectCheckAnswersMiddleware'
+import journeyStateMachine from '../middleware/journeyStateMachine'
+import JourneyRoutes from './journeys/routes'
+import setUpJourneyData from '../middleware/setUpJourneyData'
 
 export default function routes({ auditService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const { alertsApiClient, prisonerSearchApiClient } = dataAccess()
+  const apiClient = dataAccess()
+  const { alertsApiClient, prisonerSearchApiClient } = apiClient
 
   get('/', async (req, res) => {
     // sample function call for the new AuditService. disabled by default.
@@ -28,6 +34,12 @@ export default function routes({ auditService }: Services): Router {
   router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
   router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
   router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient))
+
+  router.use(insertJourneyIdentifier())
+  router.use(setUpJourneyData())
+  router.use(redirectCheckAnswersMiddleware())
+  router.use(journeyStateMachine())
+  router.use('/:journeyId', JourneyRoutes(apiClient))
 
   return router
 }

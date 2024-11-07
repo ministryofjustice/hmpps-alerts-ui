@@ -58,6 +58,11 @@ const stubGetAlertTypes = () => {
               description: 'AA description',
               isActive: true,
             },
+            {
+              code: 'DOCGM',
+              description: 'OCG Nominal',
+              isActive: true,
+            },
           ],
         },
         {

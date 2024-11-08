@@ -6,6 +6,7 @@ import { schemaFactory } from './schemas'
 import { DataAccess } from '../../../data'
 import BulkAlertsController from './controller'
 import EnterAlertReasonRoutes from './enter-alert-reason/routes'
+import HowToAddPrisonersRoutes from './how-to-add-prisoners/routes'
 
 export default function BulkAlertsRoutes({ alertsApiClient }: DataAccess) {
   const { router, get, post } = BaseRouter()
@@ -17,6 +18,7 @@ export default function BulkAlertsRoutes({ alertsApiClient }: DataAccess) {
   post('/', validate(schemaFactory(alertsApiClient)), controller.POST)
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
+  router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())
 
   return router
 }

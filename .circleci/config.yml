@@ -109,6 +109,8 @@ jobs:
       - store_test_results:
           path: test_results
       - store_artifacts:
+          path: test_results
+      - store_artifacts:
           path: integration_tests/videos
       - store_artifacts:
           path: integration_tests/screenshots

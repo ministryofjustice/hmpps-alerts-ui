@@ -1,18 +1,14 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
-{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Select alert - Manage alerts in bulk for the prison estate" %}
+{% set pageTitle = "Select alert - Upload alerts in bulk" %}
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% block content %}
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row govuk-!-margin-top-6">
         <div class="govuk-grid-column-two-thirds">
-            <h1>Select alert</h1>
+            {% include 'bulk-alerts/common/components/caption.njk' %}
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Select alert</h1>
         </div>
     </div>
 

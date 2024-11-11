@@ -37,6 +37,7 @@ type BulkAlertJourney = Partial<{
   alertType: Omit<AlertType, 'alertCodes'>
   alertCode: AlertCode
   description: string
+  useCsvUpload: boolean
   prisonNumbers: string[]
   cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
 }>

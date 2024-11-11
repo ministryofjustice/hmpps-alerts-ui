@@ -1,0 +1,47 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "How do you want to select the individuals that should have this alert applied to them? - Upload alerts in bulk" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post" novalidate="novalidate" autocomplete="off">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {% include 'bulk-alerts/common/components/caption.njk' %}
+                {{ govukRadios({
+                    name: "useCsvUpload",
+                    fieldset: {
+                        legend: {
+                            text: "How do you want to select the individuals that should have this alert applied to them?",
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    items: [
+                        {
+                            value: 'false',
+                            text: "Search for them one by one",
+                            checked: useCsvUpload === 'false'
+                        },
+                        {
+                            value: 'true',
+                            text: "Add a group of people using a CSV file",
+                            checked: useCsvUpload === 'true'
+                        }
+                    ],
+                    errorMessage: validationErrors | findError('useCsvUpload')
+                }) }}
+                <div class="govuk-button-group govuk-!-display-none-print">
+                    {{ govukButton({
+                        text: "Continue",
+                        preventDoubleClick: true
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

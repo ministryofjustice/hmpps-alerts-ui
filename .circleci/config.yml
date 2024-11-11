@@ -102,10 +102,10 @@ jobs:
           background: true
       - run:
           name: Wait for node app to start
-          command: sleep 5
+          command: ./node_modules/wait-on/bin/wait-on -t 30s http://localhost:3007/ping
       - run:
           name: Integration tests
-          command: circleci tests glob "**/*.cy.ts" | circleci tests run --command="xargs npx cypress run --reporter cypress-circleci-reporter --spec" --verbose --split-by=timings
+          command: circleci tests glob "*e*/**/*.cy.ts" | circleci tests run --command="xargs npx cypress run --reporter cypress-circleci-reporter --spec" --verbose --split-by=timings
       - store_test_results:
           path: test_results
       - store_artifacts:

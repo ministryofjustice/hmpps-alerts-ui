@@ -70,12 +70,27 @@
 
                             {% set prisonerRows = (prisonerRows.push([
                                 {
+                                    attributes: {
+                                        id: 'prisoner-name',
+                                        "data-sort-value": prisoner | firstNameLastName | toTitleCase | prisonerNameForSorting
+                                    },
                                     html: prisonerName
                                 }, {
+                                    attributes: {
+                                        id: 'prisoner-number',
+                                        "data-sort-value": prisoner.prisonerNumber
+                                    },
                                     text: prisoner.prisonerNumber
                                 }, {
+                                    attributes: {
+                                        id: 'prisoner-cell-location',
+                                        "data-sort-value": prisoner.cellLocation
+                                    },
                                     text: prisoner.cellLocation
                                 }, {
+                                    attributes: {
+                                        id: 'prisoner-actions'
+                                    },
                                     html: '<a href="' + digitalPrisonServicesUrl + '/prisoner/' + prisoner.prisonerNumber + '" class="govuk-link govuk-link--no-visited-state" target="_blank">View <span class="govuk-visually-hidden">' + prisoner | firstNameLastName | toTitleCase + '\'s</span> prisoner profile<span class="govuk-visually-hidden"> (opens in new tab)</span></a>'
                                 }
                             ]), prisonerRows) %}
@@ -89,14 +104,27 @@
                         {% endif %}
 
                         {{ govukTable({
+                            attributes: {
+                                'data-module': 'moj-sortable-table',
+                                id: 'prisoner-search-list'
+                            } if prisoners.length > 1 else undefined,
                             caption: "Prisoner search list",
                             classes: "fixed-layout-table",
                             captionClasses: "govuk-visually-hidden",
                             head: [{
+                                attributes: {
+                                    "aria-sort": "none"
+                                } if prisoners.length > 1 else undefined,
                                 text: "Name"
                             }, {
+                                attributes: {
+                                    "aria-sort": "none"
+                                } if prisoners.length > 1 else undefined,
                                 text: "Prison number"
                             }, {
+                                attributes: {
+                                    "aria-sort": "none"
+                                } if prisoners.length > 1 else undefined,
                                 text: "Cell location"
                             }, {
                                 html: '<span class="govuk-visually-hidden">Actions</span>'

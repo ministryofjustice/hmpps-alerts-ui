@@ -3,7 +3,9 @@
 
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "How do you want to select the individuals that should have this alert applied to them? - Upload alerts in bulk" %}
+{% set heading = "How do you want to select the individuals that should have the ‘" + alertCode.description + "’ alert applied to them?" %}
+
+{% set pageTitle = heading + " - Upload alerts in bulk" %}
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% block content %}
     <div class="govuk-grid-row govuk-!-margin-top-6">
@@ -15,7 +17,7 @@
                     name: "useCsvUpload",
                     fieldset: {
                         legend: {
-                            text: "How do you want to select the individuals that should have this alert applied to them?",
+                            text: heading,
                             classes: "govuk-fieldset__legend--l",
                             isPageHeading: true
                         }

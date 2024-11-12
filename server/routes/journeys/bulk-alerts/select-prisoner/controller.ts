@@ -22,6 +22,7 @@ export default class SelectPrisonerController {
 
     res.render('bulk-alerts/select-prisoner/view', {
       prisoners,
+      alertCode: req.journeyData.bulkAlert!.alertCode,
       query: res.locals.formResponses?.['query'] ?? req.journeyData.bulkAlert!.query,
       backUrl: 'how-to-add-prisoners',
     })
@@ -29,6 +30,9 @@ export default class SelectPrisonerController {
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.bulkAlert!.prisonersSelected ??= []
+    req.journeyData.bulkAlert!.prisonersSelected = req.journeyData.bulkAlert!.prisonersSelected!.filter(
+      prisoner => prisoner.prisonerNumber !== req.body.selectedPrisoner.prisonerNumber,
+    )
     req.journeyData.bulkAlert!.prisonersSelected!.push(req.body.selectedPrisoner)
     delete req.journeyData.bulkAlert!.query
     delete req.journeyData.bulkAlert!.prisonersSearched

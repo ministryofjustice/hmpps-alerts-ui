@@ -1,0 +1,144 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% extends "partials/layout.njk" %}
+
+{% switch prisonersSelected.length %}
+{% case 0 %}
+    {% set heading = "There are no prisoners selected" %}
+{% case 1 %}
+    {% set heading = "Review the prisoner that that will have the ‘" + alertCode.description + "’ alert applied" %}
+{% default %}
+    {% set heading = "Review the " + prisonersSelected.length + " prisoners that that will have the ‘" + alertCode.description + "’ alert applied" %}
+{% endswitch %}
+
+{% set pageTitle = heading + " - Upload alerts in bulk" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+            {% include 'bulk-alerts/common/components/caption.njk' %}
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-5">{{ heading }}</h1>
+
+            <form method="POST">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {% if prisonersSelected.length === 0 %}
+                    <p class="govuk-body">You’ve remove the last individual from this list.</p>
+                    <p class="govuk-body">If you want to continue with a bulk alerts upload, you must add someone.</p>
+                    {{ govukButton({
+                        text: "Add someone to the list",
+                        preventDoubleClick: true
+                    }) }}
+                {% else %}
+                    <p class="govuk-body">Add or remove people, or continue with the current {{ "prisoner" if prisonersSelected.length == 1 else "list of prisoners" }}.</p>
+                    <div>
+                    {{ govukButton({
+                        text: "Add another person individually",
+                        href: 'select-prisoner',
+                        classes: "govuk-button--secondary",
+                        preventDoubleClick: true
+                    }) }}
+                    </div>
+                    <div>
+                        {{ govukButton({
+                            text: "Add people using a CSV file",
+                            href: 'upload-prisoner-list',
+                            classes: "govuk-button--secondary",
+                            preventDoubleClick: true
+                        }) }}
+                    </div>
+                    <div>
+                        {{ govukButton({
+                            text: "Continue",
+                            preventDoubleClick: true
+                        }) }}
+                    </div>
+                    {% set prisonersList = [] %}
+                    {% for prisoner in prisonersSelected %}
+                        {% set prisonerNameHyperlink %}
+                            <div data-qa="prisoner-summary">
+                                <div data-qa="prisoner-name">
+                                    <a href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonerNumber }}"
+                                       target="_blank"
+                                       class="govuk-link govuk-link--no-visited-state">
+                                        {{ prisoner | firstNameLastName | toTitleCase | prisonerName  }}
+                                    </a>
+                                </div>
+                                <div class="govuk-body-s govuk-!-margin-0" data-qa="prisoner-number">{{ prisoner.prisonerNumber }}</div>
+                            </div>
+                        {% endset %}
+
+
+                        {% set prisonersList = (prisonersList.push([
+                            {
+                                attributes: {
+                                "data-sort-value": prisoner | firstNameLastName | toTitleCase | prisonerNameForSorting
+                            },
+                                html: prisonerNameHyperlink
+                            }, {
+                                attributes: {
+                                    id: 'prisoner-cell-location',
+                                    "data-sort-value": prisoner.cellLocation
+                                },
+                                text: prisoner.cellLocation
+                            }, {
+                                html: '<a href="review-prisoners?remove=' + prisoner.prisonerNumber + '"
+                            class="govuk-link--no-visited-state">
+                            Remove<span class="govuk-visually-hidden"> prison number ' + prisoner.prisonerNumber + '</span>
+                        </a>',
+                                classes: 'govuk-!-text-align-right',
+                                attributes: { 'data-qa': 'remove-prison-number-' + prisoner.prisonerNumber }
+                            }
+                        ]), prisonersList) %}
+                    {% endfor %}
+
+                    {{ govukTable({
+                        attributes: {
+                            'data-module': 'moj-sortable-table',
+                            'data-qa': 'prisoners-list-table'
+                        },
+                        head: [
+                            {
+                                text: "Name",
+                                attributes: { "aria-sort": "none" },
+                                classes: 'govuk-table__header'
+                            },
+                            {
+                                text: "Cell location",
+                                attributes: { "aria-sort": "none" },
+                                classes: 'govuk-table__header'
+                            }, {
+                                html: '<span class="govuk-visually-hidden">Actions</span>'
+                            }
+                        ],
+                        rows: prisonersList
+                    }) }}
+
+                    <div>
+                        {{ govukButton({
+                            text: "Add another person individually",
+                            href: 'select-prisoner',
+                            classes: "govuk-button--secondary",
+                            preventDoubleClick: true
+                        }) }}
+                    </div>
+                    <div>
+                        {{ govukButton({
+                            text: "Add people using a CSV file",
+                            href: 'upload-prisoner-list',
+                            classes: "govuk-button--secondary",
+                            preventDoubleClick: true
+                        }) }}
+                    </div>
+                    <div>
+                        {{ govukButton({
+                            text: "Continue",
+                            preventDoubleClick: true
+                        }) }}
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

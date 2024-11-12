@@ -6,7 +6,9 @@
 
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Who should have this alert applied? - Upload alerts in bulk" %}
+{% set heading = "Who should have the ‘" + alertCode.description + "’ alert applied?" %}
+
+{% set pageTitle = heading + " - Upload alerts in bulk" %}
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% block content %}
     <div class="govuk-grid-row govuk-!-margin-top-6">
@@ -14,7 +16,7 @@
             {% include 'bulk-alerts/common/components/caption.njk' %}
             <h1 class="govuk-heading-l govuk-!-margin-bottom-5">
                 <label for="query">
-                    Who should have this alert applied?
+                    {{ heading }}
                 </label>
             </h1>
             <form method="POST" action="select-prisoner/query">

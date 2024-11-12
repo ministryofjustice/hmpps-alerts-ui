@@ -5,7 +5,7 @@ import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e
 context('test /bulk-alerts/select-prisoner screen', () => {
   const uuid = uuidV4()
 
-  const getQueryInput = () => cy.findByRole('textbox', { name: /Who should have this alert applied\?/ })
+  const getQueryInput = () => cy.findByRole('textbox', { name: /Who should have the ‘OCG Nominal’ alert applied\?/ })
   const getSearchButton = () => cy.findByRole('button', { name: /^Search$/ })
   const getSelectButton = () => cy.findByRole('button', { name: /^Select and continue$/ })
   const getContinueButton = () => cy.findByRole('button', { name: /^Continue$/ })
@@ -81,6 +81,7 @@ context('test /bulk-alerts/select-prisoner screen', () => {
       bulkAlert: {
         alertCode: {
           code: 'DOCGM',
+          description: 'OCG Nominal',
         },
         useCsvUpload: false,
       },
@@ -89,9 +90,9 @@ context('test /bulk-alerts/select-prisoner screen', () => {
   }
 
   const validatePageContents = () => {
-    cy.title().should('equal', 'Who should have this alert applied? - Upload alerts in bulk - DPS')
+    cy.title().should('equal', 'Who should have the ‘OCG Nominal’ alert applied? - Upload alerts in bulk - DPS')
     cy.findByRole('heading', {
-      name: /Who should have this alert applied\?/,
+      name: /Who should have the ‘OCG Nominal’ alert applied\?/,
     }).should('be.visible')
     getQueryInput().should('be.visible')
     getSearchButton().should('be.visible')

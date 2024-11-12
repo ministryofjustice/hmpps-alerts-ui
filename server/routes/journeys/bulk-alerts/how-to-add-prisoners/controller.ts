@@ -7,6 +7,7 @@ export default class HowToAddPrisonersController {
 
     res.render('bulk-alerts/how-to-add-prisoners/view', {
       useCsvUpload,
+      alertCode: req.journeyData.bulkAlert!.alertCode,
       backUrl: req.journeyData.bulkAlert!.alertCode!.code === 'DOCGM' ? '../bulk-alerts' : 'enter-alert-reason',
     })
   }

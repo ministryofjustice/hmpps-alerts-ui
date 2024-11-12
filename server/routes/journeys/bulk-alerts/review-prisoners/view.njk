@@ -7,9 +7,9 @@
 {% case 0 %}
     {% set heading = "There are no prisoners selected" %}
 {% case 1 %}
-    {% set heading = "Review the prisoner that that will have the ‘" + alertCode.description + "’ alert applied" %}
+    {% set heading = "Review the prisoner that will have the ‘" + alertCode.description + "’ alert applied" %}
 {% default %}
-    {% set heading = "Review the " + prisonersSelected.length + " prisoners that that will have the ‘" + alertCode.description + "’ alert applied" %}
+    {% set heading = "Review the " + prisonersSelected.length + " prisoners that will have the ‘" + alertCode.description + "’ alert applied" %}
 {% endswitch %}
 
 {% set pageTitle = heading + " - Upload alerts in bulk" %}

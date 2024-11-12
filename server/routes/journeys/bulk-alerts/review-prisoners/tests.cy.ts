@@ -20,10 +20,10 @@ context('test /bulk-alerts/review-prisoners screen', () => {
     // test with 2 selected prisoners
     cy.title().should(
       'equal',
-      'Review the 2 prisoners that that will have the ‘OCG Nominal’ alert applied - Upload alerts in bulk - DPS',
+      'Review the 2 prisoners that will have the ‘OCG Nominal’ alert applied - Upload alerts in bulk - DPS',
     )
     cy.findByRole('heading', {
-      name: /Review the 2 prisoners that that will have the ‘OCG Nominal’ alert applied/,
+      name: /Review the 2 prisoners that will have the ‘OCG Nominal’ alert applied/,
     }).should('be.visible')
     cy.findByRole('link', { name: /^Back$/ })
       .should('be.visible')
@@ -52,10 +52,10 @@ context('test /bulk-alerts/review-prisoners screen', () => {
     // test with 1 selected prisoner
     cy.title().should(
       'equal',
-      'Review the prisoner that that will have the ‘OCG Nominal’ alert applied - Upload alerts in bulk - DPS',
+      'Review the prisoner that will have the ‘OCG Nominal’ alert applied - Upload alerts in bulk - DPS',
     )
     cy.findByRole('heading', {
-      name: /Review the prisoner that that will have the ‘OCG Nominal’ alert applied/,
+      name: /Review the prisoner that will have the ‘OCG Nominal’ alert applied/,
     }).should('be.visible')
     cy.findByRole('link', { name: /^Back$/ })
       .should('be.visible')

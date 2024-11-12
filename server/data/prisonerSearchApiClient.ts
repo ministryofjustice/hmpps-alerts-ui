@@ -44,4 +44,11 @@ export default class PrisonerSearchApiClient {
 
     return results[0].concat(results[1])
   }
+
+  async searchByPrisonNumbers(token: string, payload: { prisonerNumbers: string[] }): Promise<Prisoner[]> {
+    return PrisonerSearchApiClient.restClient(token).post<Prisoner[]>({
+      path: `/prisoner-search/prisoner-numbers`,
+      data: payload,
+    })
+  }
 }

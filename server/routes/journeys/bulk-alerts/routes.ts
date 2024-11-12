@@ -7,8 +7,9 @@ import { DataAccess } from '../../../data'
 import BulkAlertsController from './controller'
 import EnterAlertReasonRoutes from './enter-alert-reason/routes'
 import HowToAddPrisonersRoutes from './how-to-add-prisoners/routes'
+import SelectPrisonerRoutes from './select-prisoner/routes'
 
-export default function BulkAlertsRoutes({ alertsApiClient }: DataAccess) {
+export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiClient }: DataAccess) {
   const { router, get, post } = BaseRouter()
   const controller = new BulkAlertsController(alertsApiClient)
 
@@ -19,6 +20,7 @@ export default function BulkAlertsRoutes({ alertsApiClient }: DataAccess) {
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())
+  router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient))
 
   return router
 }

@@ -63,7 +63,7 @@ const normaliseNewLines = (body: Record<string, unknown>) => {
   )
 }
 
-export const validate = (schema: z.ZodTypeAny | SchemaFactory): RequestHandler => {
+export const validate = (schema: z.ZodTypeAny | SchemaFactory, failureUrl?: string): RequestHandler => {
   return async (req, res, next) => {
     if (!schema) {
       return next()
@@ -87,7 +87,7 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory): RequestHandler =
     }
     req.flash(FLASH_KEY__VALIDATION_ERRORS, JSON.stringify(deduplicatedFieldErrors))
 
-    return res.redirect(req.originalUrl)
+    return res.redirect(failureUrl ?? req.originalUrl)
   }
 }
 

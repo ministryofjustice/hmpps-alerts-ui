@@ -3,7 +3,7 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
 import fs from 'fs'
-import { initialiseName } from './utils'
+import { convertToTitleCase, firstNameLastName, initialiseName, prisonerName } from './utils'
 import config from '../config'
 import logger from '../../logger'
 import { buildErrorSummaryList, customErrorOrderBuilder, findError } from '../middleware/validationMiddleware'
@@ -48,5 +48,15 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
   njkEnv.addFilter('setSelected', setSelected)
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('toTitleCase', convertToTitleCase)
+  njkEnv.addFilter('firstNameLastName', firstNameLastName)
+  njkEnv.addFilter('prisonerName', (str, bold) => {
+    const name = prisonerName(str, bold)
+    return name ? njkEnv.getFilter('safe')(name) : null
+  })
+  njkEnv.addFilter('prisonerNameForSorting', str => {
+    const name = njkEnv.getFilter('prisonerName')(str, false)
+    return name.val || null
+  })
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
 }

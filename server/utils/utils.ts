@@ -28,3 +28,28 @@ export const getNonUndefinedProp = <T>(referral: T, key: keyof T, mapper?: (obj:
   }
   return {}
 }
+
+/**
+ * Converts a user object containing firstName & lastName to a "firstName lastName" string.
+ * @param user user to extract full name from
+ * @returns name string
+ */
+export const firstNameLastName = (user?: { firstName: string; lastName: string }): string | null => {
+  if (!user) return null
+  return `${user.firstName} ${user.lastName}`
+}
+
+/**
+ * Converts a prisoner name from 'firstName lastName' format to
+ * "lastName, firstName" and bolds prisoner lastName
+ */
+export const prisonerName = (name: string, boldLastName = true) => {
+  if (!name) return null
+  const nameParts = name.trim().split(' ')
+  const firstNames = nameParts.slice(0, nameParts.length - 1)
+
+  let formattedName = nameParts[nameParts.length - 1]
+  if (boldLastName) formattedName = `<strong>${formattedName}</strong>`
+  formattedName += `, ${firstNames.join(' ')}`
+  return formattedName?.trim()
+}

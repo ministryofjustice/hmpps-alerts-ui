@@ -1,5 +1,6 @@
 import { CaseLoad, HmppsUser } from '../../interfaces/hmppsUser'
 import { AlertCode, AlertType } from '../alerts/alertsApiTypes'
+import { Prisoner } from '../../data/prisonerSearchApiClient'
 
 export declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
@@ -38,7 +39,9 @@ type BulkAlertJourney = Partial<{
   alertCode: AlertCode
   description: string
   useCsvUpload: boolean
-  prisonNumbers: string[]
+  query: string
+  prisonersSearched: Prisoner[]
+  prisonersSelected: Prisoner[]
   cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
 }>
 

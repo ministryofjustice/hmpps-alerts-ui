@@ -23,7 +23,7 @@
             <form method="POST">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% if prisonersSelected.length === 0 %}
-                    <p class="govuk-body">You’ve remove the last individual from this list.</p>
+                    <p class="govuk-body">You’ve removed the last prisoner from this list.</p>
                     <p class="govuk-body">If you want to continue with a bulk alerts upload, you must add someone.</p>
                     {{ govukButton({
                         text: "Add someone to the list",

@@ -92,7 +92,7 @@ context('test /bulk-alerts/review-prisoners screen', () => {
       .and('match', /how-to-add-prisoners$/)
     cy.findByText('A1111AA').should('not.exist')
     cy.findByText('B1111BB').should('not.exist')
-    cy.findByText('You’ve remove the last individual from this list.').should('be.visible')
+    cy.findByText('You’ve removed the last prisoner from this list.').should('be.visible')
     cy.findByRole('button', { name: /Add another person individually/ }).should('not.exist')
     cy.findByRole('button', { name: /Add people using a CSV file/ }).should('not.exist')
     cy.findByRole('button', { name: /^Continue$/ }).should('not.exist')

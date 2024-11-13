@@ -117,10 +117,37 @@ const stubPostPrisonerSearchNoneFound = () => {
   })
 }
 
+const stubPostPrisonerSearchByNumber = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/prisoner-search-api/prisoner-search/prisoner-numbers',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: [
+        {
+          firstName: 'TestName',
+          lastName: 'User',
+          prisonerNumber: 'A1111AA',
+          dateOfBirth: '1932-02-02',
+          status: 'On remand',
+          prisonName: 'HMP Kirkham',
+          cellLocation: 'A-1-1',
+        },
+      ],
+    },
+  })
+}
+
 export default {
   stubGetPrisoner,
   stubGetPrisoner500,
   stubPostPrisonerSearchNoneFound,
   stubPostPrisonerSearchOneFound,
   stubPostPrisonerSearchTwoFound,
+  stubPostPrisonerSearchByNumber,
 }

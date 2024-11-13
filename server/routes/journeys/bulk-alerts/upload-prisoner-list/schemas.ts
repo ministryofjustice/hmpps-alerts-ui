@@ -69,7 +69,7 @@ export const validateFile =
     if (invalidPrisonNumbers.length) {
       if (invalidPrisonNumbers.length > 1) {
         return fail(
-          `The following prison numbers ${invalidPrisonNumbers.map(itm => `‘${itm}’`).join(' ,')} do not follow the format A1234CD`,
+          `The following prison numbers ${invalidPrisonNumbers.map(itm => `‘${itm}’`).join(', ')} do not follow the format A1234CD`,
         )
       }
       return fail(`The prison number ‘${invalidPrisonNumbers[0]}’ does not follow the format A1234CD`)
@@ -84,7 +84,7 @@ export const validateFile =
     if (unrecognisedNumbers.length) {
       if (unrecognisedNumbers.length > 1) {
         return fail(
-          `The following prison numbers ${unrecognisedNumbers.map(itm => `‘${itm}’`).join(' ,')} were not recognised`,
+          `The following prison numbers ${unrecognisedNumbers.map(itm => `‘${itm}’`).join(', ')} were not recognised`,
         )
       }
       return fail(`The prison number ‘${unrecognisedNumbers[0]}’ was not recognised`)

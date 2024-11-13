@@ -8,6 +8,7 @@
       "express",
       "express-session",
       "@testing-library/cypress",
+      "cypress-file-upload",
       "../../integration_tests/index.d.ts",
       "../@types/environment.d.ts"
     ]

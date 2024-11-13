@@ -41,6 +41,10 @@ const buildConfig = {
         to: path.join(cwd, 'dist/assets/images'),
       },
       {
+        from: path.join(cwd, 'assets/downloads/**/*'),
+        to: path.join(cwd, 'dist/assets/downloads'),
+      },
+      {
         from: path.join(cwd, 'assets/js/extra/**/*'),
         to: path.join(cwd, 'dist/assets/js/extra'),
       },

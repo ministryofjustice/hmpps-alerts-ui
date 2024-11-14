@@ -10,6 +10,7 @@ import HowToAddPrisonersRoutes from './how-to-add-prisoners/routes'
 import SelectPrisonerRoutes from './select-prisoner/routes'
 import ReviewPrisonersRoutes from './review-prisoners/routes'
 import UploadPrisonerListRoutes from './upload-prisoner-list/routes'
+import SelectUploadLogicRoutes from './select-upload-logic/routes'
 
 export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiClient }: DataAccess) {
   const { router, get, post } = BaseRouter()
@@ -25,6 +26,7 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
   router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient))
   router.use('/upload-prisoner-list', UploadPrisonerListRoutes(prisonerSearchApiClient))
   router.use('/review-prisoners', ReviewPrisonersRoutes())
+  router.use('/select-upload-logic', SelectUploadLogicRoutes())
 
   return router
 }

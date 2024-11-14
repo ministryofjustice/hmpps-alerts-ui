@@ -1,0 +1,55 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set heading = "What do you want to happen when the bulk alert upload for ‘" + alertCode.description + "’ is applied?" %}
+
+{% set pageTitle = heading + " - Upload alerts in bulk" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post" novalidate="novalidate" autocomplete="off">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {% include 'bulk-alerts/common/components/caption.njk' %}
+                {{ govukRadios({
+                    name: "cleanupMode",
+                    fieldset: {
+                        legend: {
+                            text: heading,
+                            classes: "govuk-fieldset__legend--l",
+                            isPageHeading: true
+                        }
+                    },
+                    items: [
+                        {
+                            value: 'KEEP_ALL',
+                            text: "Add new alerts from the list without deactivating any existing ‘" + alertCode.description + "’ alerts",
+                            hint: {
+                                text: "Prisoners who are not on the list will still have active ‘" + alertCode.description + "’ alerts after the bulk upload."
+                            },
+                            checked: cleanupMode === 'KEEP_ALL'
+                        },
+                        {
+                            value: 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED',
+                            text: "Deactivate ‘" + alertCode.description + "’ alerts for anyone not on the list",
+                            hint: {
+                                text: "Only those prisoners on the list will have ‘" + alertCode.description + "’ alerts after the bulk upload."
+                            },
+                            checked: cleanupMode === 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
+                        }
+                    ],
+                    errorMessage: validationErrors | findError('cleanupMode')
+                }) }}
+                <div class="govuk-button-group govuk-!-display-none-print">
+                    {{ govukButton({
+                        text: "Continue",
+                        preventDoubleClick: true
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

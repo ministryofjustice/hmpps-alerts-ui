@@ -8,3 +8,6 @@ export type CreateAlertCodeRequest = components['schemas']['CreateAlertCodeReque
 export type UpdateAlertTypeRequest = components['schemas']['UpdateAlertTypeRequest']
 export type UpdateAlertCodeRequest = components['schemas']['UpdateAlertCodeRequest']
 export type CreateAlertRequest = components['schemas']['CreateAlert']
+export type BulkAlertsRequest = components['schemas']['BulkCreateAlerts']
+export type BulkAlertPlan = components['schemas']['BulkAlertPlan']
+export type BulkAlert = components['schemas']['BulkAlert']

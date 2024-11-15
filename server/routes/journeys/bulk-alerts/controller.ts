@@ -29,6 +29,9 @@ export default class BulkAlertsController extends BaseController {
     if (req.body.alertCode.code === 'DOCGM') {
       res.redirect('bulk-alerts/how-to-add-prisoners')
     } else {
+      if (req.journeyData.bulkAlert!.description === undefined) {
+        delete req.journeyData.isCheckAnswers
+      }
       res.redirect('bulk-alerts/enter-alert-reason')
     }
   }

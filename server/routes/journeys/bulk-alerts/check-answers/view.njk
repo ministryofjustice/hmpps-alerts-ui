@@ -1,0 +1,116 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% extends "partials/layout.njk" %}
+
+{% set fullWidth = true %}
+{% set pageTitle = "Check your answers before uploading alerts in bulk - Upload alerts in bulk" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% include 'bulk-alerts/common/components/caption.njk' %}
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Check your answers before uploading alerts in bulk</h1>
+        </div>
+    </div>
+
+    {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-7",
+        rows: [
+            {
+                key: {
+                    text: "Alert"
+                },
+                value: {
+                    text: alertCode.description
+                },
+                actions: {
+                    items: [
+                        {
+                            href: "../bulk-alerts#alertCode",
+                            text: "Change",
+                            visuallyHiddenText: "the alert to be created",
+                            classes: "govuk-link--no-visited-state"
+                        }
+                    ]
+                }
+            },
+            {
+                key: {
+                    text: "Reason for alert"
+                },
+                value: {
+                    html: (description | escape | nl2br) if alertCode.code !== 'DOCGM' else ("** Offenders must not be made aware of the OCG flag status.  Do not Share with offender. **" +
+        "<br/><br/>This person has been mapped as a member of an Organised Crime Group (OCG). If further information is required to assist in management or re-categorisation decisions, including OPT 2 applications please contact the Prison Intelligence Officer.")
+                },
+                actions: {
+                    items: [
+                        {
+                            href: "enter-alert-reason#description",
+                            text: "Change",
+                            visuallyHiddenText: "the reason for alert",
+                            classes: "govuk-link--no-visited-state"
+                        }
+                    ]
+                } if alertCode.code !== 'DOCGM' else undefined
+            },
+            {
+                key: {
+                    text: "Number of prisoners on list"
+                },
+                value: {
+                    text: prisonersSelected.length
+                },
+                actions: {
+                    items: [
+                        {
+                            href: "review-prisoners",
+                            text: "Change",
+                            visuallyHiddenText: "the selected prisoners",
+                            classes: "govuk-link--no-visited-state"
+                        }
+                    ]
+                }
+            },
+            {
+                key: {
+                text: "Upload logic"
+            },
+                value: {
+                text: ("Add new alerts from the list without deactivating any existing ‘" + alertCode.description + "’ alerts") if cleanupMode === 'KEEP_ALL' else ("Deactivate ‘" + alertCode.description + "’ alerts for anyone not on the list")
+            },
+                actions: {
+                items: [
+                    {
+                        href: "select-upload-logic#cleanupMode",
+                        text: "Change",
+                        visuallyHiddenText: "the upload logic",
+                        classes: "govuk-link--no-visited-state"
+                    }
+                ]
+            }
+            }
+        ]
+    }) }}
+
+    <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
+        {% set createAlerts = plan.alertsToBeCreatedForPrisonNumbers.length + " new " + alertLabel + ('s' if plan.alertsToBeCreatedForPrisonNumbers.length > 1 else '') %}
+        {% set expireAlerts = plan.alertsToBeExpiredForPrisonNumbers.length + " existing " + alertLabel + ('s' if plan.alertsToBeExpiredForPrisonNumbers.length > 1 else '') %}
+        {% set otherAlertsCount = plan.existingActiveAlertsPrisonNumbers.length + plan.alertsToBeUpdatedForPrisonNumbers.length %}
+        {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s' if otherAlertsCount > 1 else '') %}
+        {{ govukWarningText({
+            text: createAlerts + " will be created, " + expireAlerts + " will be made inactive, and " + otherAlerts + " will remain active."
+        }) }}
+        <div class="govuk-button-group">
+            {{ govukButton({
+                text: "Confirm and upload alerts",
+                preventDoubleClick: true
+            }) }}
+            <a class="govuk-link govuk-link--no-visited-state" href="/">Cancel</a>
+        </div>
+    </form>
+{% endblock %}

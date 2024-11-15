@@ -24,7 +24,7 @@ export default class SelectPrisonerController {
       prisoners,
       alertCode: req.journeyData.bulkAlert!.alertCode,
       query: res.locals.formResponses?.['query'] ?? req.journeyData.bulkAlert!.query,
-      backUrl: 'how-to-add-prisoners',
+      backUrl: req.journeyData.isCheckAnswers ? 'review-prisoners' : 'how-to-add-prisoners',
     })
   }
 

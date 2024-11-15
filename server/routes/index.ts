@@ -8,10 +8,10 @@ import AlertTypeRoutes from './alert-type/routes'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
-import redirectCheckAnswersMiddleware from '../middleware/redirectCheckAnswersMiddleware'
 import journeyStateMachine from '../middleware/journeyStateMachine'
 import JourneyRoutes from './journeys/routes'
 import setUpJourneyData from '../middleware/setUpJourneyData'
+import removeTrailingSlashMiddleware from '../middleware/removeTrailingSlashMiddleware'
 
 export default function routes({ auditService }: Services): Router {
   const router = Router()
@@ -30,6 +30,8 @@ export default function routes({ auditService }: Services): Router {
     res.render('pages/errorPage', { errorMessage })
   })
 
+  router.use(removeTrailingSlashMiddleware)
+
   router.use('/manage-reference-data', ManageReferenceDataRoutes())
   router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
   router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
@@ -37,7 +39,6 @@ export default function routes({ auditService }: Services): Router {
 
   router.use(insertJourneyIdentifier())
   router.use(setUpJourneyData())
-  router.use(redirectCheckAnswersMiddleware())
   router.use(journeyStateMachine())
   router.use('/:journeyId', JourneyRoutes(apiClient))
 

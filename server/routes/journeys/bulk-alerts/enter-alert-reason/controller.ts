@@ -13,6 +13,10 @@ export default class EnterAlertReasonController {
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.bulkAlert!.description = req.body.description
-    res.redirect('how-to-add-prisoners')
+    if (req.journeyData.bulkAlert!.prisonersSelected?.length) {
+      res.redirect('review-prisoners')
+    } else {
+      res.redirect('how-to-add-prisoners')
+    }
   }
 }

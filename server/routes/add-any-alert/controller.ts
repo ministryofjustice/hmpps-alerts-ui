@@ -34,8 +34,7 @@ export default class AddAnyAlertController extends BaseController {
 
   checkSubmitToAPI = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     try {
-      await this.alertsApiService.createAlert(req.middleware.clientToken, {
-        prisonNumber: req.body.prisonNumber.prisonerNumber,
+      await this.alertsApiService.createAlert(req.middleware.clientToken, req.body.prisonNumber.prisonerNumber, {
         alertCode: req.body.alertCode.code,
         authorisedBy: res.locals.user.displayName,
         ...getNonUndefinedProp(req.body, 'description'),

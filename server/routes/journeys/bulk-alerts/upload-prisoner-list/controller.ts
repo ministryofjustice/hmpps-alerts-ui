@@ -2,9 +2,9 @@ import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 
 export default class UploadPrisonerListController {
-  GET = async (_req: Request, res: Response) => {
+  GET = async (req: Request, res: Response) => {
     res.render('bulk-alerts/upload-prisoner-list/view', {
-      backUrl: 'how-to-add-prisoners',
+      backUrl: req.journeyData.isCheckAnswers ? 'review-prisoners' : 'how-to-add-prisoners',
     })
   }
 

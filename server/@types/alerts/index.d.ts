@@ -3,230 +3,439 @@
  * Do not make direct changes to the file.
  */
 
-import { CreateAlertCodeRequest, UpdateAlertCodeRequest } from '../../@schemas/AlertCodeRequests'
-import { CreateAlertTypeRequest, UpdateAlertTypeRequest } from '../../@schemas/AlertTypeRequests'
-
 export interface paths {
   '/alerts/{alertUuid}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get an alert by its unique identifier
      * @description Returns the alert with the matching identifier.
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     * * ROLE_NOMIS_ALERTS
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     get: operations['retrieveAlert']
     /**
      * Update an alert
      * @description
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_WRITER
-     * * ROLE_ALERTS_ADMIN
-     * * UPDATE_ALERT
-     * * ROLE_NOMIS_ALERTS
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     put: operations['updateAlert']
+    post?: never
     /**
      * Delete an alert
      * @description This endpoint fully removes the alert from the system. It is used when an alert has been created in error or should otherwise be removed from this service. This endpoint will return 200 OK if the alert was not found or already deleted. This is to prevent low value warnings being logged.
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_WRITER
-     * * ROLE_ALERTS_ADMIN
-     * * UPDATE_ALERT
-     * * ROLE_NOMIS_ALERTS
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     delete: operations['deleteAlert']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
-  '/migrate/{prisonNumber}/alerts': {
+  '/resync/{prisonNumber}/alerts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
-     * Migrate all alerts for a prisoner from NOMIS
+     * Resync all alerts for a prisoner from NOMIS
      * @description
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     * * ROLE_NOMIS_ALERTS
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     *     * ROLE_NOMIS_ALERTS
      */
-    post: operations['createAlert']
-  }
-  '/migrate/alerts': {
-    /**
-     * Migrate an alert from NOMIS
-     * @deprecated
-     * @description
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     * * ROLE_NOMIS_ALERTS
-     */
-    post: operations['migrateAlert']
-  }
-  '/bulk-alerts': {
-    /**
-     * Create alerts for multiple people in bulk
-     * @description
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    post: operations['bulkCreateAlerts']
-  }
-  '/alerts': {
-    /**
-     * Create an alert
-     * @description
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_WRITER
-     * * ROLE_ALERTS_ADMIN
-     * * UPDATE_ALERT
-     * * ROLE_NOMIS_ALERTS
-     */
-    post: operations['createAlert_1']
-  }
-  '/alert-types': {
-    /**
-     * Get all alert types
-     * @description Returns the full list of alert types and the alert codes within those types. By default this endpoint only returns active alert types and codes. The include inactive parameter can be used to return all alert types and codes.
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     */
-    get: operations['retrieveAlertTypes']
-    /**
-     * Create an alert type
-     * @description Create a new alert type, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    post: operations['createAlertType']
-  }
-  '/alert-codes': {
-    /**
-     * Retrieve all alert codes
-     * @description Retrieve all alert codes, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     */
-    get: operations['retrieveAlertCodes']
-    /**
-     * Create an alert code
-     * @description Create a new alert code, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    post: operations['createAlertCode']
-  }
-  '/alert-types/{alertType}': {
-    /**
-     * Deactivate an alert type
-     * @description Deactivate an alert type, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    delete: operations['deactivateAlertType']
-    /**
-     * Update alert type
-     * @description Set the properties of an alert type to the submitted value.
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    patch: operations['updateAlertType']
-  }
-  '/alert-codes/{alertCode}': {
-    /**
-     * Retrieve an alert code
-     * @description Retrieve an alert code, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     */
-    get: operations['retrieveAlertCode']
-    /**
-     * Deactivate an alert code
-     * @description Deactivate an alert code, typically from the Alerts UI
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    delete: operations['deactivateAlertCode']
-    /**
-     * Update alert code
-     * @description Set the properties of an alert code to the submitted value.
-     *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_ADMIN
-     */
-    patch: operations['updateAlertCode']
+    post: operations['resyncPrisonerAlerts']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisoners/{prisonNumber}/alerts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Gets all the alerts for a prisoner by their prison number
      * @description
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     get: operations['retrievePrisonerAlerts']
+    put?: never
+    /**
+     * Create an alert
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['createPrisonerAlert']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-alerts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create alerts for multiple people in bulk
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['bulkCreateAlerts']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-alerts/plan': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Plan the creation of alerts for multiple people in bulk
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['planBulkCreateAlerts']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/alert-types': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all alert types
+     * @description Returns the full list of alert types and the alert codes within those types. By default this endpoint only returns active alert types and codes. The include inactive parameter can be used to return all alert types and codes.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    get: operations['retrieveAlertTypes']
+    put?: never
+    /**
+     * Create an alert type
+     * @description Create a new alert type, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['createAlertType']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/alert-codes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve all alert codes
+     * @description Retrieve all alert codes, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    get: operations['retrieveAlertCodes']
+    put?: never
+    /**
+     * Create an alert code
+     * @description Create a new alert code, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['createAlertCode']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/alert-types/{alertType}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Update alert type
+     * @description Set the properties of an alert type to the submitted value.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['updateAlertType']
+    trace?: never
+  }
+  '/alert-types/{alertType}/reactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Reactivate an alert type
+     * @description Reactivate an alert type, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['reactivateAlertType']
+    trace?: never
+  }
+  '/alert-types/{alertType}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Deactivate an alert type
+     * @description Deactivate an alert type, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['deactivateAlertType']
+    trace?: never
+  }
+  '/alert-codes/{alertCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve an alert code
+     * @description Retrieve an alert code, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    get: operations['retrieveAlertCode']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Update alert code
+     * @description Set the properties of an alert code to the submitted value.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['updateAlertCode']
+    trace?: never
+  }
+  '/alert-codes/{alertCode}/reactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Reactivate an alert code
+     * @description Reactivate an alert code, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['reactivateAlertCode']
+    trace?: never
+  }
+  '/alert-codes/{alertCode}/deactivate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Deactivate an alert code
+     * @description Deactivate an alert code, typically from the Alerts UI
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['deactivateAlertCode']
+    trace?: never
   }
   '/prisoners/alerts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Gets all the alerts for prisoners by their prison numbers
      * @description Returns all the alerts for the supplied prison numbers. The alerts for each prisoner are mapped to their prison number.
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     get: operations['retrievePrisonerAlerts_1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
-  '/alerts/{alertUuid}/auditEvents': {
+  '/alerts/{alertUuid}/audit-events': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get audit events for an alert
      * @description This endpoint retrieves all the audit events for a given alert
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
-     * * ROLE_NOMIS_ALERTS
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     get: operations['retrieveAlertAuditEvents']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/alert-types/{alertTypeCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get an alert type
      * @description Returns the specified alert type.
      *
-     * Requires one of the following roles:
-     * * ROLE_ALERTS_READER
-     * * ROLE_ALERTS_ADMIN
-     * * PRISON
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
     get: operations['retrieveAlertType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
 }
-
 export type webhooks = Record<string, never>
-
 export interface components {
   schemas: {
     /** @description The alert data to use to update an alert in the service */
@@ -253,11 +462,6 @@ export interface components {
        * @example 2022-07-15
        */
       activeTo?: string
-      /**
-       * @description An additional comment to append to comments thread associated with the alert. Will be ignored if null or empty. It is a free text field limited to 1000 characters.
-       * @example Additional user comment on the alert comment thread
-       */
-      appendComment?: string
     }
     ErrorResponse: {
       /** Format: int32 */
@@ -308,8 +512,6 @@ export interface components {
        * @example true
        */
       isActive: boolean
-      /** @description The comments thread associated with the alert. The comments are ordered by the date and time they were created, with the most recent comment first. */
-      comments: components['schemas']['Comment'][]
       /**
        * Format: date-time
        * @description The date and time the alert was created
@@ -340,6 +542,21 @@ export interface components {
        * @example Firstname Lastname
        */
       lastModifiedByDisplayName?: string
+      /**
+       * Format: date-time
+       * @description The date and time the alert was last set to expire.
+       */
+      activeToLastSetAt?: string
+      /**
+       * @description The username of the user who last set the alert to expire.
+       * @example USER1234
+       */
+      activeToLastSetBy?: string
+      /**
+       * @description The displayable name of the user who last set the alert to expire.
+       * @example Firstname Lastname
+       */
+      activeToLastSetByDisplayName?: string
     }
     /** @description The summary information of an alert code used to categorise alerts */
     AlertCodeSummary: {
@@ -364,37 +581,7 @@ export interface components {
        */
       description: string
     }
-    /** @description A comment appended to an alert comment thread */
-    Comment: {
-      /**
-       * Format: uuid
-       * @description The unique identifier assigned to the comment
-       * @example 476939e3-7cc1-4c5f-8f54-e7d055d1d50c
-       */
-      commentUuid: string
-      /**
-       * @description The comment text appended to the alert comment thread. It is a free text field limited to 1000 characters.
-       * @example Additional user comment on the alert comment thread
-       */
-      comment: string
-      /**
-       * Format: date-time
-       * @description The date and time the comment was created and appended to the alert comment thread
-       */
-      createdAt: string
-      /**
-       * @description The username of the user who created the comment and appended it to the alert comment thread
-       * @example USER1234
-       */
-      createdBy: string
-      /**
-       * @description The displayable name of the user who created the comment and appended it to the alert comment thread
-       * @example Firstname Lastname
-       */
-      createdByDisplayName: string
-    }
-    /** @description The request body for migrating an alert from NOMIS to DPS */
-    MigrateAlert: {
+    ResyncAlert: {
       /**
        * Format: int64
        * @description The internal NOMIS id for the offender booking. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
@@ -403,18 +590,12 @@ export interface components {
       offenderBookId: number
       /**
        * Format: int32
-       * @description The sequence of the NOMIS offender booking. A sequence of 1 means the alert is from the current booking. A sequence of > 1 means the alert is from a historic booking.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
-       * @example 1
-       */
-      bookingSeq: number
-      /**
-       * Format: int32
        * @description The NOMIS alert sequence. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
        * @example 2
        */
       alertSeq: number
       /**
-       * @description The alert code for the alert. A person can only have one alert using each code active at any one time. The alert code must exist but can be inactive when migrating an alert.
+       * @description The alert code for the alert. A person should only have one alert using each code active at any one time however this is not enforced during migration. The alert code must exist but can be inactive.
        * @example ABC
        */
       alertCode: string
@@ -451,42 +632,37 @@ export interface components {
        */
       createdBy: string
       /**
-       * @description The displayable name of the person who created the alert.
-       * @example C Reated
+       * @description The display name of the person who created the alert.
+       * @example A Jones
        */
       createdByDisplayName: string
       /**
        * Format: date-time
-       * @description The date and time the alert was updated. Only provide if the alert has been updated since creation.
+       * @description The date and time the alert was last modified. Only provided if the alert has been modified since creation.
        */
-      updatedAt?: string
+      lastModifiedAt?: string
       /**
-       * @description The user id of the person who updated the alert. Required if updated at has been supplied.
+       * @description The user id of the person who last modified the alert. Required if lastModifiedAt has been supplied.
        * @example AB11DZ
        */
-      updatedBy?: string
+      lastModifiedBy?: string
       /**
-       * @description The displayable name of the person who updated the alert. Required if updated at has been supplied.
-       * @example Up Dated
+       * @description The displayable name of the person who last modified the alert. Required if lastModifiedAt has been supplied.
+       * @example U Dated
        */
-      updatedByDisplayName?: string
+      lastModifiedByDisplayName?: string
+      isActive: boolean
     }
-    MigratedAlert: {
+    ResyncedAlert: {
       /**
        * Format: int64
-       * @description The internal NOMIS id for the offender booking. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
+       * @description The internal NOMIS id for the offender booking. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the resync alert response for mapping between NOMIS and DPS.
        * @example 12345
        */
       offenderBookId: number
       /**
        * Format: int32
-       * @description The sequence of the NOMIS offender booking. A sequence of 1 means the alert is from the current booking. A sequence of > 1 means the alert is from a historic booking.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
-       * @example 1
-       */
-      bookingSeq: number
-      /**
-       * Format: int32
-       * @description The NOMIS alert sequence. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the migrated alert response for mapping between NOMIS and DPS.
+       * @description The NOMIS alert sequence. An alert in NOMIS is uniquely identified by the offender booking id and alert sequence.This is returned as part of the resync alert response for mapping between NOMIS and DPS.
        * @example 2
        */
       alertSeq: number
@@ -498,19 +674,14 @@ export interface components {
       alertUuid: string
     }
     /** @description The alert data to use to create an alert in the service */
-    MigrateAlertRequest: {
-      /**
-       * @description The prison number of the person the alert is for. Also referred to as the offender number, offender id or NOMS id.
-       * @example A1234AA
-       */
-      prisonNumber: string
+    CreateAlert: {
       /**
        * @description The alert code for the alert. A person can only have one alert using each code active at any one time. The alert code must exist and be active.
        * @example ABC
        */
       alertCode: string
       /**
-       * @description The description of the alert. This is a free text field and can be used to provide additional information about the alert e.g. the reasons for adding it.It is limited to 1000 characters.
+       * @description The description of the alert. This is a free text field and can be used to provide additional information about the alert e.g. the reasons for adding it.It is limited to 4000 characters.
        * @example Alert description
        */
       description?: string
@@ -524,68 +695,13 @@ export interface components {
        * @description The date the alert should be active from. If not provided, the alert will be active from the current date. The active from date can be in the past or the future, but must be before the active to date
        * @example 2021-09-27
        */
-      activeFrom: string
+      activeFrom?: string
       /**
        * Format: date
        * @description The date the alert should be active until. If not provided, the alert will be active indefinitely. The active to date can be in the past or the future, but must be after the active from date
        * @example 2022-07-15
        */
       activeTo?: string
-      /**
-       * Format: date-time
-       * @description The date the alert was created
-       */
-      createdAt: string
-      /**
-       * @description The user ID of the person who created the alert
-       * @example AB11DZ
-       */
-      createdBy: string
-      /**
-       * @description The friendly name of the person who created the alert
-       * @example C Reated
-       */
-      createdByDisplayName: string
-      /**
-       * Format: date-time
-       * @description The date the alert was updated
-       */
-      updatedAt?: string
-      /**
-       * @description The user ID of the person who updated the alert
-       * @example AB11DZ
-       */
-      updatedBy?: string
-      /**
-       * @description The friendly name of the person who updated the alert
-       * @example C Reated
-       */
-      updatedByDisplayName?: string
-      /** @description The threaded comments that are stored against an alert */
-      comments: components['schemas']['MigrateCommentRequest'][]
-    }
-    /** @description The threaded comments that are stored against an alert */
-    MigrateCommentRequest: {
-      /**
-       * @description The text added at the comment
-       * @example This is a comment
-       */
-      comment: string
-      /**
-       * Format: date-time
-       * @description The date the alert was created
-       */
-      createdAt: string
-      /**
-       * @description The user ID of the person who created the alert
-       * @example AB11DZ
-       */
-      createdBy: string
-      /**
-       * @description The friendly name of the person who created the alert
-       * @example C Reated
-       */
-      createdByDisplayName: string
     }
     /** @description The request body for bulk creating alerts for multiple people */
     BulkCreateAlerts: {
@@ -600,11 +716,10 @@ export interface components {
        */
       alertCode: string
       /**
-       * @description The strategy to use when creating alerts in bulk
-       * @example ADD_MISSING
-       * @enum {string}
+       * @description The description of the alert. This is a free text field and can be used to provide additional information about the alert e.g. the reasons for adding it.It is limited to 4000 characters.
+       * @example Alert description
        */
-      mode: 'ADD_MISSING' | 'EXPIRE_AND_REPLACE'
+      description?: string
       /**
        * @description The strategy to use when cleaning up existing alerts for people supplied list of prison numbers
        * @example KEEP_ALL
@@ -673,43 +788,31 @@ export interface components {
       /** @description Optional displayable message relating to the result of the bulk alert creation request specific to this alert. For example the description of the updates that were applied to this alert. */
       message: string
     }
-    /** @description The alert data to use to create an alert in the service */
-    CreateAlert: {
-      /**
-       * @description The prison number of the person the alert is for. Also referred to as the offender number, offender id or NOMS id.
-       * @example A1234AA
-       */
-      prisonNumber: string
-      /**
-       * @description The alert code for the alert. A person can only have one alert using each code active at any one time. The alert code must exist and be active.
-       * @example ABC
-       */
-      alertCode: string
-      /**
-       * @description The description of the alert. This is a free text field and can be used to provide additional information about the alert e.g. the reasons for adding it.It is limited to 4000 characters.
-       * @example Alert description
-       */
-      description?: string
-      /**
-       * @description The user, staff member, approving person or organisation that authorised the alert to be added. This is a free text field and can be used to record the name of the person who authorised the alert. It is limited to 40 characters.
-       * @example A. Nurse, An Agency
-       */
-      authorisedBy?: string
-      /**
-       * Format: date
-       * @description The date the alert should be active from. If not provided, the alert will be active from the current date. The active from date can be in the past or the future, but must be before the active to date
-       * @example 2021-09-27
-       */
-      activeFrom?: string
-      /**
-       * Format: date
-       * @description The date the alert should be active until. If not provided, the alert will be active indefinitely. The active to date can be in the past or the future, but must be after the active from date
-       * @example 2022-07-15
-       */
-      activeTo?: string
+    /** @description The plan of a bulk alert request. Contains detailed information of the result if the bulk alert creation request is actually executed. */
+    BulkAlertPlan: {
+      request: components['schemas']['BulkCreateAlerts']
+      /** @description Collection of prisoner numbers of the existing active alerts that will not be modified, nor have additional alert created for the same prison number */
+      existingActiveAlertsPrisonNumbers: string[]
+      /** @description Collection of prisoner numbers that will have new alerts created */
+      alertsToBeCreatedForPrisonNumbers: string[]
+      /** @description Collection of prison numbers of the existing alerts that will be updated as a result of the bulk alert creation request. */
+      alertsToBeUpdatedForPrisonNumbers: string[]
+      /** @description Collection of prison numbers of the existing alerts that will be made inactive as a result of the bulk alert creation request */
+      alertsToBeExpiredForPrisonNumbers: string[]
     }
     /** @description The request body for creating a new alert type */
-    CreateAlertTypeRequest: CreateAlertTypeRequest
+    CreateAlertTypeRequest: {
+      /**
+       * @description The short code for the alert type
+       * @example A
+       */
+      code: string
+      /**
+       * @description The description of the alert type
+       * @example Alert type description
+       */
+      description: string
+    }
     /** @description An alert code used to categorise alerts */
     AlertCode: {
       /**
@@ -826,16 +929,44 @@ export interface components {
       alertCodes: components['schemas']['AlertCode'][]
     }
     /** @description The request body for creating a new alert code */
-    CreateAlertCodeRequest: CreateAlertCodeRequest
+    CreateAlertCodeRequest: {
+      /**
+       * @description The short code for the alert code
+       * @example A
+       */
+      code: string
+      /**
+       * @description The description of the alert code
+       * @example Alert code description
+       */
+      description: string
+      /**
+       * @description The short code for the parent type
+       * @example A
+       */
+      parent: string
+    }
     /** @description The request body for updating the properties of an alert type */
-    UpdateAlertTypeRequest: UpdateAlertTypeRequest
+    UpdateAlertTypeRequest: {
+      /**
+       * @description The new property value(s) to be updated onto an alert type
+       * @example New description value for an alert type
+       */
+      description: string
+    }
     /** @description The request body for updating the properties of an alert code */
-    UpdateAlertCodeRequest: UpdateAlertCodeRequest
+    UpdateAlertCodeRequest: {
+      /**
+       * @description The new property value(s) to be updated onto an alert code
+       * @example New description value for an alert code
+       */
+      description: string
+    }
     PageAlert: {
-      /** Format: int32 */
-      totalPages?: number
       /** Format: int64 */
       totalElements?: number
+      /** Format: int32 */
+      totalPages?: number
       first?: boolean
       last?: boolean
       /** Format: int32 */
@@ -855,9 +986,9 @@ export interface components {
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       pageSize?: number
+      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
@@ -902,68 +1033,61 @@ export interface components {
   headers: never
   pathItems: never
 }
-
 export type $defs = Record<string, never>
-
-export type external = Record<string, never>
-
 export interface operations {
-  /**
-   * Get an alert by its unique identifier
-   * @description Returns the alert with the matching identifier.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   * * ROLE_NOMIS_ALERTS
-   */
   retrieveAlert: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description Alert unique identifier */
         alertUuid: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Alert found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Alert']
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The alert associated with this identifier was not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Update an alert
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_WRITER
-   * * ROLE_ALERTS_ADMIN
-   * * UPDATE_ALERT
-   * * ROLE_NOMIS_ALERTS
-   */
   updateAlert: {
     parameters: {
+      query?: never
       header?: {
         /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
         Username?: string
@@ -974,6 +1098,7 @@ export interface operations {
         /** @description Alert unique identifier */
         alertUuid: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -983,42 +1108,45 @@ export interface operations {
     responses: {
       /** @description Alert updated successfully */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Alert']
         }
       }
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete an alert
-   * @description This endpoint fully removes the alert from the system. It is used when an alert has been created in error or should otherwise be removed from this service. This endpoint will return 200 OK if the alert was not found or already deleted. This is to prevent low value warnings being logged.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_WRITER
-   * * ROLE_ALERTS_ADMIN
-   * * UPDATE_ALERT
-   * * ROLE_NOMIS_ALERTS
-   */
   deleteAlert: {
     parameters: {
+      query?: never
       header?: {
         /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
         Username?: string
@@ -1029,642 +1157,103 @@ export interface operations {
         /** @description Alert unique identifier */
         alertUuid: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Alert deleted */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Alert was not found or already deleted */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Migrate all alerts for a prisoner from NOMIS
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   * * ROLE_NOMIS_ALERTS
-   */
-  createAlert: {
+  resyncPrisonerAlerts: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
-         * @description Prison number of the prisoner. Also referred to as the offender number, offender id or NOMS id
+         * @description Unique identifier of the prisoner. Aliases: offender number, prisoner number, offender id or NOMS id
          * @example A1234AA
          */
         prisonNumber: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['MigrateAlert'][]
+        'application/json': components['schemas']['ResyncAlert'][]
       }
     }
     responses: {
-      /** @description Alerts migrated successfully */
+      /** @description Resync of alerts successful */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          'application/json': components['schemas']['MigratedAlert'][]
+          'application/json': components['schemas']['ResyncedAlert'][]
         }
       }
       /** @description Bad request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Migrate an alert from NOMIS
-   * @deprecated
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   * * ROLE_NOMIS_ALERTS
-   */
-  migrateAlert: {
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['MigrateAlertRequest']
-      }
-    }
-    responses: {
-      /** @description Alert migrated successfully */
-      201: {
-        content: {
-          'application/json': components['schemas']['Alert']
-        }
-      }
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Conflict, the person already has an active alert using the supplied alert code */
-      409: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Create alerts for multiple people in bulk
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  bulkCreateAlerts: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
-        Source?: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['BulkCreateAlerts']
-      }
-    }
-    responses: {
-      /** @description Alerts created successfully */
-      201: {
-        content: {
-          'application/json': components['schemas']['BulkAlert']
-        }
-      }
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Create an alert
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_WRITER
-   * * ROLE_ALERTS_ADMIN
-   * * UPDATE_ALERT
-   * * ROLE_NOMIS_ALERTS
-   */
-  createAlert_1: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
-        Source?: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateAlert']
-      }
-    }
-    responses: {
-      /** @description Alert created successfully */
-      201: {
-        content: {
-          'application/json': components['schemas']['Alert']
-        }
-      }
-      /** @description Bad request */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Conflict, the person already has an active alert using the supplied alert code */
-      409: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Get all alert types
-   * @description Returns the full list of alert types and the alert codes within those types. By default this endpoint only returns active alert types and codes. The include inactive parameter can be used to return all alert types and codes.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
-  retrieveAlertTypes: {
-    parameters: {
-      query?: {
-        /** @description Include inactive alert types and codes. Defaults to false */
-        includeInactive?: boolean
-      }
-    }
-    responses: {
-      /** @description Alert types and codes found */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertType'][]
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Create an alert type
-   * @description Create a new alert type, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  createAlertType: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateAlertTypeRequest']
-      }
-    }
-    responses: {
-      /** @description Alert type created */
-      201: {
-        content: {
-          'application/json': components['schemas']['AlertType'][]
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Conflict, the alert type code already exists */
-      409: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Retrieve all alert codes
-   * @description Retrieve all alert codes, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
-  retrieveAlertCodes: {
-    parameters: {
-      query?: {
-        /** @description Include inactive alert types and codes. Defaults to false */
-        includeInactive?: boolean
-      }
-    }
-    responses: {
-      /** @description Alert code retrieved */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertCode'][]
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Create an alert code
-   * @description Create a new alert code, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  createAlertCode: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateAlertCodeRequest']
-      }
-    }
-    responses: {
-      /** @description Alert code created */
-      201: {
-        content: {
-          'application/json': components['schemas']['AlertCode']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the parent alert type has not been found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Conflict, the alert code already exists */
-      409: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Deactivate an alert type
-   * @description Deactivate an alert type, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  deactivateAlertType: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-      path: {
-        alertType: string
-      }
-    }
-    responses: {
-      /** @description Alert type deactivated */
-      204: {
-        content: {
-          'application/json': components['schemas']['AlertType']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert type was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Update alert type
-   * @description Set the properties of an alert type to the submitted value.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  updateAlertType: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-      path: {
-        alertType: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateAlertTypeRequest']
-      }
-    }
-    responses: {
-      /** @description Alert type updated */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertType']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert type was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Retrieve an alert code
-   * @description Retrieve an alert code, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
-  retrieveAlertCode: {
-    parameters: {
-      path: {
-        alertCode: string
-      }
-    }
-    responses: {
-      /** @description Alert code retrieved */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertCode']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert code was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Deactivate an alert code
-   * @description Deactivate an alert code, typically from the Alerts UI
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  deactivateAlertCode: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-      path: {
-        alertCode: string
-      }
-    }
-    responses: {
-      /** @description Alert code deactivated */
-      204: {
-        content: never
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert code was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Update alert code
-   * @description Set the properties of an alert code to the submitted value.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_ADMIN
-   */
-  updateAlertCode: {
-    parameters: {
-      header?: {
-        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
-        Username?: string
-      }
-      path: {
-        alertCode: string
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['UpdateAlertCodeRequest']
-      }
-    }
-    responses: {
-      /** @description Alert code updated */
-      200: {
-        content: {
-          'application/json': components['schemas']['AlertCode']
-        }
-      }
-      /** @description Unauthorised, requires a valid Oauth2 token */
-      401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden, requires an appropriate role */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Not found, the alert code was is not found */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * Gets all the alerts for a prisoner by their prison number
-   * @description
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
   retrievePrisonerAlerts: {
     parameters: {
       query?: {
@@ -1694,7 +1283,7 @@ export interface operations {
          */
         activeFromEnd?: string
         /**
-         * @description Filter alerts that contain the search text in their description, authorised by or comments. The search is case insensitive and will match any part of the description, authorised by or comment text
+         * @description Filter alerts that contain the search text in their description or authorised by. The search is case insensitive and will match any part of the description or authorised by text
          * @example Search text
          */
         search?: string
@@ -1705,6 +1294,7 @@ export interface operations {
         /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
         sort?: string[]
       }
+      header?: never
       path: {
         /**
          * @description Prison number of the prisoner. Also referred to as the offender number, offender id or NOMS id
@@ -1712,47 +1302,810 @@ export interface operations {
          */
         prisonNumber: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Alerts found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PageAlert']
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Gets all the alerts for prisoners by their prison numbers
-   * @description Returns all the alerts for the supplied prison numbers. The alerts for each prisoner are mapped to their prison number.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
+  createPrisonerAlert: {
+    parameters: {
+      query?: {
+        /** @description Allows the creation of an alert using an inactive code. Intended only for use by the Alerts UI when the user has the ‘Manage Alerts in Bulk for Prison Estate’ role. Defaults to false */
+        allowInactiveCode?: boolean
+      }
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
+        Source?: string
+      }
+      path: {
+        /**
+         * @description Prison number of the prisoner. Also referred to as the offender number, offender id or NOMS id
+         * @example A1234AA
+         */
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAlert']
+      }
+    }
+    responses: {
+      /** @description Alert created successfully */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Alert']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Conflict, the person already has an active alert using the supplied alert code */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  bulkCreateAlerts: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
+        Source?: string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BulkCreateAlerts']
+      }
+    }
+    responses: {
+      /** @description Alerts created successfully */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BulkAlert']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  planBulkCreateAlerts: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
+        Source?: string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BulkCreateAlerts']
+      }
+    }
+    responses: {
+      /** @description Alerts creation plan generated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BulkAlertPlan']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  retrieveAlertTypes: {
+    parameters: {
+      query?: {
+        /** @description Include inactive alert types and codes. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert types and codes found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertType'][]
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createAlertType: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAlertTypeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert type created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertType'][]
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Conflict, the alert type code already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  retrieveAlertCodes: {
+    parameters: {
+      query?: {
+        /** @description Include inactive alert types and codes. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert code retrieved */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode'][]
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createAlertCode: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateAlertCodeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert code created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the parent alert type has not been found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Conflict, the alert code already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateAlertType: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertType: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAlertTypeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert type updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertType']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert type was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  reactivateAlertType: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertType: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert type reactivated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertType']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert type was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deactivateAlertType: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertType: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert type deactivated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertType']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert type was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  retrieveAlertCode: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        alertCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert code retrieved */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateAlertCode: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertCode: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAlertCodeRequest']
+      }
+    }
+    responses: {
+      /** @description Alert code updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  reactivateAlertCode: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert code reactivated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deactivateAlertCode: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+      }
+      path: {
+        alertCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Alert code deactivated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AlertCode']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not found, the alert code was is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   retrievePrisonerAlerts_1: {
     parameters: {
       query: {
         /** @description The prison numbers of the prisoners */
         prisonNumbers: string[]
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Alerts found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': {
             [key: string]: components['schemas']['Alert'][]
@@ -1761,30 +2114,27 @@ export interface operations {
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get audit events for an alert
-   * @description This endpoint retrieves all the audit events for a given alert
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   * * ROLE_NOMIS_ALERTS
-   */
   retrieveAlertAuditEvents: {
     parameters: {
+      query?: never
       header?: {
         /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
         Source?: string
@@ -1793,70 +2143,91 @@ export interface operations {
         /** @description Alert unique identifier */
         alertUuid: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Audit events retrieved for a given alert */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['AuditEvent'][]
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Alert was not found or already deleted */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get an alert type
-   * @description Returns the specified alert type.
-   *
-   * Requires one of the following roles:
-   * * ROLE_ALERTS_READER
-   * * ROLE_ALERTS_ADMIN
-   * * PRISON
-   */
   retrieveAlertType: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         alertTypeCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Alert type found */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['AlertType'][]
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Not found, the alert type was is not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }

@@ -4,6 +4,9 @@ import logger from '../../logger'
 import {
   AlertCode,
   AlertType,
+  BulkAlert,
+  BulkAlertPlan,
+  BulkAlertsRequest,
   CreateAlertCodeRequest,
   CreateAlertRequest,
   CreateAlertTypeRequest,
@@ -72,9 +75,9 @@ export default class AlertsApiClient {
     })
   }
 
-  createAlert(token: string, requestBody: CreateAlertRequest) {
+  createAlert(token: string, prisonNumber: string, requestBody: CreateAlertRequest) {
     return AlertsApiClient.restClient(token).post({
-      path: `/prisoners/${requestBody.prisonNumber}/alerts?allowInactiveCode=true`,
+      path: `/prisoners/${prisonNumber}/alerts?allowInactiveCode=true`,
       data: requestBody,
     })
   }
@@ -82,6 +85,20 @@ export default class AlertsApiClient {
   getPrisonerActiveAlertForAlertCode(token: string, prisonNumber: string, code: string): Promise<PageAlert> {
     return AlertsApiClient.restClient(token).get({
       path: `/prisoners/${prisonNumber}/alerts?isActive=true&alertCode=${code}`,
+    })
+  }
+
+  planBulkAlerts(token: string, requestBody: BulkAlertsRequest): Promise<BulkAlertPlan> {
+    return AlertsApiClient.restClient(token).post({
+      path: `/bulk-alerts/plan`,
+      data: requestBody,
+    })
+  }
+
+  createBulkAlerts(token: string, requestBody: BulkAlertsRequest): Promise<BulkAlert> {
+    return AlertsApiClient.restClient(token).post({
+      path: `/bulk-alerts`,
+      data: requestBody,
     })
   }
 }

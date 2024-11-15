@@ -7,6 +7,9 @@ export default class ReviewPrisonersController {
       req.journeyData.bulkAlert!.prisonersSelected = req.journeyData.bulkAlert!.prisonersSelected!.filter(
         prisoner => prisoner.prisonerNumber !== remove,
       )
+      if (req.journeyData.bulkAlert!.prisonersSelected!.length === 0) {
+        delete req.journeyData.isCheckAnswers
+      }
       return res.redirect('review-prisoners')
     }
 

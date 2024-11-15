@@ -61,10 +61,10 @@ context('test /bulk-alerts/how-to-add-prisoners screen', () => {
   const validatePageContents = () => {
     cy.title().should(
       'match',
-      /How do you want to select the individuals that should have the ‘(CSIP|OCG Nominal)’ alert applied to them\? - Upload alerts in bulk - DPS/,
+      /How do you want to select the prisoners that should have the ‘(CSIP|OCG Nominal)’ alert applied to them\? - Upload alerts in bulk - DPS/,
     )
     cy.findByRole('heading', {
-      name: /How do you want to select the individuals that should have the ‘(CSIP|OCG Nominal)’ alert applied to them?/i,
+      name: /How do you want to select the prisoners that should have the ‘(CSIP|OCG Nominal)’ alert applied to them?/i,
     }).should('be.visible')
     getContinueButton().should('be.visible')
     getRadio1().should('exist')

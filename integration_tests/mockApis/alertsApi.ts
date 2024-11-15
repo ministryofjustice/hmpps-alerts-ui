@@ -310,6 +310,33 @@ const stubGetPrisonerAlertsFound = () => {
   })
 }
 
+const stubPlanBulkAlerts = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/bulk-alerts/plan',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        request: {
+          prisonNumbers: 'A1234AA',
+          alertCode: 'ABC',
+          description: 'Alert description',
+          cleanupMode: 'KEEP_ALL',
+        },
+        existingActiveAlertsPrisonNumbers: ['string'],
+        alertsToBeCreatedForPrisonNumbers: ['string'],
+        alertsToBeUpdatedForPrisonNumbers: ['string', 'string'],
+        alertsToBeExpiredForPrisonNumbers: ['string', 'string'],
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
@@ -323,6 +350,7 @@ export default {
   stubUpdateAlertType,
   stubUpdateAlertCode,
   stubCreateAlert,
+  stubPlanBulkAlerts,
   stubGetPrisonerAlertsNotFound,
   stubGetPrisonerAlertsFound,
 }

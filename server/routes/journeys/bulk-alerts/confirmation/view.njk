@@ -1,0 +1,33 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Alerts uploaded in bulk successfully" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukPanel({
+                titleText: "Alerts uploaded in bulk successfully"
+            }) }}
+
+            {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
+            {% set createAlerts = alertsCreated.length + " new " + alertLabel + ('s were' if alertsCreated.length > 1 else ' was') %}
+            {% set expireAlerts = alertsExpired.length + " existing " + alertLabel + ('s were' if alertsExpired.length > 1 else ' was') %}
+            {% set otherAlertsCount = existingActiveAlerts.length + alertsUpdated.length %}
+            {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s remain' if otherAlertsCount > 1 else ' remains') %}
+
+            <p class="govuk-body">{{ createAlerts }} created.</p>
+            <p class="govuk-body">{{ expireAlerts }} made inactive.</p>
+            <p class="govuk-body">{{ otherAlerts }} active.</p>
+
+            <h1 class="govuk-heading-m">What you can do next</h1>
+            <p class="govuk-body">
+                <a class="govuk-link govuk-link--no-visited-state" href="/bulk-alerts">Upload more alerts in bulk links</a>
+            </p>
+            <p class="govuk-body">
+                <a class="govuk-link govuk-link--no-visited-state" href="/">Update alerts reference data</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

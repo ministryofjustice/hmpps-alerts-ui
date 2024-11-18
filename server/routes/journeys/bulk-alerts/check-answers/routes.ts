@@ -7,7 +7,7 @@ export default function BulkAlertsCheckAnswersRoutes(alertsApiClient: AlertsApiC
   const controller = new BulkAlertsCheckAnswersController(alertsApiClient)
 
   get('/', controller.GET)
-  post('/', controller.POST)
+  post('/', controller.checkSubmitToAPI, controller.POST)
 
   return router
 }

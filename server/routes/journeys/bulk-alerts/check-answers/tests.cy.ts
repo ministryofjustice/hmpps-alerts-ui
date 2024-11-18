@@ -9,6 +9,7 @@ context('test /bulk-alerts/check-answers', () => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
     cy.task('stubPlanBulkAlerts')
+    cy.task('stubCreateBulkAlerts')
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })

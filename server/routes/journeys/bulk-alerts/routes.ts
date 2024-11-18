@@ -13,6 +13,7 @@ import UploadPrisonerListRoutes from './upload-prisoner-list/routes'
 import SelectUploadLogicRoutes from './select-upload-logic/routes'
 import BulkAlertsCheckAnswersRoutes from './check-answers/routes'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
+import BulkAlertsConfirmationRoutes from './confirmation/routes'
 
 export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiClient }: DataAccess) {
   const { router, get, post } = BaseRouter()
@@ -32,6 +33,7 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
   router.use('/review-prisoners', ReviewPrisonersRoutes())
   router.use('/select-upload-logic', SelectUploadLogicRoutes())
   router.use('/check-answers', BulkAlertsCheckAnswersRoutes(alertsApiClient))
+  router.use('/confirmation', BulkAlertsConfirmationRoutes())
 
   return router
 }

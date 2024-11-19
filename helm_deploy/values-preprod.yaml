@@ -16,6 +16,7 @@ generic-service:
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
     ENVIRONMENT_NAME: PRE-PRODUCTION # Phase banner tag label
+    SENTRY_ENVIRONMENT: PRE-PRODUCTION
     AUDIT_ENABLED: "false"
     ALERTS_API_URL: "https://alerts-api-preprod.hmpps.service.justice.gov.uk"
     PRISONER_SEARCH_API_URL: "https://prisoner-search-preprod.prison.service.justice.gov.uk"

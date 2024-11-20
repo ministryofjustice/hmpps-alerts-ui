@@ -25,7 +25,7 @@ context('test /bulk-alerts/confirmation', () => {
     cy.findByText('Alerts uploaded in bulk successfully').should('be.visible')
 
     cy.findByText('1 new ‘OCG Nominal’ alert was created.').should('be.visible')
-    cy.findByText('0 existing ‘OCG Nominal’ alert was made inactive.').should('be.visible')
+    cy.findByText('0 existing ‘OCG Nominal’ alerts were made inactive.').should('be.visible')
     cy.findByText('2 existing ‘OCG Nominal’ alerts remain active.').should('be.visible')
 
     cy.findByRole('heading', { name: /What you can do next/ }).should('be.visible')

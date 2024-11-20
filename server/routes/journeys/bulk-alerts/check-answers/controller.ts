@@ -4,6 +4,7 @@ import BaseController from '../../../common/controller'
 export default class BulkAlertsCheckAnswersController extends BaseController {
   GET = async (req: Request, res: Response) => {
     req.journeyData.isCheckAnswers = true
+    delete req.journeyData.bulkAlert!.alertCodeSubJourney
 
     const { alertCode, description, prisonersSelected, cleanupMode } = req.journeyData.bulkAlert!
 

@@ -5,8 +5,14 @@ import { SchemaType } from './schemas'
 export default class BulkAlertsController extends BaseController {
   GET = async (req: Request, res: Response) => {
     req.journeyData.bulkAlert ??= {}
-    const alertType = res.locals.formResponses?.['alertType'] ?? req.journeyData.bulkAlert.alertType?.code
-    const alertCode = res.locals.formResponses?.['alertCode'] ?? req.journeyData.bulkAlert.alertCode?.code
+    const alertType =
+      res.locals.formResponses?.['alertType'] ??
+      req.journeyData.bulkAlert.alertCodeSubJourney?.alertType?.code ??
+      req.journeyData.bulkAlert.alertType?.code
+    const alertCode =
+      res.locals.formResponses?.['alertCode'] ??
+      req.journeyData.bulkAlert.alertCodeSubJourney?.alertCode?.code ??
+      req.journeyData.bulkAlert.alertCode?.code
 
     const { alertTypes, alertCodes, typeCodeMap } = await this.mapAlertTypes({
       req,
@@ -19,20 +25,30 @@ export default class BulkAlertsController extends BaseController {
       alertTypes,
       alertCodes,
       typeCodeMap,
-      backUrl: '/',
+      backUrl: req.journeyData.isCheckAnswers ? 'bulk-alerts/check-answers' : '/',
     })
   }
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.bulkAlert!.alertType = req.body.alertType
-    req.journeyData.bulkAlert!.alertCode = req.body.alertCode
-    if (req.body.alertCode.code === 'DOCGM') {
-      res.redirect('bulk-alerts/how-to-add-prisoners')
-    } else {
-      if (req.journeyData.bulkAlert!.description === undefined) {
-        delete req.journeyData.isCheckAnswers
-      }
-      res.redirect('bulk-alerts/enter-alert-reason')
+    if (
+      req.journeyData.isCheckAnswers &&
+      (req.body.alertCode.code === 'DOCGM' || req.journeyData.bulkAlert!.description !== undefined)
+    ) {
+      req.journeyData.bulkAlert!.alertType = req.body.alertType
+      req.journeyData.bulkAlert!.alertCode = req.body.alertCode
+      return res.redirect('bulk-alerts/check-answers')
     }
+
+    if (req.body.alertCode.code === 'DOCGM') {
+      req.journeyData.bulkAlert!.alertType = req.body.alertType
+      req.journeyData.bulkAlert!.alertCode = req.body.alertCode
+      return res.redirect('bulk-alerts/how-to-add-prisoners')
+    }
+
+    req.journeyData.bulkAlert!.alertCodeSubJourney = {
+      alertType: req.body.alertType,
+      alertCode: req.body.alertCode,
+    }
+    return res.redirect('bulk-alerts/enter-alert-reason')
   }
 }

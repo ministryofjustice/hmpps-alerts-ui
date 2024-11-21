@@ -2,7 +2,7 @@ import z from 'zod'
 import { createSchema } from '../../../../middleware/validationMiddleware'
 
 const ERROR_MSG = 'You must enter why you are creating this alert'
-const TOO_LONG_ERROR_MSG = 'Reason why you are creating this alert must be 4,000 characters or less'
+const TOO_LONG_ERROR_MSG = 'Enter why you are creating this alert using 4,000 characters or less'
 
 export const schema = createSchema({
   description: z

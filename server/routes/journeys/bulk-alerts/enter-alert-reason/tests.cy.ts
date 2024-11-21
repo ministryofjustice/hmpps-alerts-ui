@@ -5,7 +5,7 @@ context('test /bulk-alerts/enter-alert-reason screen', () => {
   const uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
-  const getDescriptionInput = () => cy.findByRole('textbox', { name: /Enter why you are creating this alert/ })
+  const getDescriptionInput = () => cy.findByRole('textbox', { name: /Enter why you are creating this alert$/ })
 
   beforeEach(() => {
     cy.task('reset')
@@ -50,7 +50,7 @@ context('test /bulk-alerts/enter-alert-reason screen', () => {
 
     getDescriptionInput().type('n'.repeat(4001), { delay: 0 })
     getContinueButton().click()
-    cy.findByRole('link', { name: /Reason why you are creating this alert must be 4,000 characters or less$/i })
+    cy.findByRole('link', { name: /Enter why you are creating this alert using 4,000 characters or less$/i })
       .should('be.visible')
       .click()
     getDescriptionInput().should('be.focused')

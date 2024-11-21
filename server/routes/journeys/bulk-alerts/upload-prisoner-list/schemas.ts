@@ -8,14 +8,14 @@ import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSear
 export const validateFile =
   (prisonerSearchApiClient: PrisonerSearchApiClient, failureUrl?: string) =>
   async (req: Request, res: Response, next: NextFunction) => {
-    const fail = (msg: string) => {
+    const fail = (...messages: string[]) => {
       if (req.file && fs.existsSync(req.file.path)) {
         fs.unlinkSync(req.file.path)
       }
       req.flash(
         FLASH_KEY__VALIDATION_ERRORS,
         JSON.stringify({
-          file: [msg],
+          file: messages,
         }),
       )
       return res.redirect(failureUrl ?? 'back')
@@ -38,7 +38,7 @@ export const validateFile =
 
     const rowValues: string[][] = []
 
-    const parser = parse(fileData!, { trim: true, skipEmptyLines: true }).on('readable', () => {
+    const parser = parse(fileData!, { trim: true, skipEmptyLines: true, bom: true }).on('readable', () => {
       let row
       // eslint-disable-next-line no-cond-assign
       while ((row = parser.read())) {
@@ -66,28 +66,40 @@ export const validateFile =
     }
 
     const invalidPrisonNumbers = prisonNumbers.filter(prisonNumber => !prisonNumber!.match(/^[A-z][0-9]{4}[A-z]{2}$/))
-    if (invalidPrisonNumbers.length) {
-      if (invalidPrisonNumbers.length > 1) {
-        return fail(
-          `The following prison numbers ${invalidPrisonNumbers.map(itm => `‘${itm}’`).join(', ')} do not follow the format A1234CD`,
-        )
-      }
-      return fail(`The prison number ‘${invalidPrisonNumbers[0]}’ does not follow the format A1234CD`)
-    }
-
     const prisonersUploaded = await prisonerSearchApiClient.searchByPrisonNumbers(req.middleware.clientToken, {
-      prisonerNumbers: prisonNumbers,
+      prisonerNumbers: prisonNumbers.filter(prisonNumber => !invalidPrisonNumbers.includes(prisonNumber)),
     })
     const unrecognisedNumbers = prisonNumbers.filter(
-      itm => !prisonersUploaded.find(found => found.prisonerNumber === itm),
+      itm => !prisonersUploaded.find(found => found.prisonerNumber === itm) && !invalidPrisonNumbers.includes(itm),
     )
-    if (unrecognisedNumbers.length) {
-      if (unrecognisedNumbers.length > 1) {
-        return fail(
-          `The following prison numbers ${unrecognisedNumbers.map(itm => `‘${itm}’`).join(', ')} were not recognised`,
+
+    const invalidOrUnrecognisedPrisonNumberErrorMessages: string[] = []
+
+    if (invalidPrisonNumbers.length) {
+      if (invalidPrisonNumbers.length > 1) {
+        invalidOrUnrecognisedPrisonNumberErrorMessages.push(
+          `The following prison numbers ${invalidPrisonNumbers.map(itm => `‘${itm}’`).join(', ')} do not follow the format A1234CD`,
+        )
+      } else {
+        invalidOrUnrecognisedPrisonNumberErrorMessages.push(
+          `The prison number ‘${invalidPrisonNumbers[0]}’ does not follow the format A1234CD`,
         )
       }
-      return fail(`The prison number ‘${unrecognisedNumbers[0]}’ was not recognised`)
+    }
+    if (unrecognisedNumbers.length) {
+      if (unrecognisedNumbers.length > 1) {
+        invalidOrUnrecognisedPrisonNumberErrorMessages.push(
+          `The following prison numbers ${unrecognisedNumbers.map(itm => `‘${itm}’`).join(', ')} were not recognised`,
+        )
+      } else {
+        invalidOrUnrecognisedPrisonNumberErrorMessages.push(
+          `The prison number ‘${unrecognisedNumbers[0]}’ was not recognised`,
+        )
+      }
+    }
+
+    if (invalidOrUnrecognisedPrisonNumberErrorMessages.length) {
+      return fail(...invalidOrUnrecognisedPrisonNumberErrorMessages)
     }
 
     req.body = { prisonersUploaded }

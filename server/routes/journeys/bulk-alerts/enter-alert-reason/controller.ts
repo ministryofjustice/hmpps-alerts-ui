@@ -7,13 +7,23 @@ export default class EnterAlertReasonController {
 
     res.render('bulk-alerts/enter-alert-reason/view', {
       description,
-      backUrl: '../bulk-alerts',
+      backUrl:
+        req.journeyData.isCheckAnswers && req.journeyData.bulkAlert!.alertCodeSubJourney === undefined
+          ? 'check-answers'
+          : '../bulk-alerts',
     })
   }
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     req.journeyData.bulkAlert!.description = req.body.description
-    if (req.journeyData.bulkAlert!.prisonersSelected?.length) {
+    if (req.journeyData.bulkAlert!.alertCodeSubJourney) {
+      req.journeyData.bulkAlert!.alertType = req.journeyData.bulkAlert!.alertCodeSubJourney.alertType!
+      req.journeyData.bulkAlert!.alertCode = req.journeyData.bulkAlert!.alertCodeSubJourney.alertCode!
+      delete req.journeyData.bulkAlert!.alertCodeSubJourney
+    }
+    if (req.journeyData.isCheckAnswers) {
+      res.redirect('check-answers')
+    } else if (req.journeyData.bulkAlert!.prisonersSelected?.length) {
       res.redirect('review-prisoners')
     } else {
       res.redirect('how-to-add-prisoners')

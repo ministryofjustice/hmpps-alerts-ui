@@ -21,7 +21,16 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS], false))
 
-  router.use(redirectCheckAnswersMiddleware([/select-prisoner(\/query)?$/, /upload-prisoner-list$/, /check-answers$/]))
+  router.use(
+    redirectCheckAnswersMiddleware([
+      /bulk-alerts$/,
+      /enter-alert-reason$/,
+      /select-prisoner(\/query)?$/,
+      /upload-prisoner-list(\?_csrf=.+)?$/,
+      /review-prisoners\?remove=[A-z0-9]+/,
+      /check-answers$/,
+    ]),
+  )
 
   get('/', controller.GET)
   post('/', validate(schemaFactory(alertsApiClient)), controller.POST)

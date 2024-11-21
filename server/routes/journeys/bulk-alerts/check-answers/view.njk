@@ -98,10 +98,10 @@
     <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
-        {% set createAlerts = plan.alertsToBeCreatedForPrisonNumbers.length + " new " + alertLabel + ('s' if plan.alertsToBeCreatedForPrisonNumbers.length > 1 else '') %}
-        {% set expireAlerts = plan.alertsToBeExpiredForPrisonNumbers.length + " existing " + alertLabel + ('s' if plan.alertsToBeExpiredForPrisonNumbers.length > 1 else '') %}
+        {% set createAlerts = plan.alertsToBeCreatedForPrisonNumbers.length + " new " + alertLabel + ('s' if plan.alertsToBeCreatedForPrisonNumbers.length !== 1 else '') %}
+        {% set expireAlerts = plan.alertsToBeExpiredForPrisonNumbers.length + " existing " + alertLabel + ('s' if plan.alertsToBeExpiredForPrisonNumbers.length !== 1 else '') %}
         {% set otherAlertsCount = plan.existingActiveAlertsPrisonNumbers.length + plan.alertsToBeUpdatedForPrisonNumbers.length %}
-        {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s' if otherAlertsCount > 1 else '') %}
+        {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s' if otherAlertsCount !== 1 else '') %}
         {{ govukWarningText({
             text: createAlerts + " will be created, " + expireAlerts + " will be made inactive, and " + otherAlerts + " will remain active."
         }) }}

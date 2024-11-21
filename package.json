@@ -91,7 +91,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "^3.689.0",
+    "@aws-sdk/client-sqs": "^3.693.0",
     "@cypress/code-coverage": "^3.13.6",
     "@ministryofjustice/frontend": "^3.0.3",
     "@ministryofjustice/hmpps-connect-dps-components": "^1.3.0",
@@ -186,7 +186,7 @@
     "nyc": "^17.1.0",
     "prettier": "^3.3.3",
     "prettier-plugin-jinja-template": "^2.0.0",
-    "sass": "^1.80.7",
+    "sass": "^1.81.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.6.3",

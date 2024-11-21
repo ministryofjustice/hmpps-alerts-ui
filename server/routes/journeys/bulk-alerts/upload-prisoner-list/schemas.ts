@@ -98,9 +98,6 @@ export const validateFile =
       }
     }
 
-    console.log(unrecognisedNumbers)
-    console.log(invalidOrUnrecognisedPrisonNumberErrorMessages)
-
     if (invalidOrUnrecognisedPrisonNumberErrorMessages.length) {
       return fail(...invalidOrUnrecognisedPrisonNumberErrorMessages)
     }

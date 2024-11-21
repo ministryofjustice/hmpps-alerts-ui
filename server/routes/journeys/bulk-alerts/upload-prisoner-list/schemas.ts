@@ -38,7 +38,7 @@ export const validateFile =
 
     const rowValues: string[][] = []
 
-    const parser = parse(fileData!, { trim: true, skipEmptyLines: true }).on('readable', () => {
+    const parser = parse(fileData!, { trim: true, skipEmptyLines: true, bom: true }).on('readable', () => {
       let row
       // eslint-disable-next-line no-cond-assign
       while ((row = parser.read())) {

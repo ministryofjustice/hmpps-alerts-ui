@@ -3,6 +3,7 @@ import { validateFile } from './schemas'
 import UploadPrisonerListController from './controller'
 import PrisonerSearchApiClient from '../../../../data/prisonerSearchApiClient'
 import setUpMultipartFormDataParsing from '../../../../middleware/setUpMultipartFormDataParsing'
+import overrideTimeoutMiddleware from '../../../../middleware/overrideTimeoutMiddleware'
 
 export default function UploadPrisonerListRoutes(prisonerSearchApiClient: PrisonerSearchApiClient) {
   const { router, get, post } = BaseRouter()
@@ -11,6 +12,7 @@ export default function UploadPrisonerListRoutes(prisonerSearchApiClient: Prison
   get('/', controller.GET)
   post(
     '/',
+    overrideTimeoutMiddleware(5 * 60),
     setUpMultipartFormDataParsing(),
     validateFile(prisonerSearchApiClient, 'upload-prisoner-list'),
     controller.POST,

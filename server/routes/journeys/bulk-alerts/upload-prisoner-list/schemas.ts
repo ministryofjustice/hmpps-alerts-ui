@@ -5,6 +5,8 @@ import { finished } from 'stream/promises'
 import { FLASH_KEY__VALIDATION_ERRORS } from '../../../../utils/constants'
 import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSearchApiClient'
 
+const PRISONER_SEARCH_CHUNK_SIZE = 1000
+
 export const validateFile =
   (prisonerSearchApiClient: PrisonerSearchApiClient, failureUrl?: string) =>
   async (req: Request, res: Response, next: NextFunction) => {
@@ -66,9 +68,21 @@ export const validateFile =
     }
 
     const invalidPrisonNumbers = prisonNumbers.filter(prisonNumber => !prisonNumber!.match(/^[A-z][0-9]{4}[A-z]{2}$/))
-    const prisonersUploaded = await prisonerSearchApiClient.searchByPrisonNumbers(req.middleware.clientToken, {
-      prisonerNumbers: prisonNumbers.filter(prisonNumber => !invalidPrisonNumbers.includes(prisonNumber)),
-    })
+
+    const allPrisonNumbersToSearch = prisonNumbers.filter(prisonNumber => !invalidPrisonNumbers.includes(prisonNumber))
+    const chunkCount = Math.ceil(allPrisonNumbersToSearch.length / PRISONER_SEARCH_CHUNK_SIZE)
+    const prisonNumbersToSearchChunks = Array.from(Array(chunkCount).keys()).map(idx =>
+      allPrisonNumbersToSearch.slice(idx * PRISONER_SEARCH_CHUNK_SIZE, (idx + 1) * PRISONER_SEARCH_CHUNK_SIZE),
+    )
+
+    const prisonersUploaded = (
+      await Promise.all(
+        prisonNumbersToSearchChunks.map(prisonerNumbers =>
+          prisonerSearchApiClient.searchByPrisonNumbers(req.middleware.clientToken, { prisonerNumbers }),
+        ),
+      )
+    ).flat()
+
     const unrecognisedNumbers = prisonNumbers.filter(
       itm => !prisonersUploaded.find(found => found.prisonerNumber === itm) && !invalidPrisonNumbers.includes(itm),
     )

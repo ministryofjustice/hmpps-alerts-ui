@@ -7,6 +7,7 @@ import {
   TelemetryClient,
 } from 'applicationinsights'
 import { Request, RequestHandler } from 'express'
+import { v4 } from 'uuid'
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
 import type { ApplicationInfo } from '../applicationInfo'
 
@@ -47,6 +48,13 @@ export function buildAppInsightsClient(
     defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
     defaultClient.context.tags['ai.application.ver'] = buildNumber
 
+    defaultClient.addTelemetryProcessor(({ data }) => {
+      const { url } = data.baseData!
+      return !url?.endsWith('/health') && !url?.endsWith('/ping') && !url?.endsWith('/metrics')
+    })
+
+    defaultClient.addTelemetryProcessor(addUserDataToRequests)
+
     defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
       if (contextObjects && data?.baseData) {
         const { correlationContext } = contextObjects!
@@ -57,7 +65,6 @@ export function buildAppInsightsClient(
       }
       return true
     })
-    defaultClient.addTelemetryProcessor(addUserDataToRequests)
 
     return defaultClient
   }
@@ -70,6 +77,7 @@ export function appInsightsMiddleware(): RequestHandler {
       const context = getCorrelationContext()
       if (context && req.route) {
         context.customProperties.setProperty('operationName', `${req.method} ${req.route?.path}`)
+        context.customProperties.setProperty('operationId', v4())
       }
     })
     next()

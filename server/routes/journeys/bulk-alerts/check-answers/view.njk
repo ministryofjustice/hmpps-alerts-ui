@@ -95,7 +95,7 @@
         ]
     }) }}
 
-    <form method="post">
+    <form method="post" data-module="form-spinner" data-loading-text="Updating alerts">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
         {% set createAlerts = plan.alertsToBeCreatedForPrisonNumbers.length + " new " + alertLabel + ('s' if plan.alertsToBeCreatedForPrisonNumbers.length !== 1 else '') %}

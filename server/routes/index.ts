@@ -8,7 +8,6 @@ import AlertTypeRoutes from './alert-type/routes'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
-import journeyStateMachine from '../middleware/journeyStateMachine'
 import JourneyRoutes from './journeys/routes'
 import setUpJourneyData from '../middleware/setUpJourneyData'
 import removeTrailingSlashMiddleware from '../middleware/removeTrailingSlashMiddleware'
@@ -39,7 +38,6 @@ export default function routes({ auditService }: Services): Router {
 
   router.use(insertJourneyIdentifier())
   router.use(setUpJourneyData())
-  router.use(journeyStateMachine())
   router.use('/:journeyId', JourneyRoutes(apiClient))
 
   return router

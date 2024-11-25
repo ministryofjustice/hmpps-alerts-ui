@@ -1,9 +1,12 @@
 import { Router } from 'express'
 import { DataAccess } from '../../data'
 import BulkAlertsRoutes from './bulk-alerts/routes'
+import journeyStateMachine from '../../middleware/journeyStateMachine'
 
 export default function JourneyRoutes(dataAccess: DataAccess) {
   const router = Router({ mergeParams: true })
+
+  router.use(journeyStateMachine())
 
   router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess))
 

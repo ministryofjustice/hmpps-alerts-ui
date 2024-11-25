@@ -6,6 +6,7 @@ export default class BulkAlertsConfirmationController {
 
     // delete unnecessary properties to reduce session storage size
     req.journeyData.bulkAlert = { result: result!, alertCode: alertCode! }
+    req.journeyData.journeyCompleted = true
 
     res.render('bulk-alerts/confirmation/view', {
       ...result,

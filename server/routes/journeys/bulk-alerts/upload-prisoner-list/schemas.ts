@@ -4,6 +4,7 @@ import { parse } from 'csv-parse'
 import { finished } from 'stream/promises'
 import { FLASH_KEY__VALIDATION_ERRORS } from '../../../../utils/constants'
 import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSearchApiClient'
+import { sanitisePrisonerObject } from '../../../../utils/utils'
 
 const PRISONER_SEARCH_CHUNK_SIZE = 1000
 
@@ -116,7 +117,9 @@ export const validateFile =
       return fail(...invalidOrUnrecognisedPrisonNumberErrorMessages)
     }
 
-    req.body = { prisonersUploaded }
+    req.body = {
+      prisonersUploaded: prisonersUploaded.map(sanitisePrisonerObject),
+    }
     return next()
   }
 

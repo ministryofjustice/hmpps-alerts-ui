@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSearchApiClient'
+import { sanitisePrisonerObject } from '../../../../utils/utils'
 
 export default class SelectPrisonerController {
   constructor(readonly prisonerSearchApiClient: PrisonerSearchApiClient) {}
@@ -14,7 +15,9 @@ export default class SelectPrisonerController {
           req.middleware.clientToken,
           req.journeyData.bulkAlert!.query!,
         )
-      ).slice(0, 50)
+      )
+        .slice(0, 50)
+        .map(sanitisePrisonerObject)
       req.journeyData.bulkAlert!.prisonersSearched = prisoners
     } else if (res.locals.validationErrors?.selectedPrisoner) {
       prisoners = req.journeyData.bulkAlert!.prisonersSearched

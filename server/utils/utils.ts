@@ -59,9 +59,9 @@ export const prisonerName = (name: string, boldLastName = true) => {
 /**
  * filter out unnecessary properties from the Prisoner objects, to reduce session storage size
  * @param Prisoner raw Prisoner object from API calls
- * @returns sanitised Prisoner object with only properties used by hmpps-alerts-ui
+ * @returns summarised Prisoner object with only properties used by hmpps-alerts-ui
  */
-export const sanitisePrisonerObject = ({ prisonerNumber, firstName, lastName, cellLocation, prisonId }: Prisoner) => ({
+export const summarisePrisoner = ({ prisonerNumber, firstName, lastName, cellLocation, prisonId }: Prisoner) => ({
   prisonerNumber,
   firstName,
   lastName,

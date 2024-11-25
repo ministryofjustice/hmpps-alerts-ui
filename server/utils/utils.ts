@@ -1,3 +1,5 @@
+import { Prisoner } from '../data/prisonerSearchApiClient'
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0]!.toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -53,3 +55,16 @@ export const prisonerName = (name: string, boldLastName = true) => {
   formattedName += `, ${firstNames.join(' ')}`
   return formattedName?.trim()
 }
+
+/**
+ * filter out unnecessary properties from the Prisoner objects, to reduce session storage size
+ * @param Prisoner raw Prisoner object from API calls
+ * @returns summarised Prisoner object with only properties used by hmpps-alerts-ui
+ */
+export const summarisePrisoner = ({ prisonerNumber, firstName, lastName, cellLocation, prisonId }: Prisoner) => ({
+  prisonerNumber,
+  firstName,
+  lastName,
+  cellLocation,
+  prisonId,
+})

@@ -35,6 +35,7 @@ export type JourneyData = {
 }
 
 export type BulkAlertJourney = Partial<{
+  planId: string
   alertCodeSubJourney: BulkAlertJourney
   alertType: Omit<AlertType, 'alertCodes'>
   alertCode: AlertCode

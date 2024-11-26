@@ -8,6 +8,7 @@ context('test /bulk-alerts screen', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
+    cy.task('stubCreateBulkAlertsPlan')
   })
 
   it('select alert - happy path', () => {

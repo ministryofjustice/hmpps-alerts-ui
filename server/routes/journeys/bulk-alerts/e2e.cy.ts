@@ -27,6 +27,7 @@ context('test /bulk-alerts full journey', () => {
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
+    cy.task('stubCreateBulkAlertsPlan')
     cy.task('stubPostPrisonerSearchOneFound')
     cy.task('stubPostPrisonerSearchByNumber')
     cy.task('stubPlanBulkAlerts')

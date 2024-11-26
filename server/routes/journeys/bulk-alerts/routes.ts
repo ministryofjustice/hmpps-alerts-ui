@@ -33,7 +33,7 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
   )
 
   get('/', controller.GET)
-  post('/', validate(schemaFactory(alertsApiClient)), controller.POST)
+  post('/', validate(schemaFactory(alertsApiClient)), controller.START_BACKEND_SESSION, controller.POST)
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())

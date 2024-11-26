@@ -6,6 +6,7 @@ import {
   AlertType,
   BulkAlert,
   BulkAlertPlan,
+  BulkAlertPlanRequest,
   BulkAlertsRequest,
   CreateAlertCodeRequest,
   CreateAlertRequest,
@@ -99,6 +100,57 @@ export default class AlertsApiClient {
     return AlertsApiClient.restClient(token).post({
       path: `/bulk-alerts`,
       data: requestBody,
+    })
+  }
+
+  createBulkAlertsPlan(token: string): Promise<{ planId: string }> {
+    return AlertsApiClient.restClient(token).post({
+      path: `/bulk-alerts-plan`,
+      data: {},
+    })
+  }
+
+  addPrisonersToBulkAlertsPlan(token: string, planId: string, prisonNumbers: string[]): Promise<BulkAlertPlan> {
+    return AlertsApiClient.restClient(token).patch({
+      path: `/bulk-alerts-plan/${planId}`,
+      data: { prisonNumbers },
+    })
+  }
+
+  removePrisonersFromBulkAlertsPlan(token: string, planId: string, prisonNumber: string) {
+    return AlertsApiClient.restClient(token).delete({
+      path: `/bulk-alerts-plan/${planId}/prisoners/${prisonNumber}`,
+    })
+  }
+
+  patchBulkAlertsPlan(token: string, planId: string, requestBody: BulkAlertPlanRequest): Promise<BulkAlertPlan> {
+    return AlertsApiClient.restClient(token).patch({
+      path: `/bulk-alerts-plan/${planId}`,
+      data: requestBody,
+    })
+  }
+
+  startBulkAlertsPlan(token: string, planId: string): Promise<BulkAlertPlan> {
+    return AlertsApiClient.restClient(token).get({
+      path: `/bulk-alerts-plan/${planId}/start`,
+    })
+  }
+
+  getPrisonersFromBulkAlertsPlan(token: string, planId: string) {
+    return AlertsApiClient.restClient(token).get({
+      path: `/bulk-alerts-plan/${planId}/prisoners`,
+    })
+  }
+
+  getStatusFromBulkAlertsPlan(token: string, planId: string) {
+    return AlertsApiClient.restClient(token).get({
+      path: `/bulk-alerts-plan/${planId}/status`,
+    })
+  }
+
+  getResultFromBulkAlertsPlan(token: string, planId: string) {
+    return AlertsApiClient.restClient(token).get({
+      path: `/bulk-alerts-plan/${planId}/result`,
     })
   }
 }

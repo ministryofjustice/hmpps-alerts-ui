@@ -376,6 +376,24 @@ const stubCreateBulkAlerts = () => {
   })
 }
 
+const stubCreateBulkAlertsPlan = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/bulk-alerts-plan',
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        planId: 'plan-uuid',
+      },
+    },
+  })
+}
+
 export default {
   stubCreateAlertType,
   stubGetAlertTypes,
@@ -391,6 +409,7 @@ export default {
   stubCreateAlert,
   stubPlanBulkAlerts,
   stubCreateBulkAlerts,
+  stubCreateBulkAlertsPlan,
   stubGetPrisonerAlertsNotFound,
   stubGetPrisonerAlertsFound,
 }

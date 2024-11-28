@@ -43,7 +43,6 @@ export type BulkAlertJourney = Partial<{
   useCsvUpload: boolean
   query: string
   prisonersSearched: Prisoner[]
-  prisonersSelected: Prisoner[]
   prisonersSelectedCount: number
   cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
   result: BulkAlert

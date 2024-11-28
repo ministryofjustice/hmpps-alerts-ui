@@ -30,8 +30,13 @@ context('test /bulk-alerts full journey', () => {
     cy.task('stubCreateBulkAlertsPlan')
     cy.task('stubPostPrisonerSearchOneFound')
     cy.task('stubPostPrisonerSearchByNumber')
-    cy.task('stubPlanBulkAlerts')
-    cy.task('stubCreateBulkAlerts')
+    cy.task('stubGetBulkAlertsPlanPrisonersTwoFound')
+    cy.task('stubDeleteBulkAlertsPlanPrisoner')
+    cy.task('stubPatchBulkAlertsPlan')
+    cy.task('stubGetBulkAlertsPlan')
+    cy.task('stubStartBulkAlertsPlan')
+    cy.task('stubGetBulkAlertsPlanStatus')
+    cy.task('stubGetBulkAlertsPlanResult')
   })
 
   it('create bulk alerts - happy path', () => {
@@ -90,9 +95,9 @@ context('test /bulk-alerts full journey', () => {
     // Change prisoner list
     cy.findByRole('link', { name: /Change the selected prisoners/i }).click()
     cy.findByRole('link', { name: /Remove prison number A1111AA/ }).click()
-    cy.findByRole('button', { name: /^Add someone to the list$/ }).click()
-    cy.findByRole('radio', { name: /Add a group of people using a CSV file/ }).click()
-    getContinueButton().click()
+    cy.findAllByRole('button', { name: /Add people using a CSV file/ })
+      .first()
+      .click()
     getChooseFile().attachFile({
       fileContent: new Blob(['Prison number\nA1111AA']),
       fileName: 'test.csv',
@@ -103,8 +108,6 @@ context('test /bulk-alerts full journey', () => {
     cy.findAllByRole('button', { name: /^Continue$/ })
       .first()
       .click()
-    getLogicRadio2().click()
-    getContinueButton().click()
 
     // Change from OCG Nominal alert to other type
     cy.contains('dt', 'Alert').next().should('include.text', 'OCG Nominal')

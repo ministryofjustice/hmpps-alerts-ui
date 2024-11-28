@@ -15,6 +15,7 @@ import {
   UpdateAlertCodeRequest,
   UpdateAlertTypeRequest,
 } from '../@types/alerts/alertsApiTypes'
+import { Prisoner } from './prisonerSearchApiClient'
 
 export default class AlertsApiClient {
   constructor() {}
@@ -136,21 +137,27 @@ export default class AlertsApiClient {
     })
   }
 
-  getPrisonersFromBulkAlertsPlan(token: string, planId: string) {
+  getPrisonersFromBulkAlertsPlan(token: string, planId: string): Promise<{ prisoners: Prisoner[] }> {
     return AlertsApiClient.restClient(token).get({
       path: `/bulk-alerts-plan/${planId}/prisoners`,
     })
   }
 
-  getStatusFromBulkAlertsPlan(token: string, planId: string) {
+  getStatusFromBulkAlertsPlan(token: string, planId: string): Promise<{ status: string }> {
     return AlertsApiClient.restClient(token).get({
       path: `/bulk-alerts-plan/${planId}/status`,
     })
   }
 
-  getResultFromBulkAlertsPlan(token: string, planId: string) {
+  getResultFromBulkAlertsPlan(token: string, planId: string): Promise<BulkAlert> {
     return AlertsApiClient.restClient(token).get({
       path: `/bulk-alerts-plan/${planId}/result`,
+    })
+  }
+
+  getBulkAlertsPlan(token: string, planId: string): Promise<BulkAlertPlan> {
+    return AlertsApiClient.restClient(token).get({
+      path: `/bulk-alerts-plan/${planId}`,
     })
   }
 }

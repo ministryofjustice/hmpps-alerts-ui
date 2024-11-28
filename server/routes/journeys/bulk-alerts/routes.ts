@@ -37,9 +37,9 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())
-  router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient))
-  router.use('/upload-prisoner-list', UploadPrisonerListRoutes(prisonerSearchApiClient))
-  router.use('/review-prisoners', ReviewPrisonersRoutes())
+  router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient, alertsApiClient))
+  router.use('/upload-prisoner-list', UploadPrisonerListRoutes(alertsApiClient))
+  router.use('/review-prisoners', ReviewPrisonersRoutes(alertsApiClient))
   router.use('/select-upload-logic', SelectUploadLogicRoutes())
   router.use('/check-answers', BulkAlertsCheckAnswersRoutes(alertsApiClient))
   router.use('/confirmation', BulkAlertsConfirmationRoutes())

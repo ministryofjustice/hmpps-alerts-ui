@@ -8,8 +8,11 @@ context('test /bulk-alerts/check-answers', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
-    cy.task('stubPlanBulkAlerts')
-    cy.task('stubCreateBulkAlerts')
+    cy.task('stubPatchBulkAlertsPlan')
+    cy.task('stubGetBulkAlertsPlan')
+    cy.task('stubStartBulkAlertsPlan')
+    cy.task('stubGetBulkAlertsPlanStatus')
+    cy.task('stubGetBulkAlertsPlanResult')
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
@@ -68,20 +71,7 @@ context('test /bulk-alerts/check-answers', () => {
         },
         description: 'reason text',
         useCsvUpload: false,
-        prisonersSelected: [
-          {
-            firstName: 'TestName',
-            lastName: 'User',
-            prisonerNumber: 'A1111AA',
-            cellLocation: 'A-1-1',
-          },
-          {
-            firstName: 'John',
-            lastName: 'Smith',
-            prisonerNumber: 'B1111BB',
-            cellLocation: 'A-1-1',
-          },
-        ],
+        prisonersSelectedCount: 2,
         cleanupMode: 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED',
       },
     })
@@ -100,6 +90,7 @@ context('test /bulk-alerts/check-answers', () => {
     cy.visit(`/${uuid}/bulk-alerts`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
       bulkAlert: {
+        planId: 'plan-uuid',
         alertType: {
           code: 'DB',
           description: 'DB Description',
@@ -109,20 +100,7 @@ context('test /bulk-alerts/check-answers', () => {
           description: 'OCG Nominal',
         },
         useCsvUpload: false,
-        prisonersSelected: [
-          {
-            firstName: 'TestName',
-            lastName: 'User',
-            prisonerNumber: 'A1111AA',
-            cellLocation: 'A-1-1',
-          },
-          {
-            firstName: 'John',
-            lastName: 'Smith',
-            prisonerNumber: 'B1111BB',
-            cellLocation: 'A-1-1',
-          },
-        ],
+        prisonersSelectedCount: 2,
         cleanupMode: 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED',
       },
     })

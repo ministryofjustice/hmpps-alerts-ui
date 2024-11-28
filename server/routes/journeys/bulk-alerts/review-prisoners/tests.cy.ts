@@ -11,9 +11,11 @@ context('test /bulk-alerts/review-prisoners screen', () => {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetAlertTypes')
+    cy.task('stubDeleteBulkAlertsPlanPrisoner')
   })
 
-  it('should try out all cases', () => {
+  it('should render a list of selected prisoners', () => {
+    cy.task('stubGetBulkAlertsPlanPrisonersTwoFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/review-prisoners$/)
 
@@ -45,41 +47,23 @@ context('test /bulk-alerts/review-prisoners screen', () => {
     cy.url().should('to.match', /\/bulk-alerts\/select-upload-logic$/)
     cy.go('back')
     cy.reload()
+
+    // remain on same page after clicking on remove prisoner link
     cy.findByRole('link', { name: /Remove prison number A1111AA/ })
       .should('be.visible')
       .click()
+    cy.url().should('to.match', /\/bulk-alerts\/review-prisoners$/)
 
-    // test with 1 selected prisoner
-    cy.title().should(
-      'equal',
-      'Review the prisoner that will have the ‘OCG Nominal’ alert applied - Upload alerts in bulk - DPS',
-    )
-    cy.findByRole('heading', {
-      name: /Review the prisoner that will have the ‘OCG Nominal’ alert applied/,
-    }).should('be.visible')
-    cy.findByRole('link', { name: /^Back$/ })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('match', /how-to-add-prisoners$/)
-    cy.findByText('A1111AA').should('not.exist')
-    cy.findByText('B1111BB').should('be.visible')
-    cy.findAllByRole('button', { name: /Add another person individually/ })
-      .first()
-      .should('have.attr', 'href')
-      .and('match', /select-prisoner$/)
-    cy.findAllByRole('button', { name: /Add people using a CSV file/ })
-      .first()
-      .should('have.attr', 'href')
-      .and('match', /upload-prisoner-list$/)
     cy.findAllByRole('button', { name: /^Continue$/ })
       .first()
       .click()
     cy.url().should('to.match', /\/bulk-alerts\/select-upload-logic$/)
-    cy.go('back')
-    cy.reload()
-    cy.findByRole('link', { name: /Remove prison number B1111BB/ })
-      .should('be.visible')
-      .click()
+  })
+
+  it('should direct user to add prisoner if there is no prisoner selected', () => {
+    cy.task('stubGetBulkAlertsPlanPrisonersNoneFound')
+    navigateToTestPage()
+    cy.url().should('to.match', /\/bulk-alerts\/review-prisoners$/)
 
     // test with no selected prisoner
     cy.title().should('equal', 'There are no prisoners selected - Upload alerts in bulk - DPS')
@@ -112,20 +96,6 @@ context('test /bulk-alerts/review-prisoners screen', () => {
           description: 'OCG Nominal',
         },
         useCsvUpload: false,
-        prisonersSelected: [
-          {
-            firstName: 'TestName',
-            lastName: 'User',
-            prisonerNumber: 'A1111AA',
-            cellLocation: 'A-1-1',
-          },
-          {
-            firstName: 'John',
-            lastName: 'Smith',
-            prisonerNumber: 'B1111BB',
-            cellLocation: 'A-1-1',
-          },
-        ],
       },
     })
     cy.visit(`/${uuid}/bulk-alerts/review-prisoners`)

@@ -14,7 +14,7 @@ context('test /bulk-alerts/upload-prisoner-list screen', () => {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetAlertTypes')
-    cy.task('stubPostPrisonerSearchByNumber')
+    cy.task('stubPatchBulkAlertsPlan')
   })
 
   it('should try out all cases', () => {
@@ -43,56 +43,6 @@ context('test /bulk-alerts/upload-prisoner-list screen', () => {
     })
     getUploadButton().click()
     cy.findByRole('link', { name: /The selected file does not contain any prison numbers/ })
-      .should('be.visible')
-      .click()
-    getChooseFile().should('be.focused')
-
-    // file with 1 invalid prisonNumber
-    getChooseFile().attachFile({
-      fileContent: new Blob(['Prison number\nA1111BB\nINVALID_01']),
-      fileName: 'test.csv',
-      mimeType: 'text/csv',
-    })
-    getUploadButton().click()
-    cy.findByRole('link', { name: /The prison number ‘INVALID_01’ does not follow the format A1234CD/ })
-      .should('be.visible')
-      .click()
-    getChooseFile().should('be.focused')
-
-    // file with 2 invalid prisonNumbers
-    getChooseFile().attachFile({
-      fileContent: new Blob(['Prison number\nA1111BB\nINVALID_01\nINVALID_02']),
-      fileName: 'test.csv',
-      mimeType: 'text/csv',
-    })
-    getUploadButton().click()
-    cy.findByRole('link', {
-      name: /The following prison numbers ‘INVALID_01’, ‘INVALID_02’ do not follow the format A1234CD/,
-    })
-      .should('be.visible')
-      .click()
-    getChooseFile().should('be.focused')
-
-    // file with 1 prisonNumber not found
-    getChooseFile().attachFile({
-      fileContent: new Blob(['Prison number\nA1111AA\nA1111BB']),
-      fileName: 'test.csv',
-      mimeType: 'text/csv',
-    })
-    getUploadButton().click()
-    cy.findByRole('link', { name: /The prison number ‘A1111BB’ was not recognised/ })
-      .should('be.visible')
-      .click()
-    getChooseFile().should('be.focused')
-
-    // file with 2 prisonNumbers not found
-    getChooseFile().attachFile({
-      fileContent: new Blob(['Prison number\nA1111AA\nA1111BB\nA1111CC']),
-      fileName: 'test.csv',
-      mimeType: 'text/csv',
-    })
-    getUploadButton().click()
-    cy.findByRole('link', { name: /The following prison numbers ‘A1111BB’, ‘A1111CC’ were not recognised/ })
       .should('be.visible')
       .click()
     getChooseFile().should('be.focused')

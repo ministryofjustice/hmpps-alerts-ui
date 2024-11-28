@@ -68,3 +68,8 @@ export const summarisePrisoner = ({ prisonerNumber, firstName, lastName, cellLoc
   cellLocation,
   prisonId,
 })
+
+export const sleep = (seconds: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, seconds * 1000)
+  })

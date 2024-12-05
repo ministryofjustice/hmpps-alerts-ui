@@ -21,14 +21,15 @@ import PrisonerSearchApiClient from './prisonerSearchApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
+const tokenStore = config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore()
+
 export const dataAccess = () => ({
   applicationInfo,
-  hmppsAuthClient: new HmppsAuthClient(
-    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
-  ),
+  hmppsAuthClient: new HmppsAuthClient(tokenStore),
   alertsApiClient: new AlertsApiClient(),
   prisonerSearchApiClient: new PrisonerSearchApiClient(),
   hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+  tokenStore,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>

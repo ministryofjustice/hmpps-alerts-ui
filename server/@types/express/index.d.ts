@@ -19,12 +19,7 @@ export declare module 'express-session' {
     deactivateAlertType: string
     reactivateAlertType: string
     updateAlertTypeCode: string
-    journeyDataMap: JourneyDataMap
   }
-}
-
-type JourneyDataMap = {
-  [key: string]: JourneyData
 }
 
 export type JourneyData = {

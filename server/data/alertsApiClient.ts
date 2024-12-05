@@ -141,7 +141,7 @@ export default class AlertsApiClient {
   }
 
   startBulkAlertsPlan(token: string, planId: string) {
-    return AlertsApiClient.restClient(token).get({
+    return AlertsApiClient.restClient(token).post({
       path: `/bulk-alerts/plan/${planId}/start`,
     })
   }

@@ -424,7 +424,7 @@ const stubGetBulkAlertsPlan = () => {
 const stubStartBulkAlertsPlan = () => {
   return stubFor({
     request: {
-      method: 'GET',
+      method: 'POST',
       urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/start',
     },
     response: {

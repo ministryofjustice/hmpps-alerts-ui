@@ -343,6 +343,24 @@ const stubPatchBulkAlertsPlan = () => {
   })
 }
 
+const stubPatchBulkAlertsPlanFailureToAddPrisoner = () => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+',
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        userMessage: 'Stubbed API error message',
+      },
+    },
+  })
+}
+
 const stubGetBulkAlertsPlanPrisonersTwoFound = () => {
   return stubFor({
     request: {
@@ -475,6 +493,7 @@ export default {
   stubCreateAlert,
   stubCreateBulkAlertsPlan,
   stubPatchBulkAlertsPlan,
+  stubPatchBulkAlertsPlanFailureToAddPrisoner,
   stubGetBulkAlertsPlanPrisonersTwoFound,
   stubGetBulkAlertsPlanPrisonersNoneFound,
   stubGetPrisonerAlertsNotFound,

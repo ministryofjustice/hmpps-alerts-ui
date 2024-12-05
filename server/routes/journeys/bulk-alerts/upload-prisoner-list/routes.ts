@@ -1,11 +1,11 @@
 import BaseRouter from '../../../common/routes'
-import { validateFile } from './schemas'
+import { validateFileAndSubmitPrisonerList } from './schemas'
 import UploadPrisonerListController from './controller'
-import PrisonerSearchApiClient from '../../../../data/prisonerSearchApiClient'
 import setUpMultipartFormDataParsing from '../../../../middleware/setUpMultipartFormDataParsing'
 import overrideTimeoutMiddleware from '../../../../middleware/overrideTimeoutMiddleware'
+import AlertsApiClient from '../../../../data/alertsApiClient'
 
-export default function UploadPrisonerListRoutes(prisonerSearchApiClient: PrisonerSearchApiClient) {
+export default function UploadPrisonerListRoutes(alertsApiClient: AlertsApiClient) {
   const { router, get, post } = BaseRouter()
   const controller = new UploadPrisonerListController()
 
@@ -14,7 +14,7 @@ export default function UploadPrisonerListRoutes(prisonerSearchApiClient: Prison
     '/',
     overrideTimeoutMiddleware(5 * 60),
     setUpMultipartFormDataParsing(),
-    validateFile(prisonerSearchApiClient, 'upload-prisoner-list'),
+    validateFileAndSubmitPrisonerList(alertsApiClient, 'upload-prisoner-list'),
     controller.POST,
   )
 

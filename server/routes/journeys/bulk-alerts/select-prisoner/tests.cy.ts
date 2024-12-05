@@ -16,6 +16,7 @@ context('test /bulk-alerts/select-prisoner screen', () => {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetAlertTypes')
+    cy.task('stubPatchBulkAlertsPlan')
   })
 
   it('should try out all cases for single-result happy path', () => {

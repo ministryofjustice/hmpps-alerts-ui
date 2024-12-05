@@ -1,5 +1,5 @@
 import { CaseLoad, HmppsUser } from '../../interfaces/hmppsUser'
-import { AlertCode, AlertType, BulkAlert } from '../alerts/alertsApiTypes'
+import { AlertCode, AlertType, BulkPlanStatus } from '../alerts/alertsApiTypes'
 import { Prisoner } from '../../data/prisonerSearchApiClient'
 
 export declare module 'express-session' {
@@ -35,6 +35,7 @@ export type JourneyData = {
 }
 
 export type BulkAlertJourney = Partial<{
+  planId: string
   alertCodeSubJourney: BulkAlertJourney
   alertType: Omit<AlertType, 'alertCodes'>
   alertCode: AlertCode
@@ -42,9 +43,9 @@ export type BulkAlertJourney = Partial<{
   useCsvUpload: boolean
   query: string
   prisonersSearched: Prisoner[]
-  prisonersSelected: Prisoner[]
+  prisonersSelectedCount: number
   cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
-  result: BulkAlert
+  result: BulkPlanStatus['counts']
 }>
 
 export declare global {

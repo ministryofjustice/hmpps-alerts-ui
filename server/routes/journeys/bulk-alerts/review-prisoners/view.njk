@@ -58,13 +58,13 @@
                         {% set prisonerNameHyperlink %}
                             <div data-qa="prisoner-summary">
                                 <div data-qa="prisoner-name">
-                                    <a href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonerNumber }}"
+                                    <a href="{{ digitalPrisonServicesUrl }}/prisoner/{{ prisoner.prisonNumber }}"
                                        target="_blank"
                                        class="govuk-link govuk-link--no-visited-state">
                                         {{ prisoner | firstNameLastName | toTitleCase | prisonerName  }}
                                     </a>
                                 </div>
-                                <div class="govuk-body-s govuk-!-margin-0" data-qa="prisoner-number">{{ prisoner.prisonerNumber }}</div>
+                                <div class="govuk-body-s govuk-!-margin-0" data-qa="prisoner-number">{{ prisoner.prisonNumber }}</div>
                             </div>
                         {% endset %}
 
@@ -82,12 +82,12 @@
                                 },
                                 text: prisoner.cellLocation
                             }, {
-                                html: '<a href="review-prisoners?remove=' + prisoner.prisonerNumber + '"
+                                html: '<a href="review-prisoners?remove=' + prisoner.prisonNumber + '"
                             class="govuk-link--no-visited-state">
-                            Remove<span class="govuk-visually-hidden"> prison number ' + prisoner.prisonerNumber + '</span>
+                            Remove<span class="govuk-visually-hidden"> prison number ' + prisoner.prisonNumber + '</span>
                         </a>',
                                 classes: 'govuk-!-text-align-right',
-                                attributes: { 'data-qa': 'remove-prison-number-' + prisoner.prisonerNumber }
+                                attributes: { 'data-qa': 'remove-prison-number-' + prisoner.prisonNumber }
                             }
                         ]), prisonersList) %}
                     {% endfor %}

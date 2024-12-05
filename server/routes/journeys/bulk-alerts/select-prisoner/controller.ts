@@ -1,10 +1,14 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSearchApiClient'
 import { summarisePrisoner } from '../../../../utils/utils'
+import AlertsApiClient from '../../../../data/alertsApiClient'
 
 export default class SelectPrisonerController {
-  constructor(readonly prisonerSearchApiClient: PrisonerSearchApiClient) {}
+  constructor(
+    readonly prisonerSearchApiClient: PrisonerSearchApiClient,
+    readonly alertsApiClient: AlertsApiClient,
+  ) {}
 
   GET = async (req: Request, res: Response) => {
     let prisoners: Prisoner[] | undefined
@@ -31,12 +35,16 @@ export default class SelectPrisonerController {
     })
   }
 
-  POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    req.journeyData.bulkAlert!.prisonersSelected ??= []
-    req.journeyData.bulkAlert!.prisonersSelected = req.journeyData.bulkAlert!.prisonersSelected!.filter(
-      prisoner => prisoner.prisonerNumber !== req.body.selectedPrisoner.prisonerNumber,
+  UPDATE_BACKEND_SESSION = async (req: Request<unknown, unknown, SchemaType>, _res: Response, next: NextFunction) => {
+    await this.alertsApiClient.addPrisonersToBulkAlertsPlan(
+      req.middleware.clientToken,
+      req.journeyData.bulkAlert!.planId!,
+      [req.body.selectedPrisoner.prisonerNumber],
     )
-    req.journeyData.bulkAlert!.prisonersSelected!.push(req.body.selectedPrisoner)
+    next()
+  }
+
+  POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     delete req.journeyData.bulkAlert!.query
     delete req.journeyData.bulkAlert!.prisonersSearched
     res.redirect('review-prisoners')

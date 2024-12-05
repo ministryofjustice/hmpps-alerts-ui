@@ -50,28 +50,10 @@ context('test /bulk-alerts/confirmation', () => {
           description: 'OCG Nominal',
         },
         result: {
-          existingActiveAlerts: [
-            {
-              alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-              prisonNumber: 'A1234AA',
-              message: 'string',
-            },
-          ],
-          alertsCreated: [
-            {
-              alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-              prisonNumber: 'A1234AA',
-              message: 'string',
-            },
-          ],
-          alertsUpdated: [
-            {
-              alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-              prisonNumber: 'A1234AA',
-              message: 'string',
-            },
-          ],
-          alertsExpired: [],
+          existingAlerts: 1,
+          created: 1,
+          updated: 1,
+          expired: 0,
         },
       },
     })

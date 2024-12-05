@@ -8,6 +8,12 @@ export type CreateAlertCodeRequest = components['schemas']['CreateAlertCodeReque
 export type UpdateAlertTypeRequest = components['schemas']['UpdateAlertTypeRequest']
 export type UpdateAlertCodeRequest = components['schemas']['UpdateAlertCodeRequest']
 export type CreateAlertRequest = components['schemas']['CreateAlert']
-export type BulkAlertsRequest = components['schemas']['BulkCreateAlerts']
-export type BulkAlertPlan = components['schemas']['BulkAlertPlan']
-export type BulkAlert = components['schemas']['BulkAlert']
+export type BulkPlan = components['schemas']['BulkPlan']
+export type BulkPlanPrisoners = components['schemas']['BulkPlanPrisoners']
+export type BulkPlanAffect = components['schemas']['BulkPlanAffect']
+export type BulkPlanStatus = components['schemas']['BulkPlanStatus']
+export type BulkAlertPlanRequest = Partial<{
+  alertCode: string
+  description: string
+  cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
+}>

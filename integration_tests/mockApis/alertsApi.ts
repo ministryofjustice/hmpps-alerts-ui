@@ -310,38 +310,62 @@ const stubGetPrisonerAlertsFound = () => {
   })
 }
 
-const stubPlanBulkAlerts = () => {
+const stubCreateBulkAlertsPlan = () => {
   return stubFor({
     request: {
       method: 'POST',
       urlPattern: '/alerts-api/bulk-alerts/plan',
     },
     response: {
-      status: 200,
+      status: 201,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: {
-        request: {
-          prisonNumbers: 'A1234AA',
-          alertCode: 'ABC',
-          description: 'Alert description',
-          cleanupMode: 'KEEP_ALL',
-        },
-        existingActiveAlertsPrisonNumbers: ['string'],
-        alertsToBeCreatedForPrisonNumbers: ['string'],
-        alertsToBeUpdatedForPrisonNumbers: ['string', 'string'],
-        alertsToBeExpiredForPrisonNumbers: ['string', 'string'],
+        id: 'plan-uuid',
       },
     },
   })
 }
 
-const stubCreateBulkAlerts = () => {
+const stubPatchBulkAlertsPlan = () => {
   return stubFor({
     request: {
-      method: 'POST',
-      urlPattern: '/alerts-api/bulk-alerts',
+      method: 'PATCH',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+',
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
+const stubPatchBulkAlertsPlanFailureToAddPrisoner = () => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+',
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        userMessage: 'Stubbed API error message',
+      },
+    },
+  })
+}
+
+const stubGetBulkAlertsPlanPrisonersTwoFound = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/prisoners',
     },
     response: {
       status: 200,
@@ -349,28 +373,106 @@ const stubCreateBulkAlerts = () => {
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: {
-        existingActiveAlerts: [
+        prisoners: [
           {
-            alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-            prisonNumber: 'A1234AA',
-            message: 'string',
+            firstName: 'TestName',
+            lastName: 'User',
+            prisonNumber: 'A1111AA',
+            dateOfBirth: '1932-02-02',
+            status: 'On remand',
+            prisonName: 'HMP Kirkham',
+            cellLocation: 'A-1-1',
+          },
+          {
+            firstName: 'John',
+            lastName: 'Smith',
+            prisonNumber: 'B1111BB',
+            dateOfBirth: '1932-02-02',
+            status: 'On remand',
+            prisonName: 'HMP Kirkham',
+            cellLocation: 'A-1-1',
           },
         ],
-        alertsCreated: [
-          {
-            alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-            prisonNumber: 'A1234AA',
-            message: 'string',
-          },
-        ],
-        alertsUpdated: [
-          {
-            alertUuid: '8cdadcf3-b003-4116-9956-c99bd8df6a00',
-            prisonNumber: 'A1234AA',
-            message: 'string',
-          },
-        ],
-        alertsExpired: [],
+      },
+    },
+  })
+}
+
+const stubGetBulkAlertsPlanPrisonersNoneFound = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/prisoners',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        prisoners: [],
+      },
+    },
+  })
+}
+
+const stubGetBulkAlertsPlan = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/affects',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        counts: {
+          existingAlerts: 1,
+          created: 1,
+          updated: 2,
+          expired: 2,
+        },
+      },
+    },
+  })
+}
+
+const stubStartBulkAlertsPlan = () => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/start',
+    },
+    response: {
+      status: 202,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
+const stubGetBulkAlertsPlanResult = () => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/bulk-alerts/plan/[\\w-]+/status',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        completedAt: '2024-12-05T11:13:18.561Z',
+        counts: {
+          existingAlerts: 1,
+          created: 1,
+          updated: 2,
+          expired: 2,
+        },
       },
     },
   })
@@ -389,8 +491,14 @@ export default {
   stubUpdateAlertType,
   stubUpdateAlertCode,
   stubCreateAlert,
-  stubPlanBulkAlerts,
-  stubCreateBulkAlerts,
+  stubCreateBulkAlertsPlan,
+  stubPatchBulkAlertsPlan,
+  stubPatchBulkAlertsPlanFailureToAddPrisoner,
+  stubGetBulkAlertsPlanPrisonersTwoFound,
+  stubGetBulkAlertsPlanPrisonersNoneFound,
   stubGetPrisonerAlertsNotFound,
   stubGetPrisonerAlertsFound,
+  stubGetBulkAlertsPlan,
+  stubStartBulkAlertsPlan,
+  stubGetBulkAlertsPlanResult,
 }

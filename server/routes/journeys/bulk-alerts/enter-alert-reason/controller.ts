@@ -23,7 +23,7 @@ export default class EnterAlertReasonController {
     }
     if (req.journeyData.isCheckAnswers) {
       res.redirect('check-answers')
-    } else if (req.journeyData.bulkAlert!.prisonersSelected?.length) {
+    } else if (req.journeyData.bulkAlert!.prisonersSelectedCount) {
       res.redirect('review-prisoners')
     } else {
       res.redirect('how-to-add-prisoners')

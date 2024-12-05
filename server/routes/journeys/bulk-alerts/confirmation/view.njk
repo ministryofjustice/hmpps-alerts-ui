@@ -12,9 +12,9 @@
             }) }}
 
             {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
-            {% set createAlerts = alertsCreated.length + " new " + alertLabel + ('s were' if alertsCreated.length !== 1 else ' was') %}
-            {% set expireAlerts = alertsExpired.length + " existing " + alertLabel + ('s were' if alertsExpired.length !== 1 else ' was') %}
-            {% set otherAlertsCount = existingActiveAlerts.length + alertsUpdated.length %}
+            {% set createAlerts = result.created + " new " + alertLabel + ('s were' if result.created !== 1 else ' was') %}
+            {% set expireAlerts = result.expired + " existing " + alertLabel + ('s were' if result.expired !== 1 else ' was') %}
+            {% set otherAlertsCount = result.existingAlerts + result.updated %}
             {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s remain' if otherAlertsCount !== 1 else ' remains') %}
 
             <p class="govuk-body">{{ createAlerts }} created.</p>

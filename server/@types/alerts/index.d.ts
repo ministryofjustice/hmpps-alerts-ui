@@ -45,6 +45,31 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/search/alerts/prison-numbers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Gets all the alerts for prisoners by their prison numbers
+     * @description Returns all the alerts for the supplied prison numbers.
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__RO
+     *     * ROLE_PRISONER_ALERTS__RW
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['retrievePrisonerAlerts']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/resync/{prisonNumber}/alerts': {
     parameters: {
       query?: never
@@ -85,7 +110,7 @@ export interface paths {
      *     * ROLE_PRISONER_ALERTS__RW
      *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
-    get: operations['retrievePrisonerAlerts']
+    get: operations['retrievePrisonerAlerts_1']
     put?: never
     /**
      * Create an alert
@@ -102,29 +127,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/bulk-alerts': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    /**
-     * Create alerts for multiple people in bulk
-     * @description
-     *
-     *     Requires one of the following roles:
-     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
-     */
-    post: operations['bulkCreateAlerts']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/bulk-alerts/plan': {
     parameters: {
       query?: never
@@ -135,13 +137,36 @@ export interface paths {
     get?: never
     put?: never
     /**
-     * Plan the creation of alerts for multiple people in bulk
+     * Create the plan for bulk alerts
      * @description
      *
      *     Requires one of the following roles:
      *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
-    post: operations['planBulkCreateAlerts']
+    post: operations['createPlan']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-alerts/plan/{id}/start': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Start the plan for bulk alerts
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    post: operations['startPlan']
     delete?: never
     options?: never
     head?: never
@@ -210,6 +235,29 @@ export interface paths {
     options?: never
     head?: never
     patch?: never
+    trace?: never
+  }
+  '/bulk-alerts/plan/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Update the plan for bulk alerts
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    patch: operations['updatePlan']
     trace?: never
   }
   '/alert-types/{alertType}': {
@@ -359,7 +407,7 @@ export interface paths {
     patch: operations['deactivateAlertCode']
     trace?: never
   }
-  '/prisoners/alerts': {
+  '/bulk-alerts/plan/{id}/status': {
     parameters: {
       query?: never
       header?: never
@@ -367,15 +415,59 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Gets all the alerts for prisoners by their prison numbers
-     * @description Returns all the alerts for the supplied prison numbers. The alerts for each prisoner are mapped to their prison number.
+     * Get the status of a plan
+     * @description
      *
      *     Requires one of the following roles:
-     *     * ROLE_PRISONER_ALERTS__RO
-     *     * ROLE_PRISONER_ALERTS__RW
      *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
      */
-    get: operations['retrievePrisonerAlerts_1']
+    get: operations['getPlanStatus']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-alerts/plan/{id}/prisoners': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get prisoners associated with a plan
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    get: operations['getPlanPrisoners']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-alerts/plan/{id}/affects': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get counts associated with a plan
+     * @description
+     *
+     *     Requires one of the following roles:
+     *     * ROLE_PRISONER_ALERTS__PRISONER_ALERTS_ADMINISTRATION_UI
+     */
+    get: operations['getPlanAffect']
     put?: never
     post?: never
     delete?: never
@@ -581,6 +673,9 @@ export interface components {
        */
       description: string
     }
+    AlertsResponse: {
+      content: components['schemas']['Alert'][]
+    }
     ResyncAlert: {
       /**
        * Format: int64
@@ -703,102 +798,9 @@ export interface components {
        */
       activeTo?: string
     }
-    /** @description The request body for bulk creating alerts for multiple people */
-    BulkCreateAlerts: {
-      /**
-       * @description The prison numbers of the people to create alerts for. Also referred to as the offender number, offender id or NOMS id.
-       * @example A1234AA
-       */
-      prisonNumbers: string[]
-      /**
-       * @description The alert code for the alert. A person can only have one alert using each code active at any one time. The alert code must exist and be active.
-       * @example ABC
-       */
-      alertCode: string
-      /**
-       * @description The description of the alert. This is a free text field and can be used to provide additional information about the alert e.g. the reasons for adding it.It is limited to 4000 characters.
-       * @example Alert description
-       */
-      description?: string
-      /**
-       * @description The strategy to use when cleaning up existing alerts for people supplied list of prison numbers
-       * @example KEEP_ALL
-       * @enum {string}
-       */
-      cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
-    }
-    /** @description A set of alerts created in bulk. Contains detailed information of the result of a bulk alert creation request. */
-    BulkAlert: {
-      /**
-       * Format: uuid
-       * @description The unique identifier assigned to the alerts created in bulk
-       * @example b49053d8-3f29-4b1e-a9c5-15bde8c6e6cf
-       */
-      bulkAlertUuid: string
-      request: components['schemas']['BulkCreateAlerts']
-      /**
-       * Format: date-time
-       * @description The date and time the alerts were created in bulk
-       */
-      requestedAt: string
-      /**
-       * @description The username of the user who created the alerts in bulk
-       * @example USER1234
-       */
-      requestedBy: string
-      /**
-       * @description The displayable name of the user who created the alerts in bulk
-       * @example Firstname Lastname
-       */
-      requestedByDisplayName: string
-      /**
-       * Format: date-time
-       * @description The date and time the request to create alerts in bulk was completed
-       */
-      completedAt: string
-      /**
-       * @description Whether the request to create alerts in bulk was successful or not
-       * @example true
-       */
-      successful: boolean
-      /** @description Collection of displayable messages relating to the result of the bulk alert creation request as a whole */
-      messages: string[]
-      /** @description Collection of existing active alerts that were not modified and resulted in no additional alert being created for the associated prison number. */
-      existingActiveAlerts: components['schemas']['BulkAlertAlert'][]
-      /** @description Collection of new alerts that were created in bulk */
-      alertsCreated: components['schemas']['BulkAlertAlert'][]
-      /** @description Collection of existing alerts that were updated as a result of the bulk alert creation request. The message for updated alerts will contain what was updated for example changing the active from date. */
-      alertsUpdated: components['schemas']['BulkAlertAlert'][]
-      /** @description Collection of existing alerts that were made inactive as a result of the bulk alert creation request */
-      alertsExpired: components['schemas']['BulkAlertAlert'][]
-    }
-    /** @description Summary information of an alert affected by a bulk alert creation request */
-    BulkAlertAlert: {
-      /**
-       * Format: uuid
-       * @description The unique identifier assigned to the alert
-       * @example 8cdadcf3-b003-4116-9956-c99bd8df6a00
-       */
-      alertUuid: string
-      /**
-       * @description The prison number of the person the alert is for. Also referred to as the offender number, offender id or NOMS id.
-       * @example A1234AA
-       */
-      prisonNumber: string
-      /** @description Optional displayable message relating to the result of the bulk alert creation request specific to this alert. For example the description of the updates that were applied to this alert. */
-      message: string
-    }
-    /** @description The plan of a bulk alert request. Contains detailed information of the result if the bulk alert creation request is actually executed. */
-    BulkAlertPlan: {
-      request: components['schemas']['BulkCreateAlerts']
-      /** @description Collection of prisoner numbers of the existing active alerts that will not be modified, nor have additional alert created for the same prison number */
-      existingActiveAlertsPrisonNumbers: string[]
-      /** @description Collection of prisoner numbers that will have new alerts created */
-      alertsToBeCreatedForPrisonNumbers: string[]
-      /** @description Collection of prison numbers of the existing alerts that will be updated as a result of the bulk alert creation request. */
-      alertsToBeUpdatedForPrisonNumbers: string[]
-      /** @description Collection of prison numbers of the existing alerts that will be made inactive as a result of the bulk alert creation request */
-      alertsToBeExpiredForPrisonNumbers: string[]
+    BulkPlan: {
+      /** Format: uuid */
+      id: string
     }
     /** @description The request body for creating a new alert type */
     CreateAlertTypeRequest: {
@@ -946,6 +948,35 @@ export interface components {
        */
       parent: string
     }
+    AddPrisonNumbers: {
+      type: 'AddPrisonNumbers'
+    } & (Omit<WithRequired<components['schemas']['BulkAction'], 'type'>, 'type'> & {
+      prisonNumbers: string[]
+    })
+    BulkAction: {
+      type: string
+    }
+    RemovePrisonNumbers: {
+      type: 'RemovePrisonNumbers'
+    } & (Omit<WithRequired<components['schemas']['BulkAction'], 'type'>, 'type'> & {
+      prisonNumbers: string[]
+    })
+    SetAlertCode: {
+      type: 'SetAlertCode'
+    } & (Omit<WithRequired<components['schemas']['BulkAction'], 'type'>, 'type'> & {
+      alertCode: string
+    })
+    SetCleanupMode: {
+      type: 'SetCleanupMode'
+    } & (Omit<WithRequired<components['schemas']['BulkAction'], 'type'>, 'type'> & {
+      /** @enum {string} */
+      cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
+    })
+    SetDescription: {
+      type: 'SetDescription'
+    } & (Omit<WithRequired<components['schemas']['BulkAction'], 'type'>, 'type'> & {
+      description?: string
+    })
     /** @description The request body for updating the properties of an alert type */
     UpdateAlertTypeRequest: {
       /**
@@ -998,13 +1029,49 @@ export interface components {
       property?: string
       ignoreCase?: boolean
     }
+    BulkPlanCounts: {
+      /** Format: int32 */
+      existingAlerts: number
+      /** Format: int32 */
+      created: number
+      /** Format: int32 */
+      updated: number
+      /** Format: int32 */
+      expired: number
+    }
+    BulkPlanStatus: {
+      /** Format: date-time */
+      createdAt?: string
+      createdBy?: string
+      createdByDisplayName?: string
+      /** Format: date-time */
+      startedAt?: string
+      startedBy?: string
+      startedByDisplayName?: string
+      /** Format: date-time */
+      completedAt?: string
+      counts?: components['schemas']['BulkPlanCounts']
+    }
+    BulkPlanPrisoners: {
+      prisoners: components['schemas']['PrisonerSummary'][]
+    }
+    PrisonerSummary: {
+      prisonNumber: string
+      firstName: string
+      lastName: string
+      prisonCode?: string
+      cellLocation?: string
+    }
+    BulkPlanAffect: {
+      counts: components['schemas']['BulkPlanCounts']
+    }
     AuditEvent: {
       /**
        * @description The audit event type
        * @example CREATED
        * @enum {string}
        */
-      action: 'CREATED' | 'UPDATED' | 'DELETED'
+      action: 'CREATED' | 'UPDATED' | 'DELETED' | 'INACTIVE'
       /**
        * @description A description of what has changed
        * @example The active to date was updated from 2012-02-03 to 2012-04-05
@@ -1197,6 +1264,50 @@ export interface operations {
       }
     }
   }
+  retrievePrisonerAlerts: {
+    parameters: {
+      query?: {
+        includeInactive?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': string[]
+      }
+    }
+    responses: {
+      /** @description Alerts found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AlertsResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   resyncPrisonerAlerts: {
     parameters: {
       query?: never
@@ -1254,7 +1365,7 @@ export interface operations {
       }
     }
   }
-  retrievePrisonerAlerts: {
+  retrievePrisonerAlerts_1: {
     parameters: {
       query?: {
         /**
@@ -1409,7 +1520,7 @@ export interface operations {
       }
     }
   }
-  bulkCreateAlerts: {
+  createPlan: {
     parameters: {
       query?: never
       header?: {
@@ -1421,19 +1532,15 @@ export interface operations {
       path?: never
       cookie?: never
     }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['BulkCreateAlerts']
-      }
-    }
+    requestBody?: never
     responses: {
-      /** @description Alerts created successfully */
+      /** @description Alerts creation plan generated successfully */
       201: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['BulkAlert']
+          'application/json': components['schemas']['BulkPlan']
         }
       }
       /** @description Bad request */
@@ -1465,7 +1572,7 @@ export interface operations {
       }
     }
   }
-  planBulkCreateAlerts: {
+  startPlan: {
     parameters: {
       query?: never
       header?: {
@@ -1474,32 +1581,19 @@ export interface operations {
         /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
         Source?: string
       }
-      path?: never
+      path: {
+        id: string
+      }
       cookie?: never
     }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['BulkCreateAlerts']
-      }
-    }
+    requestBody?: never
     responses: {
-      /** @description Alerts creation plan generated successfully */
-      200: {
+      /** @description Start plan accepted - will run asynchronously */
+      202: {
         headers: {
           [name: string]: unknown
         }
-        content: {
-          'application/json': components['schemas']['BulkAlertPlan']
-        }
-      }
-      /** @description Bad request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
+        content?: never
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
       401: {
@@ -1711,6 +1805,70 @@ export interface operations {
       }
       /** @description Conflict, the alert code already exists */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updatePlan: {
+    parameters: {
+      query?: never
+      header?: {
+        /** @description The username of the user interacting with the client service. This can be used instead of the `user_name` or `username` token claim when the client service is acting on behalf of a user. The value passed in the username header will only be used if a `user_name` or `username` token claim is not present. */
+        Username?: string
+        /** @description The source of the request. Will default to 'DPS' if not suppliedThis value will be assigned to the additionalInformation.source property in published domain events. A source value of 'NOMIS' will allow any username value that is less than 32 characters to be supplied. If this username is not found, its value will be used for the user display name property. A source value of 'NOMIS' will also allow no username value to be supplied and will use 'NOMIS' for both the username and display name properties. */
+        Source?: string
+      }
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': (
+          | components['schemas']['AddPrisonNumbers']
+          | components['schemas']['RemovePrisonNumbers']
+          | components['schemas']['SetAlertCode']
+          | components['schemas']['SetCleanupMode']
+          | components['schemas']['SetDescription']
+        )[]
+      }
+    }
+    responses: {
+      /** @description Alerts creation plan generated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BulkPlan']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
         headers: {
           [name: string]: unknown
         }
@@ -2089,27 +2247,24 @@ export interface operations {
       }
     }
   }
-  retrievePrisonerAlerts_1: {
+  getPlanStatus: {
     parameters: {
-      query: {
-        /** @description The prison numbers of the prisoners */
-        prisonNumbers: string[]
-      }
+      query?: never
       header?: never
-      path?: never
+      path: {
+        id: string
+      }
       cookie?: never
     }
     requestBody?: never
     responses: {
-      /** @description Alerts found */
+      /** @description Successfully retrieved the status of a plan */
       200: {
         headers: {
           [name: string]: unknown
         }
         content: {
-          'application/json': {
-            [key: string]: components['schemas']['Alert'][]
-          }
+          'application/json': components['schemas']['BulkPlanStatus']
         }
       }
       /** @description Unauthorised, requires a valid Oauth2 token */
@@ -2123,6 +2278,113 @@ export interface operations {
       }
       /** @description Forbidden, requires an appropriate role */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description No plan found with the provided identifier */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getPlanPrisoners: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieved prisoners associated with a plan */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BulkPlanPrisoners']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description No plan found with the provided identifier */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getPlanAffect: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieved counts of affect of plan */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BulkPlanAffect']
+        }
+      }
+      /** @description Unauthorised, requires a valid Oauth2 token */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description No plan found with the provided identifier */
+      404: {
         headers: {
           [name: string]: unknown
         }
@@ -2234,4 +2496,7 @@ export interface operations {
       }
     }
   }
+}
+type WithRequired<T, K extends keyof T> = T & {
+  [P in K]-?: T[P]
 }

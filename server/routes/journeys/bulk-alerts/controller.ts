@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import BaseController from '../../common/controller'
 import { SchemaType } from './schemas'
 
@@ -27,6 +27,14 @@ export default class BulkAlertsController extends BaseController {
       typeCodeMap,
       backUrl: req.journeyData.isCheckAnswers ? 'bulk-alerts/check-answers' : '/',
     })
+  }
+
+  START_BACKEND_SESSION = async (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.journeyData.bulkAlert!.planId) {
+      const { id: planId } = await this.alertsApiService.createBulkAlertsPlan(req.middleware.clientToken)
+      req.journeyData.bulkAlert!.planId = planId
+    }
+    next()
   }
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {

@@ -61,7 +61,7 @@
                     text: "Number of prisoners on list"
                 },
                 value: {
-                    text: prisonersSelected.length
+                    text: prisonersSelectedCount
                 },
                 actions: {
                     items: [
@@ -98,9 +98,9 @@
     <form method="post" data-module="form-spinner" data-loading-text="Updating alerts">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {% set alertLabel = "‘" + alertCode.description + "’ alert" %}
-        {% set createAlerts = plan.alertsToBeCreatedForPrisonNumbers.length + " new " + alertLabel + ('s' if plan.alertsToBeCreatedForPrisonNumbers.length !== 1 else '') %}
-        {% set expireAlerts = plan.alertsToBeExpiredForPrisonNumbers.length + " existing " + alertLabel + ('s' if plan.alertsToBeExpiredForPrisonNumbers.length !== 1 else '') %}
-        {% set otherAlertsCount = plan.existingActiveAlertsPrisonNumbers.length + plan.alertsToBeUpdatedForPrisonNumbers.length %}
+        {% set createAlerts = plan.created + " new " + alertLabel + ('s' if plan.created !== 1 else '') %}
+        {% set expireAlerts = plan.expired + " existing " + alertLabel + ('s' if plan.expired !== 1 else '') %}
+        {% set otherAlertsCount = plan.existingAlerts + plan.updated %}
         {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s' if otherAlertsCount !== 1 else '') %}
         {{ govukWarningText({
             text: createAlerts + " will be created, " + expireAlerts + " will be made inactive, and " + otherAlerts + " will remain active."

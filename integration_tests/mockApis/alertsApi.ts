@@ -377,7 +377,7 @@ const stubGetBulkAlertsPlanPrisonersTwoFound = () => {
           {
             firstName: 'TestName',
             lastName: 'User',
-            prisonerNumber: 'A1111AA',
+            prisonNumber: 'A1111AA',
             dateOfBirth: '1932-02-02',
             status: 'On remand',
             prisonName: 'HMP Kirkham',
@@ -386,7 +386,7 @@ const stubGetBulkAlertsPlanPrisonersTwoFound = () => {
           {
             firstName: 'John',
             lastName: 'Smith',
-            prisonerNumber: 'B1111BB',
+            prisonNumber: 'B1111BB',
             dateOfBirth: '1932-02-02',
             status: 'On remand',
             prisonName: 'HMP Kirkham',

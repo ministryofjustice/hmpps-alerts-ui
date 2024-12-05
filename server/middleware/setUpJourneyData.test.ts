@@ -1,12 +1,13 @@
-import { Request, Response } from 'express'
+import { Request, RequestHandler, Response } from 'express'
 import { v4 as uuidV4 } from 'uuid'
 import setUpJourneyData from './setUpJourneyData'
-import { JourneyData } from '../@types/express'
+import TokenStore from '../data/tokenStore/tokenStore'
 
-const middleware = setUpJourneyData()
+let middleware: RequestHandler
 
 let req: Request
 let res: Response
+let tokenStore: TokenStore
 
 let journeyId: string
 
@@ -16,92 +17,67 @@ beforeEach(() => {
   journeyId = uuidV4()
 
   res = {
+    callback: () => null,
     redirect: jest.fn(),
+    prependOnceListener: (_: string, cb: () => void) => {
+      // @ts-expect-error null object
+      this.callback = cb
+    },
+    send: () => {
+      // @ts-expect-error null object
+      this.callback()
+    },
   } as unknown as Response
 
   req = {
+    user: { username: 'tester' },
     session: {},
     params: { journeyId },
   } as unknown as Request
 })
 
 describe('setUpJourneyData', () => {
-  describe('create journey data map', () => {
-    it('should create a new journey data map when map is undefined', async () => {
-      // @ts-expect-error setting non-nullable property to undefined
-      req.session.journeyDataMap = undefined
+  it('should create a new journey data when no key is stored', async () => {
+    tokenStore = {
+      getToken: async () => null,
+      setToken: jest.fn(),
+    }
 
-      middleware(req, res, next)
-      expect(req.journeyData).not.toBeNull()
+    middleware = setUpJourneyData(tokenStore)
 
-      expect(req.session.journeyDataMap).not.toBeUndefined()
-      expect(req.session.journeyDataMap).not.toBeNull()
-    })
-
-    it('should create a new journey data map when map is null', async () => {
-      // @ts-expect-error setting non-nullable property to null
-      req.session.journeyDataMap = null
-
-      middleware(req, res, next)
-      expect(req.journeyData).not.toBeNull()
-
-      expect(req.session.journeyDataMap).not.toBeUndefined()
-      expect(req.session.journeyDataMap).not.toBeNull()
-    })
-
-    it('should not create a new journey data map when there is a map', async () => {
-      const existingMap = {
-        id: { instanceUnixEpoch: Date.now() },
-      }
-      req.session.journeyDataMap = existingMap
-
-      middleware(req, res, next)
-
-      expect(req.session.journeyDataMap).toBe(existingMap)
-    })
+    expect(req.journeyData).toBeUndefined()
+    await middleware(req, res, next)
+    expect(req.journeyData).not.toBeUndefined()
+    expect(req.journeyData.instanceUnixEpoch).not.toBeUndefined()
   })
 
-  describe('get journey data', () => {
-    it('should create a new journey data when map does not contain data for the journey id', async () => {
-      middleware(req, res, next)
+  it('should read journey data from store', async () => {
+    tokenStore = {
+      getToken: async () => `{ "bulkAlert" : { "description": "Test-content" } }`,
+      setToken: jest.fn(),
+    }
 
-      expect(req.journeyData).not.toBeUndefined()
-      expect(req.journeyData).not.toBeNull()
-    })
+    middleware = setUpJourneyData(tokenStore)
 
-    it('should return existing journey data when journey data is found for the journey id', async () => {
-      req.session.journeyDataMap = {}
-      const existingData: JourneyData = {
-        instanceUnixEpoch: Date.now(),
-        isCheckAnswers: true,
-      }
-      req.session.journeyDataMap[journeyId] = existingData
+    await middleware(req, res, next)
+    expect(req.journeyData.bulkAlert!.description).toEqual('Test-content')
+  })
 
-      middleware(req, res, next)
+  it('should save journey data to store', async () => {
+    tokenStore = {
+      getToken: async () => `{ "bulkAlert" : { "description": "Test-content" } }`,
+      setToken: jest.fn(),
+    }
 
-      expect(req.journeyData).toBe(existingData)
-    })
+    middleware = setUpJourneyData(tokenStore)
 
-    it('should clean up oldest journey data when max number is exceeded', async () => {
-      const epoch = Date.now() - 100000 // Reduced by 100 seconds to avoid clash of epoch
-
-      req.session.journeyDataMap = {}
-
-      Array.from(Array(100).keys()).forEach(idx => {
-        req.session.journeyDataMap ??= {}
-        req.session.journeyDataMap[uuidV4()] = { instanceUnixEpoch: epoch + idx }
-      })
-
-      middleware(req, res, next)
-
-      expect(Object.keys(req.session.journeyDataMap).length).toEqual(100)
-      expect(Object.values(req.session.journeyDataMap).find(j => j.instanceUnixEpoch === epoch)).not.toBeNull()
-
-      // create new Journey Data into map by calling the getter
-      expect(req.journeyData).not.toBeNull()
-
-      expect(Object.keys(req.session.journeyDataMap).length).toEqual(100)
-      expect(Object.values(req.session.journeyDataMap).find(j => j.instanceUnixEpoch === epoch)).toBeUndefined()
-    })
+    await middleware(req, res, next)
+    req.journeyData.bulkAlert!.description = 'Newtext'
+    await res.send('end')
+    expect(tokenStore.setToken).toHaveBeenCalledWith(
+      `journey.tester.${journeyId}`,
+      '{"bulkAlert":{"description":"Newtext"}}',
+      20 * 60 * 60,
+    )
   })
 })

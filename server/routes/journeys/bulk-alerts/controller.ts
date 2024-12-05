@@ -31,7 +31,7 @@ export default class BulkAlertsController extends BaseController {
 
   START_BACKEND_SESSION = async (req: Request, _res: Response, next: NextFunction) => {
     if (!req.journeyData.bulkAlert!.planId) {
-      const { planId } = await this.alertsApiService.createBulkAlertsPlan(req.middleware.clientToken)
+      const { id: planId } = await this.alertsApiService.createBulkAlertsPlan(req.middleware.clientToken)
       req.journeyData.bulkAlert!.planId = planId
     }
     next()

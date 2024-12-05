@@ -11,7 +11,6 @@ context('test /bulk-alerts/check-answers', () => {
     cy.task('stubPatchBulkAlertsPlan')
     cy.task('stubGetBulkAlertsPlan')
     cy.task('stubStartBulkAlertsPlan')
-    cy.task('stubGetBulkAlertsPlanStatus')
     cy.task('stubGetBulkAlertsPlanResult')
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],

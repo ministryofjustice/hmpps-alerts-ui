@@ -4,10 +4,11 @@ import logger from '../../logger'
 import {
   AlertCode,
   AlertType,
-  BulkAlert,
-  BulkAlertPlan,
   BulkAlertPlanRequest,
-  BulkAlertsRequest,
+  BulkPlan,
+  BulkPlanAffect,
+  BulkPlanPrisoners,
+  BulkPlanStatus,
   CreateAlertCodeRequest,
   CreateAlertRequest,
   CreateAlertTypeRequest,
@@ -15,7 +16,6 @@ import {
   UpdateAlertCodeRequest,
   UpdateAlertTypeRequest,
 } from '../@types/alerts/alertsApiTypes'
-import { Prisoner } from './prisonerSearchApiClient'
 
 export default class AlertsApiClient {
   constructor() {}
@@ -90,74 +90,77 @@ export default class AlertsApiClient {
     })
   }
 
-  planBulkAlerts(token: string, requestBody: BulkAlertsRequest): Promise<BulkAlertPlan> {
+  createBulkAlertsPlan(token: string): Promise<BulkPlan> {
     return AlertsApiClient.restClient(token).post({
       path: `/bulk-alerts/plan`,
-      data: requestBody,
     })
   }
 
-  createBulkAlerts(token: string, requestBody: BulkAlertsRequest): Promise<BulkAlert> {
-    return AlertsApiClient.restClient(token).post({
-      path: `/bulk-alerts`,
-      data: requestBody,
-    })
-  }
-
-  createBulkAlertsPlan(token: string): Promise<{ planId: string }> {
-    return AlertsApiClient.restClient(token).post({
-      path: `/bulk-alerts-plan`,
-      data: {},
-    })
-  }
-
-  addPrisonersToBulkAlertsPlan(token: string, planId: string, prisonNumbers: string[]): Promise<BulkAlertPlan> {
+  addPrisonersToBulkAlertsPlan(token: string, planId: string, prisonNumbers: string[]): Promise<BulkPlan> {
     return AlertsApiClient.restClient(token).patch({
-      path: `/bulk-alerts-plan/${planId}`,
-      data: { prisonNumbers },
+      path: `/bulk-alerts/plan/${planId}`,
+      data: [
+        {
+          type: 'AddPrisonNumbers',
+          prisonNumbers,
+        },
+      ],
     })
   }
 
-  removePrisonersFromBulkAlertsPlan(token: string, planId: string, prisonNumber: string) {
-    return AlertsApiClient.restClient(token).delete({
-      path: `/bulk-alerts-plan/${planId}/prisoners/${prisonNumber}`,
-    })
-  }
-
-  patchBulkAlertsPlan(token: string, planId: string, requestBody: BulkAlertPlanRequest): Promise<BulkAlertPlan> {
+  removePrisonersFromBulkAlertsPlan(token: string, planId: string, prisonNumber: string): Promise<BulkPlan> {
     return AlertsApiClient.restClient(token).patch({
-      path: `/bulk-alerts-plan/${planId}`,
-      data: requestBody,
+      path: `/bulk-alerts/plan/${planId}`,
+      data: [
+        {
+          type: 'RemovePrisonNumbers',
+          prisonNumbers: [prisonNumber],
+        },
+      ],
     })
   }
 
-  startBulkAlertsPlan(token: string, planId: string): Promise<BulkAlertPlan> {
-    return AlertsApiClient.restClient(token).get({
-      path: `/bulk-alerts-plan/${planId}/start`,
+  patchBulkAlertsPlan(token: string, planId: string, requestBody: BulkAlertPlanRequest): Promise<BulkPlan> {
+    return AlertsApiClient.restClient(token).patch({
+      path: `/bulk-alerts/plan/${planId}`,
+      data: [
+        {
+          type: 'SetAlertCode',
+          alertCode: requestBody.alertCode,
+        },
+        {
+          type: 'SetDescription',
+          description: requestBody.description,
+        },
+        {
+          type: 'SetCleanupMode',
+          cleanupMode: requestBody.cleanupMode,
+        },
+      ],
     })
   }
 
-  getPrisonersFromBulkAlertsPlan(token: string, planId: string): Promise<{ prisoners: Prisoner[] }> {
+  startBulkAlertsPlan(token: string, planId: string) {
     return AlertsApiClient.restClient(token).get({
-      path: `/bulk-alerts-plan/${planId}/prisoners`,
+      path: `/bulk-alerts/plan/${planId}/start`,
     })
   }
 
-  getStatusFromBulkAlertsPlan(token: string, planId: string): Promise<{ status: string }> {
+  getPrisonersFromBulkAlertsPlan(token: string, planId: string): Promise<BulkPlanPrisoners> {
     return AlertsApiClient.restClient(token).get({
-      path: `/bulk-alerts-plan/${planId}/status`,
+      path: `/bulk-alerts/plan/${planId}/prisoners`,
     })
   }
 
-  getResultFromBulkAlertsPlan(token: string, planId: string): Promise<BulkAlert> {
+  getResultFromBulkAlertsPlan(token: string, planId: string): Promise<BulkPlanStatus> {
     return AlertsApiClient.restClient(token).get({
-      path: `/bulk-alerts-plan/${planId}/result`,
+      path: `/bulk-alerts/plan/${planId}/status`,
     })
   }
 
-  getBulkAlertsPlan(token: string, planId: string): Promise<BulkAlertPlan> {
+  getBulkAlertsPlan(token: string, planId: string): Promise<BulkPlanAffect> {
     return AlertsApiClient.restClient(token).get({
-      path: `/bulk-alerts-plan/${planId}`,
+      path: `/bulk-alerts/plan/${planId}/affects`,
     })
   }
 }

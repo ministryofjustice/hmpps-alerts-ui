@@ -12,10 +12,9 @@ export default class BulkAlertsCheckAnswersController extends BaseController {
       cleanupMode: cleanupMode!,
     })
 
-    const plan = await this.alertsApiService.getBulkAlertsPlan(
-      req.middleware.clientToken,
-      req.journeyData.bulkAlert!.planId!,
-    )
+    const plan = (
+      await this.alertsApiService.getBulkAlertsPlan(req.middleware.clientToken, req.journeyData.bulkAlert!.planId!)
+    ).counts
 
     req.journeyData.isCheckAnswers = true
     delete req.journeyData.bulkAlert!.alertCodeSubJourney
@@ -39,10 +38,9 @@ export default class BulkAlertsCheckAnswersController extends BaseController {
           return next(`Time out waiting for Bulk Alerts creation for planUuid: ${planId}`)
         }
         // eslint-disable-next-line no-await-in-loop
-        status = (await this.alertsApiService.getStatusFromBulkAlertsPlan(token, planId)).status
-        if (status === 'complete') {
-          // eslint-disable-next-line no-await-in-loop
-          req.journeyData.bulkAlert!.result = await this.alertsApiService.getResultFromBulkAlertsPlan(token, planId)
+        status = await this.alertsApiService.getResultFromBulkAlertsPlan(token, planId)
+        if (status.completedAt) {
+          req.journeyData.bulkAlert!.result = status.counts
           req.journeyData.journeyCompleted = true
           return next()
         }

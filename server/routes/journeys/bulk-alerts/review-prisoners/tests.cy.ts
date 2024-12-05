@@ -11,7 +11,7 @@ context('test /bulk-alerts/review-prisoners screen', () => {
       roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS],
     })
     cy.task('stubGetAlertTypes')
-    cy.task('stubDeleteBulkAlertsPlanPrisoner')
+    cy.task('stubPatchBulkAlertsPlan')
   })
 
   it('should render a list of selected prisoners', () => {

@@ -31,11 +31,9 @@ context('test /bulk-alerts full journey', () => {
     cy.task('stubPostPrisonerSearchOneFound')
     cy.task('stubPostPrisonerSearchByNumber')
     cy.task('stubGetBulkAlertsPlanPrisonersTwoFound')
-    cy.task('stubDeleteBulkAlertsPlanPrisoner')
     cy.task('stubPatchBulkAlertsPlan')
     cy.task('stubGetBulkAlertsPlan')
     cy.task('stubStartBulkAlertsPlan')
-    cy.task('stubGetBulkAlertsPlanStatus')
     cy.task('stubGetBulkAlertsPlanResult')
   })
 

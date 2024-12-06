@@ -30,7 +30,7 @@ context('test /bulk-alerts/confirmation', () => {
 
     cy.findByRole('heading', { name: /What you can do next/ }).should('be.visible')
 
-    cy.findByRole('link', { name: 'Upload more alerts in bulk links' })
+    cy.findByRole('link', { name: 'Upload more alerts in bulk' })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('match', /\/bulk-alerts$/)

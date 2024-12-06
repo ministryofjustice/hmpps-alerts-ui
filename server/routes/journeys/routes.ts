@@ -3,6 +3,8 @@ import { DataAccess } from '../../data'
 import BulkAlertsRoutes from './bulk-alerts/routes'
 import journeyStateMachine from '../../middleware/journeyStateMachine'
 import setUpJourneyData from '../../middleware/setUpJourneyData'
+import AlertCodeRoutes from './alert-code/routes'
+import AlertTypeRoutes from './alert-type/routes'
 
 export default function JourneyRoutes(dataAccess: DataAccess) {
   const router = Router({ mergeParams: true })
@@ -11,6 +13,8 @@ export default function JourneyRoutes(dataAccess: DataAccess) {
   router.use(journeyStateMachine())
 
   router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess))
+  router.use('/alert-code', AlertCodeRoutes(dataAccess.alertsApiClient))
+  router.use('/alert-type', AlertTypeRoutes(dataAccess.alertsApiClient))
 
   if (process.env.NODE_ENV === 'e2e-test') {
     /* eslint-disable no-param-reassign */

@@ -1,12 +1,13 @@
 import { Request, RequestHandler } from 'express'
-import AlertsApiClient from '../../../data/alertsApiClient'
-import { CreateAlertTypeRequestSchema } from '../../../@schemas/AlertTypeRequests'
+import AlertsApiClient from '../../../../data/alertsApiClient'
+import { CreateAlertTypeRequestSchema } from '../../../../@schemas/AlertTypeRequests'
 
 export default class CreateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
-    const { alertTypeCode, alertTypeDescription } = req.session
+    req.journeyData.refData ??= {}
+    const { alertTypeCode, alertTypeDescription } = req.journeyData.refData!
     return res.render('pages/createAlertType/index', { alertTypeCode, alertTypeDescription })
   }
 
@@ -16,22 +17,22 @@ export default class CreateAlertTypeRoutes {
     if (validationMessages.alertTypeCodeErrorMessage || validationMessages.alertTypeDescriptionErrorMessage) {
       return res.render('pages/createAlertType/index', validationMessages)
     }
-    req.session.alertTypeCode = alertTypeCode
-    req.session.alertTypeDescription = alertTypeDescription
-    return res.redirect('/alert-type/confirmation')
+    req.journeyData.refData!.alertTypeCode = alertTypeCode
+    req.journeyData.refData!.alertTypeDescription = alertTypeDescription
+    return res.redirect('confirmation')
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    const { alertTypeCode, alertTypeDescription } = req.session
+    const { alertTypeCode, alertTypeDescription } = req.journeyData.refData!
     return res.render('pages/createAlertType/confirmation', { alertTypeCode, alertTypeDescription })
   }
 
   public submitConfirmation: RequestHandler = async (_req, res): Promise<void> => {
-    return res.redirect('/alert-type/success')
+    return res.redirect('success')
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
-    const { alertTypeCode, alertTypeDescription } = req.session
+    const { alertTypeCode, alertTypeDescription } = req.journeyData.refData!
     const response = await this.alertsApiClient
       .createAlertType(req.middleware.clientToken, {
         code: alertTypeCode!,

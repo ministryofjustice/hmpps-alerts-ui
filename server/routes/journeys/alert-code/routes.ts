@@ -1,12 +1,12 @@
 import { type RequestHandler, Router } from 'express'
-import AlertsApiClient from '../../data/alertsApiClient'
+import AlertsApiClient from '../../../data/alertsApiClient'
 import CreateAlertCodeRoutes from './create/createAlertCodeRoutes'
 import UpdateAlertCodeRoutes from './update-description/updateAlertCodeRoutes'
 import DeactivateAlertCodeRoutes from './deactivate/deactivateAlertCodeRoutes'
 import ReactivateAlertCodeRoutes from './reactivate/reactivateAlertCodeRoutes'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
-import authorisationMiddleware from '../../middleware/authorisationMiddleware'
-import AuthorisedRoles from '../../authentication/authorisedRoles'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
+import AuthorisedRoles from '../../../authentication/authorisedRoles'
 
 export default function AlertCodeRoutes(alertsApiClient: AlertsApiClient) {
   const router = Router({ mergeParams: true })

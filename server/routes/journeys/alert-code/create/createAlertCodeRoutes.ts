@@ -1,11 +1,12 @@
 import { Request, RequestHandler } from 'express'
-import AlertsApiClient from '../../../data/alertsApiClient'
-import { CreateAlertCodeRequestSchema } from '../../../@schemas/AlertCodeRequests'
+import AlertsApiClient from '../../../../data/alertsApiClient'
+import { CreateAlertCodeRequestSchema } from '../../../../@schemas/AlertCodeRequests'
 
 export default class CreateAlertCodeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
+    req.journeyData.refData ??= {}
     const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
       .filter(alertType => alertType.isActive)
       .map(alertType => {
@@ -32,12 +33,12 @@ export default class CreateAlertCodeRoutes {
       const alertTypeErrorMessage = 'An alert type must be selected'
       return res.render('pages/createAlertCode/index', { alertTypes, alertTypeErrorMessage })
     }
-    req.session.alertCodeParentType = req.body.alertType
-    return res.redirect('/alert-code/alert-code')
+    req.journeyData.refData!.alertCodeParentType = req.body.alertType
+    return res.redirect('alert-code')
   }
 
   public loadAlertCode: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    const { alertCode, alertDescription, alertCodeParentType } = req.journeyData.refData!
     return res.render('pages/createAlertCode/alertCode', { alertCode, alertDescription, alertCodeParentType })
   }
 
@@ -47,22 +48,22 @@ export default class CreateAlertCodeRoutes {
     if (validationMessages.alertCodeErrorMessage || validationMessages.alertDescriptionErrorMessage) {
       return res.render('pages/createAlertCode/alertCode', validationMessages)
     }
-    req.session.alertCode = alertCode
-    req.session.alertDescription = alertDescription
-    return res.redirect('/alert-code/confirmation')
+    req.journeyData.refData!.alertCode = alertCode
+    req.journeyData.refData!.alertDescription = alertDescription
+    return res.redirect('confirmation')
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    const { alertCode, alertDescription, alertCodeParentType } = req.journeyData.refData!
     return res.render('pages/createAlertCode/confirmation', { alertCode, alertDescription, alertCodeParentType })
   }
 
   public submitConfirmation: RequestHandler = async (_req, res): Promise<void> => {
-    return res.redirect('/alert-code/success')
+    return res.redirect('success')
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCode, alertDescription, alertCodeParentType } = req.session
+    const { alertCode, alertDescription, alertCodeParentType } = req.journeyData.refData!
     this.alertsApiClient
       .createAlertCode(req.middleware.clientToken, {
         code: alertCode!,

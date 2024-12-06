@@ -7,12 +7,7 @@ export default function ManageReferenceDataRoutes() {
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
 
-  get('/', (req, res) => {
-    req.session.alertTypeCode = ''
-    req.session.alertTypeDescription = ''
-    req.session.alertCodeParentType = ''
-    req.session.alertCode = ''
-    req.session.alertDescription = ''
+  get('/', (_req, res) => {
     res.render('manage-reference-data/view')
   })
 

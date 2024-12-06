@@ -1,10 +1,11 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from '../../testutils/appSetup'
-import config from '../../../config'
-import { AlertType } from '../../../@types/alerts/alertsApiTypes'
-import SessionSetup from '../../testutils/sessionSetup'
+import { v4 as uuidV4 } from 'uuid'
+import { appWithAllRoutes } from '../../../testutils/appSetup'
+import config from '../../../../config'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup
@@ -31,7 +32,7 @@ describe('createAlertCodeRoutes', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/create')
+      .get(`/${uuidV4()}/alert-code/create`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -43,14 +44,15 @@ describe('createAlertCodeRoutes', () => {
   it('POST /alert-code/create should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
+      req.journeyData = { refData: {}, instanceUnixEpoch: Date.now() }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/create')
+      .post(`/${uuidV4()}/alert-code/create`)
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-code/alert-code')
+      .expect('Location', 'alert-code')
   })
   it('POST /alert-code/create should render with error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
@@ -58,7 +60,7 @@ describe('createAlertCodeRoutes', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/create')
+      .post(`/${uuidV4()}/alert-code/create`)
       .type('form')
       .send({ alertType: '' })
       .expect(200)
@@ -71,8 +73,12 @@ describe('createAlertCodeRoutes', () => {
       })
   })
   it('GET /alert-code/alert-code should render', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = { refData: {}, instanceUnixEpoch: Date.now() }
+    }
     return request(app)
-      .get('/alert-code/alert-code')
+      .get(`/${uuidV4()}/alert-code/alert-code`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -80,16 +86,24 @@ describe('createAlertCodeRoutes', () => {
       })
   })
   it('POST /alert-code/alert-code should redirect', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = { refData: {}, instanceUnixEpoch: Date.now() }
+    }
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: 'DB', alertDescription: 'A description' })
       .expect(302)
-      .expect('Location', '/alert-code/confirmation')
+      .expect('Location', 'confirmation')
   })
   it('POST /alert-code/alert-code should render both errors if no fields entered', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = { refData: {}, instanceUnixEpoch: Date.now() }
+    }
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({})
       .expect(200)
@@ -101,8 +115,12 @@ describe('createAlertCodeRoutes', () => {
       })
   })
   it('POST /alert-code/alert-code should render code error if no code entered', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = { refData: {}, instanceUnixEpoch: Date.now() }
+    }
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: '', alertDescription: 'A description' })
       .expect(200)
@@ -116,7 +134,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/alert-code should render code error if invalid code entered', () => {
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: 'abcd', alertDescription: 'A description' })
       .expect(200)
@@ -130,7 +148,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/alert-code should render code error if too long a code entered', () => {
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: 'ABCDABCDABCDE', alertDescription: 'A description' })
       .expect(200)
@@ -144,7 +162,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/alert-code should render description error if no description entered', () => {
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: 'DB', alertDescription: '' })
       .expect(200)
@@ -160,7 +178,7 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/alert-code should render description error if too long a description entered', () => {
     return request(app)
-      .post('/alert-code/alert-code')
+      .post(`/${uuidV4()}/alert-code/alert-code`)
       .type('form')
       .send({ alertCode: 'DB', alertDescription: 'n'.repeat(41) })
       .expect(200)
@@ -176,12 +194,17 @@ describe('createAlertCodeRoutes', () => {
   })
   it('GET /alert-code/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'A description'
-      req.session.alertCodeParentType = 'BB'
+      req.journeyData = {
+        refData: {
+          alertCode: 'AA',
+          alertDescription: 'A description',
+          alertCodeParentType: 'BB',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-code/confirmation')
+      .get(`/${uuidV4()}/alert-code/confirmation`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -193,27 +216,37 @@ describe('createAlertCodeRoutes', () => {
   })
   it('POST /alert-code/confirmation should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'A description'
-      req.session.alertCodeParentType = 'BB'
+      req.journeyData = {
+        refData: {
+          alertCode: 'AA',
+          alertDescription: 'A description',
+          alertCodeParentType: 'BB',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/confirmation')
+      .post(`/${uuidV4()}/alert-code/confirmation`)
       .type('form')
       .send({ parent: 'DB', code: 'AA', description: 'A description' })
       .expect(302)
-      .expect('Location', '/alert-code/success')
+      .expect('Location', 'success')
   })
   it('GET /alert-code/success should render', () => {
     fakeApi.post('/alert-codes').reply(201)
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'A description'
-      req.session.alertCodeParentType = 'BB'
+      req.journeyData = {
+        refData: {
+          alertCode: 'AA',
+          alertDescription: 'A description',
+          alertCodeParentType: 'BB',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
       req.middleware = { clientToken: '123' }
     }
     return request(app)
-      .get('/alert-code/success')
+      .get(`/${uuidV4()}/alert-code/success`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -223,23 +256,33 @@ describe('createAlertCodeRoutes', () => {
   it('GET /alert-code/success should redirect to error page', () => {
     fakeApi.post('/alert-codes').reply(405)
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'A description'
-      req.session.alertCodeParentType = 'BB'
+      req.journeyData = {
+        refData: {
+          alertCode: 'AA',
+          alertDescription: 'A description',
+          alertCodeParentType: 'BB',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
       req.middleware = { clientToken: '123' }
     }
-    return request(app).get('/alert-code/success').expect(302).expect('Location', '/error-page')
+    return request(app).get(`/${uuidV4()}/alert-code/success`).expect(302).expect('Location', '/error-page')
   })
   it('GET /alert-code/success 409 should render code entry page', () => {
     fakeApi.post('/alert-codes').reply(409)
     sessionSetup.sessionDoctor = (req: Request) => {
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'A description'
-      req.session.alertCodeParentType = 'BB'
+      req.journeyData = {
+        refData: {
+          alertCode: 'AA',
+          alertDescription: 'A description',
+          alertCodeParentType: 'BB',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
       req.middleware = { clientToken: '123' }
     }
     return request(app)
-      .get('/alert-code/success')
+      .get(`/${uuidV4()}/alert-code/success`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {

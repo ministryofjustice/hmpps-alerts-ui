@@ -1,14 +1,16 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from '../../testutils/appSetup'
-import config from '../../../config'
-import { AlertType } from '../../../@types/alerts/alertsApiTypes'
-import SessionSetup from '../../testutils/sessionSetup'
+import { v4 } from 'uuid'
+import { appWithAllRoutes } from '../../../testutils/appSetup'
+import config from '../../../../config'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup
 let fakeApi: nock.Scope
+let uuid = v4()
 
 beforeEach(() => {
   sessionSetup = new SessionSetup()
@@ -18,6 +20,7 @@ beforeEach(() => {
     services: {},
     sessionSetup,
   })
+  uuid = v4()
 })
 
 afterEach(() => {
@@ -44,7 +47,7 @@ describe('updateAlertCode', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/update-description')
+      .get(`/${uuid}/alert-code/update-description`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -59,14 +62,18 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/update-description')
+      .post(`/${uuid}/alert-code/update-description`)
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-code/update-description/alert-code')
+      .expect('Location', 'update-description/alert-code')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -74,11 +81,16 @@ describe('updateAlertCode', () => {
   it('GET /alert-code/update-description/alert-code should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/update-description/alert-code')
+      .get(`/${uuid}/alert-code/update-description/alert-code`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -90,15 +102,20 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/alert-code should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/update-description/alert-code')
+      .post(`/${uuid}/alert-code/update-description/alert-code`)
       .type('form')
       .send({ alertCode: 'AA' })
       .expect(302)
-      .expect('Location', '/alert-code/update-description/submit-description')
+      .expect('Location', 'submit-description')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -106,12 +123,17 @@ describe('updateAlertCode', () => {
   it('GET /alert-code/update-description/submit-description should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/update-description/submit-description')
+      .get(`/${uuid}/alert-code/update-description/submit-description`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -123,15 +145,20 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/submit-description should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/update-description/submit-description')
+      .post(`/${uuid}/alert-code/update-description/submit-description`)
       .type('form')
       .send({ descriptionEntry: 'New Description' })
       .expect(302)
-      .expect('Location', '/alert-code/update-description/confirmation')
+      .expect('Location', 'confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -139,12 +166,17 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/submit-description should render error if no description entered', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/update-description/submit-description')
+      .post(`/${uuid}/alert-code/update-description/submit-description`)
       .type('form')
       .send({})
       .expect(200)
@@ -157,12 +189,17 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/submit-description should render error if too long a description entered', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/update-description/submit-description')
+      .post(`/${uuid}/alert-code/update-description/submit-description`)
       .type('form')
       .send({ descriptionEntry: 'n'.repeat(41) })
       .expect(200)
@@ -175,12 +212,17 @@ describe('updateAlertCode', () => {
   it('GET /alert-code/update-description/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-code/update-description/confirmation')
+      .get(`/${uuid}/alert-code/update-description/confirmation`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -192,16 +234,21 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/confirmation should redirect if "yes" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/update-description/confirmation')
+      .post(`/${uuid}/alert-code/update-description/confirmation`)
       .type('form')
       .send({ confirmation: 'yes' })
       .expect(302)
-      .expect('Location', '/alert-code/update-description/success')
+      .expect('Location', 'success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -209,12 +256,17 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/confirmation should redirect if "no" selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/update-description/confirmation')
+      .post(`/${uuid}/alert-code/update-description/confirmation`)
       .type('form')
       .send({ confirmation: 'no' })
       .expect(302)
@@ -226,12 +278,17 @@ describe('updateAlertCode', () => {
   it('POST /alert-code/update-description/confirmation should render error if no confirmation selected', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/update-description/confirmation')
+      .post(`/${uuid}/alert-code/update-description/confirmation`)
       .type('form')
       .send({})
       .expect(200)
@@ -244,13 +301,18 @@ describe('updateAlertCode', () => {
   it('GET /alert-code/update-description/success should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.patch('/alert-codes/AA').reply(200, { code: 'AA', description: 'New Description' } as AlertType)
     return request(app)
-      .get('/alert-code/update-description/success')
+      .get(`/${uuid}/alert-code/update-description/success`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -262,13 +324,18 @@ describe('updateAlertCode', () => {
   it('GET /alert-code/update-description/success should redirect to error page if API fails', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.alertCodeParentType = 'VI'
-      req.session.alertCode = 'AA'
-      req.session.alertDescription = 'New Description'
+      req.journeyData = {
+        refData: {
+          alertCodeParentType: 'VI',
+          alertCode: 'AA',
+          alertDescription: 'New Description',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.patch('/alert-codes/VI').reply(404)
     return request(app)
-      .get('/alert-code/update-description/success')
+      .get(`/${uuid}/alert-code/update-description/success`)
       .expect(302)
       .expect('Location', '/error-page')
       .expect(res => {

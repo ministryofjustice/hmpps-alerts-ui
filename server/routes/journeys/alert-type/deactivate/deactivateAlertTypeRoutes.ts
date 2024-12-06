@@ -1,12 +1,13 @@
 import { RequestHandler } from 'express'
-import AlertsApiClient from '../../../data/alertsApiClient'
+import AlertsApiClient from '../../../../data/alertsApiClient'
 
-export default class ReactivateAlertTypeRoutes {
+export default class DeactivateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
-    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-      .filter(at => !at.isActive)
+    req.journeyData.refData ??= {}
+    const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+      .filter(at => at.isActive)
       .map(alertType => {
         return {
           value: alertType.code,
@@ -14,15 +15,15 @@ export default class ReactivateAlertTypeRoutes {
           hint: { text: alertType.description },
         }
       })
-    return res.render('pages/reactivateAlertType/index', { alertTypes })
+    return res.render('pages/deactivateAlertType/index', { alertTypes })
   }
 
   public submitStartPage: RequestHandler = async (req, res): Promise<void> => {
     const { alertType } = req.body
     if (alertType === null || alertType === '' || alertType === undefined) {
       const alertTypeErrorMessage = 'An alert type must be selected.'
-      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-        .filter(at => !at.isActive)
+      const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
+        .filter(at => at.isActive)
         .map(at => {
           return {
             value: at.code,
@@ -30,42 +31,42 @@ export default class ReactivateAlertTypeRoutes {
             hint: { text: at.description },
           }
         })
-      return res.render('pages/reactivateAlertType/index', { alertTypes, alertTypeErrorMessage })
+      return res.render('pages/deactivateAlertType/index', { alertTypes, alertTypeErrorMessage })
     }
-    req.session.reactivateAlertType = alertType
-    return res.redirect('/alert-type/reactivate/confirmation')
+    req.journeyData.refData!.deactivateAlertType = alertType
+    return res.redirect('deactivate/confirmation')
   }
 
   public loadConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
-    const { reactivateAlertType } = req.session
-    return res.render('pages/reactivateAlertType/confirmation', { reactivateAlertType })
+    const { deactivateAlertType } = req.journeyData.refData!
+    return res.render('pages/deactivateAlertType/confirmation', { deactivateAlertType })
   }
 
   public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
     const { confirmation } = req.body
-    const { reactivateAlertType } = req.session
+    const { deactivateAlertType } = req.journeyData.refData!
     if (confirmation === undefined || confirmation === null || confirmation === '') {
       const confirmationErrorMessage = 'You must select either Yes or No.'
-      return res.render('pages/reactivateAlertType/confirmation', { reactivateAlertType, confirmationErrorMessage })
+      return res.render('pages/deactivateAlertType/confirmation', { deactivateAlertType, confirmationErrorMessage })
     }
     if (confirmation === 'no') {
       return res.redirect('/')
     }
-    return res.redirect('/alert-type/reactivate/success')
+    return res.redirect('success')
   }
 
   public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
-    const { reactivateAlertType } = req.session
+    const { deactivateAlertType } = req.journeyData.refData!
     this.alertsApiClient
-      .reactivateAlertType(req.middleware.clientToken, reactivateAlertType!)
+      .deactivateAlertType(req.middleware.clientToken, deactivateAlertType!)
       .then(response => {
-        return res.render('pages/reactivateAlertType/success', {
-          reactivateAlertType,
+        return res.render('pages/deactivateAlertType/success', {
+          deactivateAlertType,
           response,
         })
       })
       .catch(_ => {
-        req.session.errorMessage = 'Your alert code was not reactivated'
+        req.session.errorMessage = 'Your alert code was not deactivated'
         return res.redirect('/error-page')
       })
   }

@@ -3,8 +3,6 @@ import { dataAccess } from '../data'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { Page } from '../services/auditService'
-import AlertCodeRoutes from './alert-code/routes'
-import AlertTypeRoutes from './alert-type/routes'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
@@ -31,8 +29,6 @@ export default function routes({ auditService }: Services): Router {
   router.use(removeTrailingSlashMiddleware)
 
   router.use('/manage-reference-data', ManageReferenceDataRoutes())
-  router.use('/alert-code', AlertCodeRoutes(alertsApiClient))
-  router.use('/alert-type', AlertTypeRoutes(alertsApiClient))
   router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient))
 
   router.use(insertJourneyIdentifier())

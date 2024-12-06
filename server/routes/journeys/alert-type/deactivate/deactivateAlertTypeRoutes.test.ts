@@ -1,14 +1,16 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from '../../testutils/appSetup'
-import config from '../../../config'
-import { AlertType } from '../../../@types/alerts/alertsApiTypes'
-import SessionSetup from '../../testutils/sessionSetup'
+import { v4 } from 'uuid'
+import { appWithAllRoutes } from '../../../testutils/appSetup'
+import config from '../../../../config'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup
 let fakeApi: nock.Scope
+let uuid = v4()
 
 beforeEach(() => {
   sessionSetup = new SessionSetup()
@@ -18,6 +20,7 @@ beforeEach(() => {
     services: {},
     sessionSetup,
   })
+  uuid = v4()
 })
 
 afterEach(() => {
@@ -44,7 +47,7 @@ describe('deactivateAlertCode', () => {
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .get('/alert-type/deactivate')
+      .get(`/${uuid}/alert-type/deactivate`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -56,14 +59,18 @@ describe('deactivateAlertCode', () => {
   it('POST /alert-type/deactivate should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types').reply(200, alertTypes)
     return request(app)
-      .post('/alert-type/deactivate')
+      .post(`/${uuid}/alert-type/deactivate`)
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-type/deactivate/confirmation')
+      .expect('Location', 'deactivate/confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -71,10 +78,13 @@ describe('deactivateAlertCode', () => {
   it('GET /alert-type/deactivate/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-type/deactivate/confirmation')
+      .get(`/${uuid}/alert-type/deactivate/confirmation`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -85,10 +95,13 @@ describe('deactivateAlertCode', () => {
   it('POST /alert-type/deactivate/confirmation with nothing selected should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-type/deactivate/confirmation')
+      .post(`/${uuid}/alert-type/deactivate/confirmation`)
       .type('form')
       .send({})
       .expect(200)
@@ -102,10 +115,13 @@ describe('deactivateAlertCode', () => {
   it('POST /alert-type/deactivate/confirmation with confirmation as an empty string should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-type/deactivate/confirmation')
+      .post(`/${uuid}/alert-type/deactivate/confirmation`)
       .type('form')
       .send({ confirmation: '' })
       .expect(200)
@@ -119,10 +135,13 @@ describe('deactivateAlertCode', () => {
   it('POST /alert-type/deactivate/confirmation with confirmation as "no" should redirect to the home page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-type/deactivate/confirmation')
+      .post(`/${uuid}/alert-type/deactivate/confirmation`)
       .type('form')
       .send({ confirmation: 'no' })
       .expect(302)
@@ -134,14 +153,17 @@ describe('deactivateAlertCode', () => {
   it('POST /alert-type/deactivate/confirmation with confirmation as "yes" should redirect to the success page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-type/deactivate/confirmation')
+      .post(`/${uuid}/alert-type/deactivate/confirmation`)
       .type('form')
       .send({ confirmation: 'yes' })
       .expect(302)
-      .expect('Location', '/alert-type/deactivate/success')
+      .expect('Location', 'success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -149,11 +171,14 @@ describe('deactivateAlertCode', () => {
   it('GET /alert-type/deactivate/success should render`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.patch('/alert-types/VI/deactivate').reply(200)
     return request(app)
-      .get('/alert-type/deactivate/success')
+      .get(`/${uuid}/alert-type/deactivate/success`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -164,10 +189,13 @@ describe('deactivateAlertCode', () => {
   it('GET /alert-type/deactivate/success should redirect if error`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertType = 'VI'
+      req.journeyData = {
+        refData: { deactivateAlertType: 'VI' },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-type/deactivate/success')
+      .get(`/${uuid}/alert-type/deactivate/success`)
       .expect(302)
       .expect('Location', '/error-page')
       .expect(res => {

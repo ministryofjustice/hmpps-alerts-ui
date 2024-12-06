@@ -7,18 +7,7 @@ export declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-    alertTypeCode: string
-    alertTypeDescription: string
-    alertCodeParentType: string
-    alertCode: string
-    alertDescription: string
     errorMessage: string
-    deactivateAlertTypeCode: string
-    deactivateAlertCode: string
-    reactivateAlertCode: string
-    deactivateAlertType: string
-    reactivateAlertType: string
-    updateAlertTypeCode: string
   }
 }
 
@@ -27,6 +16,7 @@ export type JourneyData = {
   isCheckAnswers?: boolean
   journeyCompleted?: boolean
   bulkAlert?: BulkAlertJourney
+  refData?: ReferenceDataJourney
 }
 
 export type BulkAlertJourney = Partial<{
@@ -41,6 +31,20 @@ export type BulkAlertJourney = Partial<{
   prisonersSelectedCount: number
   cleanupMode: 'KEEP_ALL' | 'EXPIRE_FOR_PRISON_NUMBERS_NOT_SPECIFIED'
   result: BulkPlanStatus['counts']
+}>
+
+export type ReferenceDataJourney = Partial<{
+  alertTypeCode: string
+  alertTypeDescription: string
+  alertCodeParentType: string
+  alertCode: string
+  alertDescription: string
+  deactivateAlertTypeCode: string
+  deactivateAlertCode: string
+  reactivateAlertCode: string
+  deactivateAlertType: string
+  reactivateAlertType: string
+  updateAlertTypeCode: string
 }>
 
 export declare global {

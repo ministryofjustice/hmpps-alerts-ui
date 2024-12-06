@@ -1,12 +1,19 @@
-import { Express } from 'express'
+import { Express, Request } from 'express'
 import request from 'supertest'
-import { appWithAllRoutes } from '../../testutils/appSetup'
+import { v4 } from 'uuid'
+import { appWithAllRoutes } from '../../../testutils/appSetup'
+import SessionSetup from '../../../testutils/sessionSetup'
 
 let app: Express
+let sessionSetup: SessionSetup
+let uuid = v4()
 beforeEach(() => {
+  sessionSetup = new SessionSetup()
   app = appWithAllRoutes({
     services: {},
+    sessionSetup,
   })
+  uuid = v4()
 })
 
 afterEach(() => {
@@ -16,7 +23,7 @@ afterEach(() => {
 describe('createAlertTypeRoutes', () => {
   it('GET /alert-type/create should render', () => {
     return request(app)
-      .get('/alert-type/create')
+      .get(`/${uuid}/alert-type/create`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -24,19 +31,26 @@ describe('createAlertTypeRoutes', () => {
       })
   })
   it('POST /alert-type/create should submit if all fields entered', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
+    }
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: 'DB', alertTypeDescription: 'Description' })
       .expect(302)
-      .expect('Location', '/alert-type/confirmation')
+      .expect('Location', 'confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
   })
   it('POST /alert-type/create should render both errors if no fields entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({})
       .expect(200)
@@ -51,7 +65,7 @@ describe('createAlertTypeRoutes', () => {
   })
   it('POST /alert-type/create should render code error if no code entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: '', alertTypeDescription: 'This is a unique description' })
       .expect(200)
@@ -67,7 +81,7 @@ describe('createAlertTypeRoutes', () => {
   })
   it('POST /alert-type/create should render code error if invalid code entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: 'abcd', alertTypeDescription: 'This is a unique description' })
       .expect(200)
@@ -83,7 +97,7 @@ describe('createAlertTypeRoutes', () => {
   })
   it('POST /alert-type/create should render code error if too long code entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: 'ABCDABCDABCDE', alertTypeDescription: 'This is a unique description' })
       .expect(200)
@@ -99,7 +113,7 @@ describe('createAlertTypeRoutes', () => {
   })
   it('POST /alert-type/create should render description error if no description entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: 'AA', alertTypeDescription: '' })
       .expect(200)
@@ -115,7 +129,7 @@ describe('createAlertTypeRoutes', () => {
   })
   it('POST /alert-type/create should render description error if too long a description entered', () => {
     return request(app)
-      .post('/alert-type/create')
+      .post(`/${uuid}/alert-type/create`)
       .type('form')
       .send({ alertTypeCode: 'AA', alertTypeDescription: 'n'.repeat(41) })
       .expect(200)
@@ -130,8 +144,15 @@ describe('createAlertTypeRoutes', () => {
       })
   })
   it('GET /alert-type/confirmation should render confirmation page', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
+    }
     return request(app)
-      .get('/alert-type/confirmation')
+      .get(`/${uuid}/alert-type/confirmation`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -140,10 +161,17 @@ describe('createAlertTypeRoutes', () => {
   })
   // Update this test when check that the alert type has been saved (next ticket)
   it('POST /alert-type/confirmation should redirect to success page', () => {
+    sessionSetup.sessionDoctor = (req: Request) => {
+      req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
+    }
     return request(app)
-      .post('/alert-type/confirmation')
+      .post(`/${uuid}/alert-type/confirmation`)
       .expect(302)
-      .expect('Location', '/alert-type/success')
+      .expect('Location', 'success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })

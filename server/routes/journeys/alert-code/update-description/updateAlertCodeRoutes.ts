@@ -1,11 +1,12 @@
 import { Request, RequestHandler } from 'express'
-import AlertsApiClient from '../../../data/alertsApiClient'
-import { UpdateAlertCodeRequestSchema } from '../../../@schemas/AlertCodeRequests'
+import AlertsApiClient from '../../../../data/alertsApiClient'
+import { UpdateAlertCodeRequestSchema } from '../../../../@schemas/AlertCodeRequests'
 
 export default class UpdateAlertCodeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
+    req.journeyData.refData ??= {}
     const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
       .filter(at => at.isActive)
       .map(alertType => {
@@ -33,8 +34,8 @@ export default class UpdateAlertCodeRoutes {
         })
       return res.render('pages/updateAlertCode/index', { alertTypes, alertTypeErrorMessage })
     }
-    req.session.alertCodeParentType = alertType
-    return res.redirect('/alert-code/update-description/alert-code')
+    req.journeyData.refData!.alertCodeParentType = alertType
+    return res.redirect('update-description/alert-code')
   }
 
   public loadSelectAlertCode: RequestHandler = async (req, res): Promise<void> => {
@@ -53,8 +54,8 @@ export default class UpdateAlertCodeRoutes {
       const alertCodeErrorMessage = 'An alert code must be selected'
       return res.render('pages/updateAlertCode/alertCode', { alertType, codes, alertCodeErrorMessage })
     }
-    req.session.alertCode = alertCode
-    return res.redirect('/alert-code/update-description/submit-description')
+    req.journeyData.refData!.alertCode = alertCode
+    return res.redirect('submit-description')
   }
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
@@ -72,8 +73,8 @@ export default class UpdateAlertCodeRoutes {
         code,
       })
     }
-    req.session.alertDescription = descriptionEntry
-    return res.redirect('/alert-code/update-description/confirmation')
+    req.journeyData.refData!.alertDescription = descriptionEntry
+    return res.redirect('confirmation')
   }
 
   private validationMessages(req: Request) {
@@ -90,7 +91,7 @@ export default class UpdateAlertCodeRoutes {
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCode, alertDescription } = req.session
+    const { alertCode, alertDescription } = req.journeyData.refData!
     return res.render('pages/updateAlertCode/confirmation', {
       code: alertCode,
       description: alertDescription,
@@ -99,13 +100,13 @@ export default class UpdateAlertCodeRoutes {
 
   public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
     const { confirmation } = req.body
-    const { alertCode, alertDescription } = req.session
+    const { alertCode, alertDescription } = req.journeyData.refData!
 
     switch (confirmation) {
       case 'no':
         return res.redirect('/')
       case 'yes':
-        return res.redirect('/alert-code/update-description/success')
+        return res.redirect('success')
       default:
         return res.render('pages/updateAlertCode/confirmation', {
           code: alertCode,
@@ -116,7 +117,7 @@ export default class UpdateAlertCodeRoutes {
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
-    const { alertCode, alertDescription } = req.session
+    const { alertCode, alertDescription } = req.journeyData.refData!
     return this.alertsApiClient
       .updateAlertCode(req.middleware.clientToken, alertCode!, { description: alertDescription! })
       .then(ac => {
@@ -132,7 +133,7 @@ export default class UpdateAlertCodeRoutes {
   }
 
   private getAlertCode = async (req: Request) => {
-    const { alertCodeParentType } = req.session
+    const { alertCodeParentType } = req.journeyData.refData!
     const alertType = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(
       at => at.code === alertCodeParentType && at.isActive,
     )
@@ -152,7 +153,7 @@ export default class UpdateAlertCodeRoutes {
   }
 
   private getAlertCodeDetails = async (req: Request) => {
-    const { alertCode, alertCodeParentType } = req.session
+    const { alertCode, alertCodeParentType } = req.journeyData.refData!
     return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
       .find(at => at.code === alertCodeParentType)
       ?.alertCodes.find(ac => ac.code === alertCode)

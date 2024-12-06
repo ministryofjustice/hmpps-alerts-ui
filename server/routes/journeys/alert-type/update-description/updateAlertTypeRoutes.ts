@@ -1,11 +1,12 @@
 import { Request, RequestHandler } from 'express'
-import AlertsApiClient from '../../../data/alertsApiClient'
-import { UpdateAlertTypeRequestSchema } from '../../../@schemas/AlertTypeRequests'
+import AlertsApiClient from '../../../../data/alertsApiClient'
+import { UpdateAlertTypeRequestSchema } from '../../../../@schemas/AlertTypeRequests'
 
 export default class UpdateAlertTypeRoutes {
   constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
+    req.journeyData.refData ??= {}
     const alertTypes = (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken))
       .filter(at => at.isActive)
       .map(alertType => {
@@ -33,8 +34,8 @@ export default class UpdateAlertTypeRoutes {
         })
       return res.render('pages/updateAlertType/index', { alertTypes, alertTypeErrorMessage })
     }
-    req.session.updateAlertTypeCode = alertType
-    return res.redirect('/alert-type/update-description/submit-description')
+    req.journeyData.refData!.updateAlertTypeCode = alertType
+    return res.redirect('update-description/submit-description')
   }
 
   public loadSubmitDescription: RequestHandler = async (req, res): Promise<void> => {
@@ -53,8 +54,8 @@ export default class UpdateAlertTypeRoutes {
         code,
       })
     }
-    req.session.alertTypeDescription = descriptionEntry
-    return res.redirect('/alert-type/update-description/confirmation')
+    req.journeyData.refData!.alertTypeDescription = descriptionEntry
+    return res.redirect('confirmation')
   }
 
   private validationMessages(req: Request) {
@@ -71,7 +72,7 @@ export default class UpdateAlertTypeRoutes {
   }
 
   public loadConfirmation: RequestHandler = async (req, res): Promise<void> => {
-    const { updateAlertTypeCode, alertTypeDescription } = req.session
+    const { updateAlertTypeCode, alertTypeDescription } = req.journeyData.refData!
     return res.render('pages/updateAlertType/confirmation', {
       code: updateAlertTypeCode,
       description: alertTypeDescription,
@@ -80,13 +81,13 @@ export default class UpdateAlertTypeRoutes {
 
   public submitConfirmationPage: RequestHandler = async (req, res): Promise<void> => {
     const { confirmation } = req.body
-    const { updateAlertTypeCode, alertTypeDescription } = req.session
+    const { updateAlertTypeCode, alertTypeDescription } = req.journeyData.refData!
 
     switch (confirmation) {
       case 'no':
         return res.redirect('/')
       case 'yes':
-        return res.redirect('/alert-type/update-description/success')
+        return res.redirect('success')
       default:
         return res.render('pages/updateAlertType/confirmation', {
           code: updateAlertTypeCode,
@@ -97,7 +98,7 @@ export default class UpdateAlertTypeRoutes {
   }
 
   public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
-    const { updateAlertTypeCode, alertTypeDescription } = req.session
+    const { updateAlertTypeCode, alertTypeDescription } = req.journeyData.refData!
 
     return this.alertsApiClient
       .updateAlertType(req.middleware.clientToken, updateAlertTypeCode!, { description: alertTypeDescription! })
@@ -114,7 +115,7 @@ export default class UpdateAlertTypeRoutes {
   }
 
   private getAlertTypeDetails = async (req: Request) => {
-    const { updateAlertTypeCode } = req.session
+    const { updateAlertTypeCode } = req.journeyData.refData!
     return (await this.alertsApiClient.retrieveAlertTypes(req.middleware.clientToken)).find(
       at => at.code === updateAlertTypeCode && at.isActive,
     )

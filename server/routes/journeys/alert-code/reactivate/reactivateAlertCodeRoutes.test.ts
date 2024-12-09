@@ -1,14 +1,16 @@
 import { Express, Request } from 'express'
 import request from 'supertest'
 import nock from 'nock'
-import { appWithAllRoutes } from '../../testutils/appSetup'
-import config from '../../../config'
-import { AlertType } from '../../../@types/alerts/alertsApiTypes'
-import SessionSetup from '../../testutils/sessionSetup'
+import { v4 } from 'uuid'
+import { appWithAllRoutes } from '../../../testutils/appSetup'
+import config from '../../../../config'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
+import SessionSetup from '../../../testutils/sessionSetup'
 
 let app: Express
 let sessionSetup: SessionSetup
 let fakeApi: nock.Scope
+let uuid = v4()
 
 beforeEach(() => {
   sessionSetup = new SessionSetup()
@@ -18,6 +20,7 @@ beforeEach(() => {
     services: {},
     sessionSetup,
   })
+  uuid = v4()
 })
 
 afterEach(() => {
@@ -44,7 +47,7 @@ describe('reactivateAlertCode', () => {
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/reactivate')
+      .get(`/${uuid}/alert-code/reactivate`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -59,14 +62,18 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {},
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/reactivate')
+      .post(`/${uuid}/alert-code/reactivate`)
       .type('form')
       .send({ alertType: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-code/reactivate/alert-code')
+      .expect('Location', 'reactivate/alert-code')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -74,11 +81,16 @@ describe('reactivateAlertCode', () => {
   it('GET /alert-code/reactivate/alert-code should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/reactivate/alert-code')
+      .get(`/${uuid}/alert-code/reactivate/alert-code`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -90,11 +102,16 @@ describe('reactivateAlertCode', () => {
   it('GET /alert-code/reactivate/alert-code no codes should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .get('/alert-code/reactivate/alert-code')
+      .get(`/${uuid}/alert-code/reactivate/alert-code`)
       .expect(302)
       .expect('Location', '/error-page')
       .expect(res => {
@@ -104,14 +121,21 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/alert-code should redirect', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/reactivate/alert-code')
+      .post(`/${uuid}/alert-code/reactivate/alert-code`)
       .type('form')
       .send({ alertCode: 'DB' })
       .expect(302)
-      .expect('Location', '/alert-code/reactivate/confirmation')
+      .expect('Location', 'confirmation')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -119,11 +143,16 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/alert-code no alert code shows error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.get('/alert-types?includeInactive=true').reply(200, alertTypes)
     return request(app)
-      .post('/alert-code/reactivate/alert-code')
+      .post(`/${uuid}/alert-code/reactivate/alert-code`)
       .type('form')
       .send({})
       .expect(200)
@@ -136,11 +165,16 @@ describe('reactivateAlertCode', () => {
   it('GET /alert-code/reactivate/confirmation should render', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-code/reactivate/confirmation')
+      .get(`/${uuid}/alert-code/reactivate/confirmation`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -151,11 +185,16 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/confirmation with nothing selected should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/reactivate/confirmation')
+      .post(`/${uuid}/alert-code/reactivate/confirmation`)
       .type('form')
       .send({})
       .expect(200)
@@ -169,11 +208,16 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/confirmation with confirmation as an empty string should render error', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/reactivate/confirmation')
+      .post(`/${uuid}/alert-code/reactivate/confirmation`)
       .type('form')
       .send({ confirmation: '' })
       .expect(200)
@@ -187,11 +231,16 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/confirmation with confirmation as "no" should redirect to the home page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/reactivate/confirmation')
+      .post(`/${uuid}/alert-code/reactivate/confirmation`)
       .type('form')
       .send({ confirmation: 'no' })
       .expect(302)
@@ -203,15 +252,20 @@ describe('reactivateAlertCode', () => {
   it('POST /alert-code/reactivate/confirmation with confirmation as "yes" should redirect to the success page`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .post('/alert-code/reactivate/confirmation')
+      .post(`/${uuid}/alert-code/reactivate/confirmation`)
       .type('form')
       .send({ confirmation: 'yes' })
       .expect(302)
-      .expect('Location', '/alert-code/reactivate/success')
+      .expect('Location', 'success')
       .expect(res => {
         expect(res.redirect).toBeTruthy()
       })
@@ -219,12 +273,17 @@ describe('reactivateAlertCode', () => {
   it('GET /alert-code/reactivate/success should render`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     fakeApi.patch('/alert-codes/AA/reactivate').reply(200)
     return request(app)
-      .get('/alert-code/reactivate/success')
+      .get(`/${uuid}/alert-code/reactivate/success`)
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -235,11 +294,16 @@ describe('reactivateAlertCode', () => {
   it('GET /alert-code/reactivate/success should redirect if error`', () => {
     sessionSetup.sessionDoctor = (req: Request) => {
       req.middleware = { clientToken: '123' }
-      req.session.deactivateAlertTypeCode = 'VI'
-      req.session.reactivateAlertCode = 'AA'
+      req.journeyData = {
+        refData: {
+          deactivateAlertTypeCode: 'VI',
+          reactivateAlertCode: 'AA',
+        },
+        instanceUnixEpoch: Date.now(),
+      }
     }
     return request(app)
-      .get('/alert-code/reactivate/success')
+      .get(`/${uuid}/alert-code/reactivate/success`)
       .expect(302)
       .expect('Location', '/error-page')
       .expect(res => {

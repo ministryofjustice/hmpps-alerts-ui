@@ -18,6 +18,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
+import { auditPageViewMiddleware } from './middleware/auditPageViewMiddleware'
 
 import routes from './routes'
 import type { Services } from './services'
@@ -49,6 +50,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app)
   app.use(setUpAuthentication())
+  app.get('*', auditPageViewMiddleware(services.auditService))
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
@@ -70,7 +72,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(checkPopulateUserCaseloads())
 
-  app.use(routes(services))
+  app.use(routes())
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
 

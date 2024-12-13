@@ -16,6 +16,7 @@ import logger from '../../../logger'
 import config from '../../config'
 import populateValidationErrors from '../../middleware/populateValidationErrors'
 import { HmppsAuditClient } from '../../data'
+import { auditPageViewMiddleware } from '../../middleware/auditPageViewMiddleware'
 
 jest.mock('../../services/auditService')
 
@@ -60,6 +61,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.get('*', auditPageViewMiddleware(services.auditService))
   app.use(populateValidationErrors())
   app.get(
     '*',

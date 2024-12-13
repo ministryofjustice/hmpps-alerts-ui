@@ -19,7 +19,9 @@ generic-service:
     SENTRY_ENVIRONMENT: DEV
     ALERTS_API_URL: "https://alerts-api-dev.hmpps.service.justice.gov.uk"
     PRISONER_SEARCH_API_URL: "https://prisoner-search-dev.prison.service.justice.gov.uk"
-    AUDIT_ENABLED: "false"
+    AUDIT_ENABLED: "true"
+    AUDIT_SQS_REGION: "eu-west-2"
+    AUDIT_SERVICE_NAME: "hmpps-alerts-ui"
     COMPONENT_API_URL: "https://frontend-components-dev.hmpps.service.justice.gov.uk"
     COMMON_COMPONENTS_ENABLED: true
     DPS_HOME_PAGE_URL: "https://digital-dev.prison.service.justice.gov.uk"

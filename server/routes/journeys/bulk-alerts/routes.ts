@@ -35,6 +35,22 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
   get('/', controller.GET)
   post('/', validate(schemaFactory(alertsApiClient)), controller.START_BACKEND_SESSION, controller.POST)
 
+  router.get('*', (req, res, next) => {
+    const { planId, alertCode, alertType, alertCodeSubJourney } = req.journeyData.bulkAlert!
+    if (planId) {
+      const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
+      const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code
+      res.locals.auditEvent.subjectId = planId
+      res.locals.auditEvent.subjectType = planId
+      res.locals.auditEvent.details = {
+        ...res.locals.auditEvent.details,
+        ...(detailsAlertType && { alertType: detailsAlertType }),
+        ...(detailsAlertCode && { alertCode: detailsAlertCode }),
+      }
+    }
+    next()
+  })
+
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())
   router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient, alertsApiClient))

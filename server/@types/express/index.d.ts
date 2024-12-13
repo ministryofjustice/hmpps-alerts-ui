@@ -93,6 +93,14 @@ export declare global {
           navEnabled: boolean
         }[]
       }
+      auditEvent: {
+        pageNameSuffix: string
+        who: string
+        correlationId: string
+        subjectId?: string
+        subjectType?: string
+        details: Record<string, unknown>
+      }
     }
   }
 }

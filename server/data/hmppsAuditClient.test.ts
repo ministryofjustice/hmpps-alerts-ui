@@ -53,7 +53,8 @@ describe('hmppsAuditClient', () => {
 
       expect(actualMessageInput.QueueUrl).toEqual('http://localhost:4566/000000000000/mainQueue')
 
-      const actualMessageBody = actualMessageInput.MessageBody && JSON.parse(actualMessageInput.MessageBody)
+      expect(actualMessageInput.MessageBody).not.toBeUndefined()
+      const actualMessageBody = JSON.parse(actualMessageInput.MessageBody!)
       expect(actualMessageBody).toEqual(expectedSqsMessageBody)
 
       const eventTime = Date.parse(actualMessageBody.when)
@@ -81,31 +82,13 @@ describe('hmppsAuditClient', () => {
       hmppsAuditClient = new HmppsAuditClient({ ...auditClientConfig })
 
       const trySendMessage = async () => {
-        await hmppsAuditClient.sendMessage(
-          {
-            what: 'EXAMPLE_EVENT',
-            who: 'user1',
-          },
-          false,
-        )
-      }
-
-      expect(trySendMessage()).resolves.not.toThrow()
-      expect(sqsMock.calls().length).toEqual(1)
-    })
-
-    it('should throw an error if sqs message cannot be sent', async () => {
-      sqsMock.on(SendMessageCommand).rejects(new Error('Error sending sqs message'))
-      hmppsAuditClient = new HmppsAuditClient({ ...auditClientConfig })
-
-      const trySendMessage = async () => {
         await hmppsAuditClient.sendMessage({
           what: 'EXAMPLE_EVENT',
           who: 'user1',
         })
       }
 
-      expect(trySendMessage()).rejects.toThrow('Error sending sqs message')
+      expect(trySendMessage()).resolves.not.toThrow()
       expect(sqsMock.calls().length).toEqual(1)
     })
   })

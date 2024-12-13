@@ -3,7 +3,7 @@ generic-service:
   productId: "DPS090" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
   # the IRSA service account name for accessing AWS resources
-  # serviceAccountName: "hmpps-template-typescript"
+  serviceAccountName: "hmpps-alerts-ui"
 
   replicaCount: 4
 
@@ -54,9 +54,9 @@ generic-service:
     alerts-ui-sentry:
       SENTRY_DSN: "SENTRY_DSN"
       SENTRY_LOADER_SCRIPT_ID: "SENTRY_LOADER_SCRIPT_ID"
-    #sqs-hmpps-audit-secret:
-    #  AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
-    #  AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
+    sqs-hmpps-audit-secret:
+     AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
+     AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
 
   allowlist:
     groups:

@@ -44,7 +44,7 @@ export default class HmppsAuditClient {
     this.sqsClient = new SQSClient({ region: config.region })
   }
 
-  async sendMessage(event: AuditEvent, throwOnError: boolean = true) {
+  async sendMessage(event: AuditEvent) {
     if (!this.enabled) return null
 
     const sqsMessage: SqsMessage = {
@@ -64,7 +64,6 @@ export default class HmppsAuditClient {
       return messageResponse
     } catch (error) {
       logger.error('Error sending HMPPS Audit SQS message, ', error)
-      if (throwOnError) throw error
     }
     return null
   }

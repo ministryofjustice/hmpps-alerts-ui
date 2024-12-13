@@ -1,23 +1,19 @@
 import { RequestHandler, Router } from 'express'
 import { dataAccess } from '../data'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
-import { Page } from '../services/auditService'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
 import JourneyRoutes from './journeys/routes'
 import removeTrailingSlashMiddleware from '../middleware/removeTrailingSlashMiddleware'
 
-export default function routes({ auditService }: Services): Router {
+export default function routes(): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const apiClient = dataAccess()
   const { alertsApiClient, prisonerSearchApiClient } = apiClient
 
-  get('/', async (req, res) => {
-    // sample function call for the new AuditService. disabled by default.
-    await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
+  get('/', async (_req, res) => {
     res.render('view', { roles: res.locals.user.userRoles })
   })
 

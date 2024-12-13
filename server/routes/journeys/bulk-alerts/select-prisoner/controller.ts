@@ -3,11 +3,13 @@ import { SchemaType } from './schemas'
 import PrisonerSearchApiClient, { Prisoner } from '../../../../data/prisonerSearchApiClient'
 import { summarisePrisoner } from '../../../../utils/utils'
 import AlertsApiClient from '../../../../data/alertsApiClient'
+import AuditService from '../../../../services/auditService'
 
 export default class SelectPrisonerController {
   constructor(
     readonly prisonerSearchApiClient: PrisonerSearchApiClient,
     readonly alertsApiClient: AlertsApiClient,
+    readonly auditService: AuditService,
   ) {}
 
   GET = async (req: Request, res: Response) => {
@@ -35,12 +37,34 @@ export default class SelectPrisonerController {
     })
   }
 
-  UPDATE_BACKEND_SESSION = async (req: Request<unknown, unknown, SchemaType>, _res: Response, next: NextFunction) => {
+  UPDATE_BACKEND_SESSION = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
+    try {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
     await this.alertsApiClient.addPrisonersToBulkAlertsPlan(
       req.middleware.clientToken,
       req.journeyData.bulkAlert!.planId!,
       [req.body.selectedPrisoner.prisonerNumber],
     )
+    try {
+      await this.auditService.logModificationApiCall(
+        'SUCCESS',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
     next()
   }
 

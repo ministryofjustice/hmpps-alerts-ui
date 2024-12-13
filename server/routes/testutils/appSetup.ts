@@ -16,6 +16,7 @@ import logger from '../../../logger'
 import config from '../../config'
 import populateValidationErrors from '../../middleware/populateValidationErrors'
 import { HmppsAuditClient } from '../../data'
+import { auditPageViewMiddleware } from '../../middleware/auditPageViewMiddleware'
 
 jest.mock('../../services/auditService')
 
@@ -33,7 +34,7 @@ export const user: HmppsUser = {
 }
 
 function appSetup(
-  _services: Services,
+  services: Services,
   production: boolean,
   userSupplier: () => HmppsUser,
   sessionSetup: SessionSetup = new SessionSetup(),
@@ -60,6 +61,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.get('*', auditPageViewMiddleware(services.auditService))
   app.use(populateValidationErrors())
   app.get(
     '*',
@@ -70,7 +72,7 @@ function appSetup(
       timeoutOptions: { response: 50, deadline: 50 },
     }),
   )
-  app.use(routes())
+  app.use(routes(services))
   app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 

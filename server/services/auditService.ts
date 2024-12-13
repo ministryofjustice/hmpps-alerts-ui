@@ -17,18 +17,12 @@ export interface PageViewEventDetails {
 export default class AuditService {
   constructor(private readonly hmppsAuditClient: HmppsAuditClient) {}
 
-  async logAuditEvent(event: AuditEvent) {
-    await this.hmppsAuditClient.sendMessage(event)
-  }
-
-  async logPageView(
+  async logAuditEvent(
     journeyData: Partial<JourneyData>,
-    query: Request['query'],
-    auditEvent: Response['locals']['auditEvent'],
-    pagePrefix: string = '',
+    auditEvent: Omit<Response['locals']['auditEvent'], 'pageNameSuffix'>,
+    what: string,
+    query?: Request['query'],
   ) {
-    const { pageNameSuffix, ...auditEventProperties } = auditEvent
-
     const codeFromRefData =
       journeyData?.refData?.alertCode ||
       journeyData?.refData?.deactivateAlertCode ||
@@ -43,13 +37,13 @@ export default class AuditService {
     const typeOrCode = codeFromRefData || typeFromRefData
 
     const event: AuditEvent = {
-      ...auditEventProperties,
+      ...auditEvent,
       ...(query ? { details: query } : {}),
       ...(typeOrCode ? { subjectId: typeOrCode } : {}),
       ...(typeOrCode ? { subjectType: typeOrCode } : {}),
-      what: `PAGE_VIEW_${pagePrefix + pageNameSuffix}`,
+      what,
       details: {
-        ...auditEvent.details,
+        ...auditEvent?.details,
         ...(codeFromRefData && { alertCode: codeFromRefData }),
         ...(typeFromRefData && { alertType: typeFromRefData }),
         ...(journeyData?.refData?.alertDescription && { alertDescription: journeyData?.refData?.alertDescription }),
@@ -59,5 +53,26 @@ export default class AuditService {
       },
     }
     await this.hmppsAuditClient.sendMessage(event)
+  }
+
+  async logPageView(
+    journeyData: Partial<JourneyData>,
+    query: Request['query'],
+    auditEvent: Response['locals']['auditEvent'],
+    pagePrefix: string = '',
+  ) {
+    const { pageNameSuffix, ...auditEventProperties } = auditEvent
+    await this.logAuditEvent(journeyData, auditEventProperties, `PAGE_VIEW_${pagePrefix + pageNameSuffix}`, query)
+  }
+
+  async logModificationApiCall(
+    auditType: 'ATTEMPT' | 'SUCCESS',
+    modificationType: 'CREATE' | 'UPDATE',
+    requestUrl: string,
+    journeyData: Partial<JourneyData>,
+    auditEvent: Response['locals']['auditEvent'],
+  ) {
+    const pageName = requestUrl.replace(/\?.*/, '').split('/').slice(2).join('/').replace('/', '_').replace('-', '_')
+    await this.logAuditEvent(journeyData, auditEvent, `${auditType}_${modificationType}_${pageName}`)
   }
 }

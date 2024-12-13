@@ -8,16 +8,17 @@ import DeactivateAlertTypeRoutes from './deactivate/deactivateAlertTypeRoutes'
 import ReactivateAlertTypeRoutes from './reactivate/reactivteAlertTypeRoutes'
 import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
 import AuthorisedRoles from '../../../authentication/authorisedRoles'
+import AuditService from '../../../services/auditService'
 
-export default function AlertTypeRoutes(alertsApiClient: AlertsApiClient) {
+export default function AlertTypeRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const router = Router({ mergeParams: true })
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient)
-  const updateAlertTypeRoutes = new UpdateAlertTypeRoutes(alertsApiClient)
-  const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient)
-  const reactivateAlertTypeRoutes = new ReactivateAlertTypeRoutes(alertsApiClient)
+  const createAlertTypeRoutes = new CreateAlertTypeRoutes(alertsApiClient, auditService)
+  const updateAlertTypeRoutes = new UpdateAlertTypeRoutes(alertsApiClient, auditService)
+  const deactivateAlertTypeRoutes = new DeactivateAlertTypeRoutes(alertsApiClient, auditService)
+  const reactivateAlertTypeRoutes = new ReactivateAlertTypeRoutes(alertsApiClient, auditService)
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
 

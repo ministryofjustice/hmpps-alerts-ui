@@ -1,9 +1,13 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../../../../data/alertsApiClient'
 import { UpdateAlertTypeRequestSchema } from '../../../../@schemas/AlertTypeRequests'
+import AuditService from '../../../../services/auditService'
 
 export default class UpdateAlertTypeRoutes {
-  constructor(private readonly alertsApiClient: AlertsApiClient) {}
+  constructor(
+    private readonly alertsApiClient: AlertsApiClient,
+    readonly auditService: AuditService,
+  ) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     req.journeyData.refData ??= {}
@@ -97,10 +101,21 @@ export default class UpdateAlertTypeRoutes {
     }
   }
 
-  public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
+  public loadSuccess: RequestHandler = async (req, res, next): Promise<void> => {
     const { updateAlertTypeCode, alertTypeDescription } = req.journeyData.refData!
 
-    return this.alertsApiClient
+    try {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
+    await this.alertsApiClient
       .updateAlertType(req.middleware.clientToken, updateAlertTypeCode!, { description: alertTypeDescription! })
       .then(alertType => {
         return res.render('pages/updateAlertType/success', {
@@ -112,6 +127,17 @@ export default class UpdateAlertTypeRoutes {
         req.session.errorMessage = 'Your alert type was not updated'
         return res.redirect('/error-page')
       })
+    try {
+      await this.auditService.logModificationApiCall(
+        'SUCCESS',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
   }
 
   private getAlertTypeDetails = async (req: Request) => {

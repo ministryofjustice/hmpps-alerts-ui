@@ -17,7 +17,6 @@ beforeEach(() => {
   config.apis.alertsApi.url = 'http://localhost:8100'
   fakeApi = nock(config.apis.alertsApi.url)
   app = appWithAllRoutes({
-    services: {},
     sessionSetup,
   })
   uuid = v4()

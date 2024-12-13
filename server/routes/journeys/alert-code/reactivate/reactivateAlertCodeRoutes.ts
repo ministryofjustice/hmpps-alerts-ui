@@ -1,8 +1,12 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../../../../data/alertsApiClient'
+import AuditService from '../../../../services/auditService'
 
 export default class ReactivateAlertCodeRoutes {
-  constructor(private readonly alertsApiClient: AlertsApiClient) {}
+  constructor(
+    private readonly alertsApiClient: AlertsApiClient,
+    readonly auditService: AuditService,
+  ) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     req.journeyData.refData ??= {}
@@ -95,8 +99,19 @@ export default class ReactivateAlertCodeRoutes {
     return res.redirect('success')
   }
 
-  public loadSuccessPage: RequestHandler = async (req, res): Promise<void> => {
+  public loadSuccessPage: RequestHandler = async (req, res, next): Promise<void> => {
     const { reactivateAlertCode } = req.journeyData.refData!
+    try {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
     this.alertsApiClient
       .reactivateAlertCode(req.middleware.clientToken, reactivateAlertCode!)
       .then(response => {
@@ -109,5 +124,16 @@ export default class ReactivateAlertCodeRoutes {
         req.session.errorMessage = 'Your alert code was not reactivated'
         return res.redirect('/error-page')
       })
+    try {
+      await this.auditService.logModificationApiCall(
+        'SUCCESS',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
   }
 }

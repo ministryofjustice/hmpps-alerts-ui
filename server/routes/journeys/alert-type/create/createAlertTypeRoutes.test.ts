@@ -10,7 +10,6 @@ let uuid = v4()
 beforeEach(() => {
   sessionSetup = new SessionSetup()
   app = appWithAllRoutes({
-    services: {},
     sessionSetup,
   })
   uuid = v4()

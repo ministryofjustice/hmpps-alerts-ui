@@ -1,9 +1,13 @@
 import { Request, RequestHandler } from 'express'
 import AlertsApiClient from '../../../../data/alertsApiClient'
 import { CreateAlertTypeRequestSchema } from '../../../../@schemas/AlertTypeRequests'
+import AuditService from '../../../../services/auditService'
 
 export default class CreateAlertTypeRoutes {
-  constructor(private readonly alertsApiClient: AlertsApiClient) {}
+  constructor(
+    private readonly alertsApiClient: AlertsApiClient,
+    readonly auditService: AuditService,
+  ) {}
 
   public startPage: RequestHandler = async (req, res): Promise<void> => {
     req.journeyData.refData ??= {}
@@ -31,8 +35,19 @@ export default class CreateAlertTypeRoutes {
     return res.redirect('success')
   }
 
-  public loadSuccess: RequestHandler = async (req, res): Promise<void> => {
+  public loadSuccess: RequestHandler = async (req, res, next): Promise<void> => {
     const { alertTypeCode, alertTypeDescription } = req.journeyData.refData!
+    try {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'CREATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
     const response = await this.alertsApiClient
       .createAlertType(req.middleware.clientToken, {
         code: alertTypeCode!,
@@ -52,6 +67,17 @@ export default class CreateAlertTypeRoutes {
             return res.redirect('/error-page')
         }
       })
+    try {
+      await this.auditService.logModificationApiCall(
+        'SUCCESS',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
+    } catch (e: unknown) {
+      next(e)
+    }
     return res.render('pages/createAlertType/success', { alertTypeCode, alertTypeDescription, response })
   }
 

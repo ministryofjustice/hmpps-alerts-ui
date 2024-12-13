@@ -6,8 +6,9 @@ import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
 import JourneyRoutes from './journeys/routes'
 import removeTrailingSlashMiddleware from '../middleware/removeTrailingSlashMiddleware'
+import { Services } from '../services'
 
-export default function routes(): Router {
+export default function routes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const apiClient = dataAccess()
@@ -25,10 +26,10 @@ export default function routes(): Router {
   router.use(removeTrailingSlashMiddleware)
 
   router.use('/manage-reference-data', ManageReferenceDataRoutes())
-  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient))
+  router.use('/add-any-alert', AddAnyAlertRoutes(alertsApiClient, prisonerSearchApiClient, services.auditService))
 
   router.use(insertJourneyIdentifier())
-  router.use('/:journeyId', JourneyRoutes(apiClient))
+  router.use('/:journeyId', JourneyRoutes(apiClient, services))
 
   return router
 }

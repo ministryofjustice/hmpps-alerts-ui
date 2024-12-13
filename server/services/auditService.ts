@@ -43,7 +43,7 @@ export default class AuditService {
       ...(typeOrCode ? { subjectType: typeOrCode } : {}),
       what,
       details: {
-        ...auditEvent.details,
+        ...auditEvent?.details,
         ...(codeFromRefData && { alertCode: codeFromRefData }),
         ...(typeFromRefData && { alertType: typeFromRefData }),
         ...(journeyData?.refData?.alertDescription && { alertDescription: journeyData?.refData?.alertDescription }),
@@ -72,8 +72,7 @@ export default class AuditService {
     journeyData: Partial<JourneyData>,
     auditEvent: Response['locals']['auditEvent'],
   ) {
-    const { pageNameSuffix, ...auditEventProperties } = auditEvent
     const pageName = requestUrl.replace(/\?.*/, '').split('/').slice(2).join('/').replace('/', '_').replace('-', '_')
-    await this.logAuditEvent(journeyData, auditEventProperties, `${auditType}_${modificationType}_${pageName}`)
+    await this.logAuditEvent(journeyData, auditEvent, `${auditType}_${modificationType}_${pageName}`)
   }
 }

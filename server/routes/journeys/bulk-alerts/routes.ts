@@ -14,10 +14,14 @@ import SelectUploadLogicRoutes from './select-upload-logic/routes'
 import BulkAlertsCheckAnswersRoutes from './check-answers/routes'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
 import BulkAlertsConfirmationRoutes from './confirmation/routes'
+import { Services } from '../../../services'
 
-export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiClient }: DataAccess) {
+export default function BulkAlertsRoutes(
+  { alertsApiClient, prisonerSearchApiClient }: DataAccess,
+  { auditService }: Services,
+) {
   const { router, get, post } = BaseRouter()
-  const controller = new BulkAlertsController(alertsApiClient)
+  const controller = new BulkAlertsController(alertsApiClient, auditService)
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS], false))
 
@@ -53,11 +57,11 @@ export default function BulkAlertsRoutes({ alertsApiClient, prisonerSearchApiCli
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())
-  router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient, alertsApiClient))
+  router.use('/select-prisoner', SelectPrisonerRoutes(prisonerSearchApiClient, alertsApiClient, auditService))
   router.use('/upload-prisoner-list', UploadPrisonerListRoutes(alertsApiClient))
   router.use('/review-prisoners', ReviewPrisonersRoutes(alertsApiClient))
   router.use('/select-upload-logic', SelectUploadLogicRoutes())
-  router.use('/check-answers', BulkAlertsCheckAnswersRoutes(alertsApiClient))
+  router.use('/check-answers', BulkAlertsCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', BulkAlertsConfirmationRoutes())
 
   return router

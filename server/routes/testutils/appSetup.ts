@@ -33,7 +33,7 @@ export const user: HmppsUser = {
 }
 
 function appSetup(
-  _services: Services,
+  services: Services,
   production: boolean,
   userSupplier: () => HmppsUser,
   sessionSetup: SessionSetup = new SessionSetup(),
@@ -70,7 +70,7 @@ function appSetup(
       timeoutOptions: { response: 50, deadline: 50 },
     }),
   )
-  app.use(routes())
+  app.use(routes(services))
   app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 

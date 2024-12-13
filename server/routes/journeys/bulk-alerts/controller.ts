@@ -1,8 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import BaseController from '../../common/controller'
 import { SchemaType } from './schemas'
+import AlertsApiClient from '../../../data/alertsApiClient'
+import AuditService from '../../../services/auditService'
 
 export default class BulkAlertsController extends BaseController {
+  constructor(
+    override alertsApiService: AlertsApiClient,
+    readonly auditService: AuditService,
+  ) {
+    super(alertsApiService)
+  }
+
   GET = async (req: Request, res: Response) => {
     req.journeyData.bulkAlert ??= {}
     const alertType =
@@ -29,10 +38,24 @@ export default class BulkAlertsController extends BaseController {
     })
   }
 
-  START_BACKEND_SESSION = async (req: Request, _res: Response, next: NextFunction) => {
+  START_BACKEND_SESSION = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.journeyData.bulkAlert!.planId) {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'CREATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
       const { id: planId } = await this.alertsApiService.createBulkAlertsPlan(req.middleware.clientToken)
       req.journeyData.bulkAlert!.planId = planId
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'CREATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
     }
     next()
   }

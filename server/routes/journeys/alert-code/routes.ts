@@ -7,16 +7,17 @@ import ReactivateAlertCodeRoutes from './reactivate/reactivateAlertCodeRoutes'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
 import AuthorisedRoles from '../../../authentication/authorisedRoles'
+import AuditService from '../../../services/auditService'
 
-export default function AlertCodeRoutes(alertsApiClient: AlertsApiClient) {
+export default function AlertCodeRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const router = Router({ mergeParams: true })
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient)
-  const updateAlertCodeRoutes = new UpdateAlertCodeRoutes(alertsApiClient)
-  const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient)
-  const reactivateAlertCodeRoutes = new ReactivateAlertCodeRoutes(alertsApiClient)
+  const createAlertCodeRoutes = new CreateAlertCodeRoutes(alertsApiClient, auditService)
+  const updateAlertCodeRoutes = new UpdateAlertCodeRoutes(alertsApiClient, auditService)
+  const deactivateAlertCodeRoutes = new DeactivateAlertCodeRoutes(alertsApiClient, auditService)
+  const reactivateAlertCodeRoutes = new ReactivateAlertCodeRoutes(alertsApiClient, auditService)
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
 

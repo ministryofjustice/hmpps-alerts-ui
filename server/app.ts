@@ -72,7 +72,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(checkPopulateUserCaseloads())
 
-  app.use(routes())
+  app.use(routes(services))
 
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
 

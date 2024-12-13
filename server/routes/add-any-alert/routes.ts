@@ -6,13 +6,15 @@ import AuthorisedRoles from '../../authentication/authorisedRoles'
 import { validate } from '../../middleware/validationMiddleware'
 import { schemaFactory } from './schemas'
 import PrisonerSearchApiClient from '../../data/prisonerSearchApiClient'
+import AuditService from '../../services/auditService'
 
 export default function AddAnyAlertRoutes(
   alertsApiClient: AlertsApiClient,
   prisonerSearchApiClient: PrisonerSearchApiClient,
+  auditService: AuditService,
 ) {
   const { router, get, post } = BaseRouter()
-  const controller = new AddAnyAlertController(alertsApiClient)
+  const controller = new AddAnyAlertController(alertsApiClient, auditService)
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS], false))
 

@@ -5,8 +5,17 @@ import { FLASH_KEY__SUCCESS_MESSAGE } from '../../utils/constants'
 import { SchemaType } from './schemas'
 import { firstNameSpaceLastName } from '../../utils/miniProfileUtils'
 import { getNonUndefinedProp } from '../../utils/utils'
+import AlertsApiClient from '../../data/alertsApiClient'
+import AuditService from '../../services/auditService'
 
 export default class AddAnyAlertController extends BaseController {
+  constructor(
+    override alertsApiService: AlertsApiClient,
+    readonly auditService: AuditService,
+  ) {
+    super(alertsApiService)
+  }
+
   GET = async (req: Request, res: Response) => {
     const alertType = res.locals.formResponses?.['alertType'] ?? req.query['alertType']
     const alertCode = res.locals.formResponses?.['alertCode'] ?? req.query['alertCode']
@@ -42,6 +51,13 @@ export default class AddAnyAlertController extends BaseController {
 
   checkSubmitToAPI = async (req: Request<unknown, unknown, SchemaType>, res: Response, next: NextFunction) => {
     try {
+      await this.auditService.logModificationApiCall(
+        'ATTEMPT',
+        'CREATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
+      )
       await this.alertsApiService.createAlert(req.middleware.clientToken, req.body.prisonNumber.prisonerNumber, {
         alertCode: req.body.alertCode.code,
         authorisedBy: res.locals.user.displayName,
@@ -52,6 +68,13 @@ export default class AddAnyAlertController extends BaseController {
       req.flash(
         FLASH_KEY__SUCCESS_MESSAGE,
         `You’ve created a ‘${req.body.alertCode.description}’ alert for ${firstNameSpaceLastName(req.body.prisonNumber)}`,
+      )
+      await this.auditService.logModificationApiCall(
+        'SUCCESS',
+        'UPDATE',
+        req.originalUrl,
+        req.journeyData,
+        res.locals.auditEvent,
       )
       next()
     } catch (e) {

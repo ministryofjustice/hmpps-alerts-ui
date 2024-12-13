@@ -5,16 +5,17 @@ import journeyStateMachine from '../../middleware/journeyStateMachine'
 import setUpJourneyData from '../../middleware/setUpJourneyData'
 import AlertCodeRoutes from './alert-code/routes'
 import AlertTypeRoutes from './alert-type/routes'
+import { Services } from '../../services'
 
-export default function JourneyRoutes(dataAccess: DataAccess) {
+export default function JourneyRoutes(dataAccess: DataAccess, services: Services) {
   const router = Router({ mergeParams: true })
 
   router.use(setUpJourneyData(dataAccess.tokenStore))
   router.use(journeyStateMachine())
 
-  router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess))
-  router.use('/alert-code', AlertCodeRoutes(dataAccess.alertsApiClient))
-  router.use('/alert-type', AlertTypeRoutes(dataAccess.alertsApiClient))
+  router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess, services))
+  router.use('/alert-code', AlertCodeRoutes(dataAccess.alertsApiClient, services.auditService))
+  router.use('/alert-type', AlertTypeRoutes(dataAccess.alertsApiClient, services.auditService))
 
   if (process.env.NODE_ENV === 'e2e-test') {
     /* eslint-disable no-param-reassign */

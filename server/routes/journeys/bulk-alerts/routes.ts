@@ -41,16 +41,16 @@ export default function BulkAlertsRoutes(
 
   router.get('*', (req, res, next) => {
     const { planId, alertCode, alertType, alertCodeSubJourney } = req.journeyData.bulkAlert!
+    const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
+    const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code
     if (planId) {
-      const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
-      const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code
       res.locals.auditEvent.subjectId = planId
       res.locals.auditEvent.subjectType = planId
-      res.locals.auditEvent.details = {
-        ...res.locals.auditEvent.details,
-        ...(detailsAlertType && { alertType: detailsAlertType }),
-        ...(detailsAlertCode && { alertCode: detailsAlertCode }),
-      }
+    }
+    res.locals.auditEvent.details = {
+      ...res.locals.auditEvent.details,
+      ...(detailsAlertType && { alertType: detailsAlertType }),
+      ...(detailsAlertCode && { alertCode: detailsAlertCode }),
     }
     next()
   })

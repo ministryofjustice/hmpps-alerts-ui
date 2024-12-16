@@ -50,7 +50,7 @@ export default class BulkAlertsController extends BaseController {
       const { id: planId } = await this.alertsApiService.createBulkAlertsPlan(req.middleware.clientToken)
       req.journeyData.bulkAlert!.planId = planId
       await this.auditService.logModificationApiCall(
-        'ATTEMPT',
+        'SUCCESS',
         'CREATE',
         req.originalUrl,
         req.journeyData,

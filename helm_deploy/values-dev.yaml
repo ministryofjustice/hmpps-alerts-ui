@@ -24,6 +24,12 @@ generic-service:
     COMMON_COMPONENTS_ENABLED: true
     DPS_HOME_PAGE_URL: "https://digital-dev.prison.service.justice.gov.uk"
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - accessibility-testing-1
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-alerts-api-non-prod # sent to Slack channel #move-and-improve-alerts-non-prod
   businessHoursOnly: true

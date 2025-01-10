@@ -82,16 +82,18 @@ export declare global {
       message: string
       stack: string | undefined | null
       status: number
-      feComponentsMeta?: {
-        activeCaseLoad: CaseLoad
-        caseLoads: CaseLoad[]
-        services: {
-          id: string
-          heading: string
-          description: string
-          href: string
-          navEnabled: boolean
-        }[]
+      feComponents?: {
+        sharedData?: {
+          activeCaseLoad: CaseLoad
+          caseLoads: CaseLoad[]
+          services: {
+            id: string
+            heading: string
+            description: string
+            href: string
+            navEnabled: boolean
+          }[]
+        }
       }
       auditEvent: {
         pageNameSuffix: string

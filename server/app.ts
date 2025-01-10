@@ -61,7 +61,7 @@ export default function createApp(services: Services): express.Application {
     '*',
     dpsComponents.getPageComponents({
       logger,
-      includeMeta: true,
+      includeSharedData: true,
       dpsUrl: config.serviceUrls.digitalPrison,
       timeoutOptions: {
         response: config.apis.componentApi.timeout.response,

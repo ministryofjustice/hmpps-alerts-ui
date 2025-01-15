@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 import { createSchema } from '../../../../../middleware/validationMiddleware'
 
 const ERROR_MSG = 'You must enter a name or prison number in the format A1234CD'

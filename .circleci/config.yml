@@ -165,8 +165,6 @@ workflows:
           jira_env_type: staging
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
-          slack_notification: true
-          slack_channel_name: << pipeline.parameters.team-slack-channel-non-prod >>
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-preprod
@@ -184,8 +182,6 @@ workflows:
           jira_env_type: production
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
-          slack_notification: true
-          slack_channel_name: << pipeline.parameters.team-slack-channel-prod >>
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-prod

@@ -6,15 +6,10 @@ orbs:
   codecov: codecov/codecov@3 # v4 doesnt upload coverage, complaining about a lack of token
 
 parameters:
-  team-slack-channel-prod:
-    type: string
-    # Slack channel to notify the development team about production issues or events
-    default: move-and-improve-alerts
-
   team-slack-channel-non-prod:
     type: string
     # Slack channel to notify the development team about non-production issues or events
-    default: move-and-improve-alerts-non-prod
+    default: connect-dps-non-prod-alerts
 
   node-version:
     type: string
@@ -184,8 +179,7 @@ workflows:
           jira_env_type: production
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
-          slack_notification: true
-          slack_channel_name: << pipeline.parameters.team-slack-channel-prod >>
+          slack_notification: false
           context:
             - hmpps-common-vars
             - hmpps-alerts-ui-prod

@@ -31,5 +31,5 @@ generic-service:
       - accessibility-testing-1
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-alerts-api-non-prod # sent to Slack channel #move-and-improve-alerts-non-prod
+  alertSeverity: hmpps-prisoner-profile-non-prod # sent to Slack channel #connect-dps-non-prod-alerts
   businessHoursOnly: true

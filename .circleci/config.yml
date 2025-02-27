@@ -14,7 +14,7 @@ parameters:
   team-slack-channel-non-prod:
     type: string
     # Slack channel to notify the development team about non-production issues or events
-    default: move-and-improve-alerts-non-prod
+    default: connect-dps-non-prod-alerts
 
   node-version:
     type: string

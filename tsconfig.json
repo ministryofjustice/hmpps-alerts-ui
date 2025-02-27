@@ -39,6 +39,7 @@
     "coverage",
     "**/*.cy.ts",
     "test_results",
-    "codecov_reports"
+    "codecov_reports",
+    "eslint.config.mjs"
   ]
 }

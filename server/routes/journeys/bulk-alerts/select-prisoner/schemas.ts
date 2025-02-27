@@ -1,4 +1,4 @@
-import z, { RefinementCtx } from 'zod'
+import { z, RefinementCtx } from 'zod'
 import { Request, Response } from 'express'
 import { createSchema } from '../../../../middleware/validationMiddleware'
 

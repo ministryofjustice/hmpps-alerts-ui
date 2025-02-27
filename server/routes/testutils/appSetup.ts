@@ -67,7 +67,7 @@ function appSetup(
     '*',
     dpsComponents.getPageComponents({
       logger,
-      includeMeta: true,
+      includeSharedData: true,
       dpsUrl: config.serviceUrls.digitalPrison,
       timeoutOptions: { response: 50, deadline: 50 },
     }),

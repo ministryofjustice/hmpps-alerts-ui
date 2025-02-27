@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
 
 const ERROR_MSG = 'You must select one option'

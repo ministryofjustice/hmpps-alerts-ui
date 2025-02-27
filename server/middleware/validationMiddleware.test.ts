@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 import { Request, Response } from 'express'
 import { fail } from 'assert'
 import { createSchema, validate } from './validationMiddleware'

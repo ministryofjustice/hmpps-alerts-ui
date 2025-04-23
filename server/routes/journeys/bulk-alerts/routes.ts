@@ -39,7 +39,7 @@ export default function BulkAlertsRoutes(
   get('/', controller.GET)
   post('/', validate(schemaFactory(alertsApiClient)), controller.START_BACKEND_SESSION, controller.POST)
 
-  router.get('*', (req, res, next) => {
+  router.get('*any', (req, res, next) => {
     const { planId, alertCode, alertType, alertCodeSubJourney } = req.journeyData.bulkAlert!
     const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
     const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code

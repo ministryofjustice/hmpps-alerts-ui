@@ -1,0 +1,32 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Are you sure you want to cancel this bulk alerts upload? - Upload alerts in bulk" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% include 'bulk-alerts/common/components/caption.njk' %}
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-7">Are you sure you want to cancel this bulk alerts upload?</h1>
+        </div>
+    </div>
+  <p class="govuk-body govuk-!-margin-bottom-6">If you choose not to complete this bulk alerts upload, you will lose the information you have entered.</p>
+    <form method="post" data-module="form-spinner" data-loading-text="Updating alerts">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Yes, cancel",
+            classes: 'govuk-button--warning',
+            preventDoubleClick: true
+          }) }}
+          {{ govukButton({
+            text: "No, return to check answers",
+            classes: 'govuk-button--secondary',
+            href: 'check-answers',
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </form>
+{% endblock %}

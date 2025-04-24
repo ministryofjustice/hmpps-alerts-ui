@@ -26,6 +26,10 @@ context('test /bulk-alerts/check-answers', () => {
     cy.findByText(
       '1 new ‘OCG Nominal’ alert will be created, 2 existing ‘OCG Nominal’ alerts will be made inactive, and 3 existing ‘OCG Nominal’ alerts will remain active.',
     ).should('be.visible')
+    cy.findByRole('link', { name: 'Cancel' })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .should('match', /cancellation-check/)
 
     cy.contains('dt', 'Alert').next().should('include.text', 'OCG Nominal')
     cy.contains('dt', 'Reason for alert')

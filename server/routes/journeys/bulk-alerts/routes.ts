@@ -15,6 +15,7 @@ import BulkAlertsCheckAnswersRoutes from './check-answers/routes'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
 import BulkAlertsConfirmationRoutes from './confirmation/routes'
 import { Services } from '../../../services'
+import BulkAlertsCancellationCheckRoutes from './cancellation-check/routes'
 
 export default function BulkAlertsRoutes(
   { alertsApiClient, prisonerSearchApiClient }: DataAccess,
@@ -33,6 +34,7 @@ export default function BulkAlertsRoutes(
       /upload-prisoner-list(\?_csrf=.+)?$/,
       /review-prisoners\?remove=[A-z0-9]+/,
       /check-answers$/,
+      /cancellation-check$/,
     ]),
   )
 
@@ -63,6 +65,7 @@ export default function BulkAlertsRoutes(
   router.use('/select-upload-logic', SelectUploadLogicRoutes())
   router.use('/check-answers', BulkAlertsCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', BulkAlertsConfirmationRoutes())
+  router.use('/cancellation-check', BulkAlertsCancellationCheckRoutes())
 
   return router
 }

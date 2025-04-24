@@ -50,7 +50,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app)
   app.use(setUpAuthentication())
-  app.get('*', auditPageViewMiddleware(services.auditService))
+  app.get('*any', auditPageViewMiddleware(services.auditService))
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
@@ -58,7 +58,7 @@ export default function createApp(services: Services): express.Application {
   app.use(populateValidationErrors())
 
   app.get(
-    '*',
+    '*any',
     dpsComponents.getPageComponents({
       logger,
       includeSharedData: true,

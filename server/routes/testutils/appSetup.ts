@@ -61,10 +61,10 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.get('*', auditPageViewMiddleware(services.auditService))
+  app.get('*any', auditPageViewMiddleware(services.auditService))
   app.use(populateValidationErrors())
   app.get(
-    '*',
+    '*any',
     dpsComponents.getPageComponents({
       logger,
       includeSharedData: true,

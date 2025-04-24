@@ -18,7 +18,7 @@ export default function redirectCheckAnswersMiddleware(excludePaths: RegExp[] = 
         }
       }
 
-      const resRedirect = res.redirect
+      const resRedirect: (status: number, url: string) => void = res.redirect
       res.redirect = (param1: string | number, param2?: string | number) => {
         const url = (typeof param1 === 'string' ? param1 : param2) as string
         // eslint-disable-next-line no-nested-ternary
@@ -27,7 +27,7 @@ export default function redirectCheckAnswersMiddleware(excludePaths: RegExp[] = 
         if (errors.length) {
           req.flash(FLASH_KEY__VALIDATION_ERRORS, errors[0]!)
         }
-        resRedirect.call(res, req.journeyData.isCheckAnswers && !errors.length ? checkAnswersUrl : url, status || 302)
+        resRedirect.call(res, status || 302, req.journeyData.isCheckAnswers && !errors.length ? checkAnswersUrl : url)
       }
     }
     next()

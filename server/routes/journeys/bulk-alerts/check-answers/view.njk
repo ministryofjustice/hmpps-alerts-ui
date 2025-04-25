@@ -103,7 +103,7 @@
         {% set otherAlertsCount = plan.existingAlerts + plan.updated %}
         {% set otherAlerts = otherAlertsCount + " existing " + alertLabel + ('s' if otherAlertsCount !== 1 else '') %}
         {{ govukWarningText({
-            text: createAlerts + " will be created, " + expireAlerts + " will be made inactive, and " + otherAlerts + " will remain active."
+            text: createAlerts + " will be created, " + expireAlerts + " will be made inactive, and " + otherAlerts + " will remain active. Any existing " + alertLabel + "s with an end-date will have this removed."
         }) }}
         <div class="govuk-button-group">
             {{ govukButton({

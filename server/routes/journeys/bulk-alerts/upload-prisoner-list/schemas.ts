@@ -75,6 +75,18 @@ export const validateFileAndSubmitPrisonerList =
       const error = e as { text?: string }
       const errorRespData = JSON.parse(error?.text || '{}') as { userMessage?: string }
       if (errorRespData?.userMessage) {
+        const rowNumbers = [...errorRespData.userMessage.matchAll(/\d+/g)]
+        if (rowNumbers.length) {
+          let msg = ''
+          let lastIdx = 0
+          for (const row of rowNumbers) {
+            msg += errorRespData.userMessage.substring(lastIdx, row.index)
+            msg += Number(row[0]) + 1
+            lastIdx = row.index + row.length
+          }
+          msg += errorRespData.userMessage.substring(lastIdx)
+          return fail(msg)
+        }
         return fail(errorRespData.userMessage)
       }
       return next(e)

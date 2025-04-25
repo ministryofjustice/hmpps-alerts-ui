@@ -28,8 +28,8 @@
                 }) }}
                 {{ govukDetails({
                     summaryText: "How to use a CSV file",
-                    html: '<p class="govuk-body">A CSV file is a type of spreadsheet. Download the template if you need one, then add the relevant prison numbers. When you upload it to this service, the prisoners in the file will be added to the list for creating alerts.</p>'
-                    + '<p class="govuk-body">Download the <a href="/assets/downloads/prisoner-list.csv" download>prison number list template</a> (CSV, 1kb)</p>'
+                    html: '<p class="govuk-body">A CSV file is a type of spreadsheet. Download the template if you need one, then add the relevant prison numbers. When you upload it to this service, the prisoners in the file will be added to the list for creating alerts. If your file has a header row, it must be ‘Prison number’ (this is case sensitive).</p>'
+                    + '<p class="govuk-body">Download the <a href="/assets/downloads/prisoner-list.csv" download>prison number list template</a> (CSV, 1kb). Do not make changes to the header row.</p>'
                 }) }}
                 {{ govukButton({
                     text: "Upload file",

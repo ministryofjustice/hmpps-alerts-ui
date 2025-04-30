@@ -8,8 +8,10 @@ This repository hosts the Alerts User Interface, a frontend application for mana
 ## HMPPS Project Setup instructions
 
   * Make a copy of the `.env.local` file and rename it to `.env`
-  * Ensure that `HMPPS_ALERTS_UI_APPINSIGHTS_KEY`, `HMPPS_ALERTS_UI_API_CLIENT_ID`, `HMPPS_ALERTS_UI_API_CLIENT_SECRET`, `HMPPS_ALERTS_UI_SYSTEM_CLIENT_ID`, `HMPPS_ALERTS_UI_SYSTEM_CLIENT_SECRET` and any other system vars prefixed with `$` in your new `.env` file are populated either via your `.zprofile` or `.bash_profile` file or similar, or hard-code the secrets/keys into the .env file directly. This file is ignored by git so should never be committed. In order to get the actual values of these you will need to get and transform the values from k8s like so: `kubectl get secrets/<secret_collection_name> --template={{.data.<secret>}} | base64 -d`. Repeat this for other env vars needed. Please see https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html for guidance on K8s access.
-  * Ask someone with access to manage user accounts in HMPPS Digital Services to create you a new user
+  * Populate the blank secret values in the new `.env` file with the dev secrets values from kubernetes. This file is ignored by git so should never be committed. In order to get the secret values you will need to get and transform the values from k8s like so: `kubectl get secrets/<secret_collection_name> --template={{.data.<secret>}} | base64 -d`. Repeat this for other env vars needed. Please see https://user-guide.cloud-platform.service.justice.gov.uk/documentation/getting-started/kubectl-config.html for guidance on K8s access.
+  * Ask someone with access to manage user accounts in HMPPS Digital Services to create you a new user and grant the required roles:
+    * ROLE_ALERTS_REFERENCE_DATA_MANAGER
+    * ROLE_BULK_PRISON_ESTATE_ALERTS
   * Run `npm ci` to install the dependencies
   * Run `npm run build` to compile the styling and build the views
   * Run `npm run start:dev` to start the UI

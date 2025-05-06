@@ -26,7 +26,7 @@ context('test /bulk-alerts/cancellation-check', () => {
       .and('have.attr', 'href')
       .should('match', /check-answers/)
 
-    cy.findByRole('button', { name: 'Yes, cancel' }).click()
+    cy.findByRole('button', { name: 'Yes, cancel this upload' }).click()
     cy.findByRole('heading', { name: 'Manage prisoner alerts' }).should('be.visible')
   })
 

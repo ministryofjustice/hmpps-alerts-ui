@@ -17,6 +17,7 @@ export type JourneyData = {
   journeyCompleted?: boolean
   bulkAlert?: BulkAlertJourney
   refData?: ReferenceDataJourney
+  updateRefData?: UpdateReferenceDataJourney
 }
 
 export type BulkAlertJourney = Partial<{
@@ -45,6 +46,10 @@ export type ReferenceDataJourney = Partial<{
   deactivateAlertType: string
   reactivateAlertType: string
   updateAlertTypeCode: string
+}>
+
+export type UpdateReferenceDataJourney = Partial<{
+  referenceDataType: 'ALERT_CODE' | 'ALERT_TYPE'
 }>
 
 export declare global {

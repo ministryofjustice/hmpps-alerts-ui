@@ -37,12 +37,14 @@ export const validateFileAndSubmitPrisonerList =
     }
 
     const rowValues: string[][] = []
+    let headerRowCount = 0
 
     const parser = parse(fileData!, { trim: true, skipEmptyLines: true, bom: true }).on('readable', () => {
       let row
       // eslint-disable-next-line no-cond-assign
       while ((row = parser.read())) {
         const [prisonerNumber] = row
+        if (prisonerNumber === 'Prison number') headerRowCount += 1
         if (
           prisonerNumber &&
           prisonerNumber !== 'Prison number' &&
@@ -73,8 +75,21 @@ export const validateFileAndSubmitPrisonerList =
       )
     } catch (e: unknown) {
       const error = e as { text?: string }
-      const errorRespData = JSON.parse(error?.text || '{}') as { userMessage?: string }
-      if (errorRespData?.userMessage) {
+      const errorRespData = JSON.parse(error?.text || '{}') as {
+        userMessage?: string
+        invalidRows?: number[]
+      }
+      if (errorRespData?.invalidRows?.length) {
+        const invalidRows = errorRespData.invalidRows.map(num => num + headerRowCount)
+        switch (errorRespData.invalidRows.length) {
+          case 1:
+            return fail(`The prison number from row ${invalidRows[0]} was not recognised`)
+          case 2:
+            return fail(`The prison numbers from rows ${invalidRows[0]} and ${invalidRows[1]} were not recognised`)
+          default:
+            return fail(`The prison numbers from the following rows were not recognised: ${invalidRows.join(', ')}`)
+        }
+      } else if (errorRespData?.userMessage) {
         return fail(errorRespData.userMessage)
       }
       return next(e)

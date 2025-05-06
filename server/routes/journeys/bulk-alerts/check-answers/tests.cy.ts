@@ -24,7 +24,7 @@ context('test /bulk-alerts/check-answers', () => {
     cy.title().should('equal', 'Check your answers before uploading alerts in bulk - Upload alerts in bulk - DPS')
     cy.findByRole('heading', { name: /Check your answers before uploading alerts in bulk/ }).should('be.visible')
     cy.findByText(
-      '1 new ‘OCG Nominal’ alert will be created, 2 existing ‘OCG Nominal’ alerts will be made inactive, and 3 existing ‘OCG Nominal’ alerts will remain active.',
+      '1 new ‘OCG Nominal’ alert will be created, 2 existing ‘OCG Nominal’ alerts will be made inactive, and 3 existing ‘OCG Nominal’ alerts will remain active. Any existing ‘OCG Nominal’ alerts with an end-date will have this removed.',
     ).should('be.visible')
     cy.findByRole('link', { name: 'Cancel' })
       .should('be.visible')

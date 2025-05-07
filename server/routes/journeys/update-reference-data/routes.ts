@@ -6,14 +6,19 @@ import { schema } from './schemas'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
 import UpdateReferenceDataController from './controller'
 import SelectChangeRoutes from './select-change/routes'
+import AddAlertTypeRoutes from './add-alert-type/routes'
+import UpdateReferenceDataCheckAnswersRoutes from './check-answers/routes'
+import AlertsApiClient from '../../../data/alertsApiClient'
+import AuditService from '../../../services/auditService'
+import UpdateReferenceDataConfirmationRoutes from './confirmation/routes'
 
-export default function UpdateReferenceDataRoutes() {
+export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
   const controller = new UpdateReferenceDataController()
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
 
-  router.use(redirectCheckAnswersMiddleware([/check-answers$/, /cancellation-check$/]))
+  router.use(redirectCheckAnswersMiddleware([/check-answers$/]))
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)
@@ -27,6 +32,9 @@ export default function UpdateReferenceDataRoutes() {
   })
 
   router.use('/select-change', SelectChangeRoutes())
+  router.use('/add-alert-type', AddAlertTypeRoutes())
+  router.use('/check-answers', UpdateReferenceDataCheckAnswersRoutes(alertsApiClient, auditService))
+  router.use('/confirmation', UpdateReferenceDataConfirmationRoutes())
 
   return router
 }

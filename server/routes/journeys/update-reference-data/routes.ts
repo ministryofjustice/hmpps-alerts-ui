@@ -5,6 +5,7 @@ import { validate } from '../../../middleware/validationMiddleware'
 import { schema } from './schemas'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
 import UpdateReferenceDataController from './controller'
+import SelectChangeRoutes from './select-change/routes'
 
 export default function UpdateReferenceDataRoutes() {
   const { router, get, post } = BaseRouter()
@@ -24,6 +25,8 @@ export default function UpdateReferenceDataRoutes() {
     }
     next()
   })
+
+  router.use('/select-change', SelectChangeRoutes())
 
   return router
 }

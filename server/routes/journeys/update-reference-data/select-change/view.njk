@@ -1,0 +1,58 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set heading = "Select the change you want to make" %}
+{% set pageTitle = "Select the change you want to make - Maintain alerts reference data" %}
+{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate="novalidate" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% include 'update-reference-data/common/components/caption.njk' %}
+        {{ govukRadios({
+          name: "changeType",
+          fieldset: {
+            legend: {
+              text: heading,
+              classes: "govuk-fieldset__legend--l",
+              isPageHeading: true
+            }
+          },
+          items: [
+            {
+              value: 'ADD_NEW',
+              text: "Add new alert" if referenceDataType === 'ALERT_CODE' else "Add new alert type",
+              checked: changeType === 'ADD_NEW'
+            },
+            {
+              value: 'EDIT_DESCRIPTION',
+              text: "Edit alert description" if referenceDataType === 'ALERT_CODE' else "Edit alert type description",
+              checked: changeType === 'EDIT_DESCRIPTION'
+            },
+            {
+              value: 'DEACTIVATE',
+              text: "Deactivate alert" if referenceDataType === 'ALERT_CODE' else "Deactivate alert type",
+              checked: changeType === 'DEACTIVATE'
+            },
+            {
+              value: 'REACTIVATE',
+              text: "Reactivate alert" if referenceDataType === 'ALERT_CODE' else "Reactivate alert type",
+              checked: changeType === 'REACTIVATE'
+            }
+          ],
+          errorMessage: validationErrors | findError('changeType')
+        }) }}
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

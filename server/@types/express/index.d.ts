@@ -50,6 +50,7 @@ export type ReferenceDataJourney = Partial<{
 
 export type UpdateReferenceDataJourney = Partial<{
   referenceDataType: 'ALERT_CODE' | 'ALERT_TYPE'
+  changeType: 'ADD_NEW' | 'EDIT_DESCRIPTION' | 'DEACTIVATE' | 'REACTIVATE'
 }>
 
 export declare global {

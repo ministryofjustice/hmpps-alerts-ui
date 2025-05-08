@@ -58,6 +58,7 @@ jobs:
     executor:
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
+    resource_class: large
     steps:
       - checkout
       - restore_cache:

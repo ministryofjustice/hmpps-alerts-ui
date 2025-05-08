@@ -1,9 +1,10 @@
 import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
+import { UpdateReferenceDataJourney } from '../../../../@types/express'
 
 context('test /update-reference-data/confirmation', () => {
-  const uuid = uuidV4()
+  let uuid = uuidV4()
 
   beforeEach(() => {
     cy.task('reset')
@@ -12,35 +13,50 @@ context('test /update-reference-data/confirmation', () => {
     })
   })
 
-  it('should try out all cases', () => {
-    navigateToTestPage()
+  it('should show ADD_NEW ALERT_TYPE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_TYPE',
+      changeType: 'ADD_NEW',
+      code: 'ABC',
+      description: 'Type Name',
+    })
     cy.url().should('to.match', /\/confirmation$/)
     cy.title().should('equal', 'Alert type added - DPS')
-
-    validatePageContents()
-  })
-
-  const validatePageContents = () => {
     cy.findByText('Alert type added').should('be.visible')
-
     cy.findByText('You have added the Type Name alert type.').should('be.visible')
 
+    validateCommonPageContents()
+  })
+
+  it('should show ADD_NEW ALERT_CODE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_CODE',
+      changeType: 'ADD_NEW',
+      code: 'ABC',
+      description: 'Type Name',
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert added - DPS')
+    cy.findByText('Alert added').should('be.visible')
+    cy.findByText('You have added the Type Name alert.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
+  const validateCommonPageContents = () => {
     cy.findByRole('button', { name: 'Return to manage prisoner alerts' })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('equal', '/')
   }
 
-  const navigateToTestPage = () => {
+  const navigateToTestPage = (journeyData: UpdateReferenceDataJourney) => {
     cy.signIn()
     cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
-      updateRefData: {
-        referenceDataType: 'ALERT_TYPE',
-        changeType: 'ADD_NEW',
-        code: 'ABC',
-        description: 'Type Name',
-      },
+      updateRefData: journeyData,
     })
     cy.visit(`/${uuid}/update-reference-data/confirmation`)
   }

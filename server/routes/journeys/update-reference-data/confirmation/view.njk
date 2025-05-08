@@ -8,6 +8,11 @@
   {% set body = "You have added the " + journey.description + " alert type." %}
 {% endif %}
 
+{% if journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'ADD_NEW' %}
+  {% set pageTitle = "Alert added" %}
+  {% set body = "You have added the " + journey.description + " alert." %}
+{% endif %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

@@ -3,8 +3,8 @@
 
 {% extends "partials/layout.njk" %}
 
-{% set heading = "Add new alert type details" %}
-{% set pageTitle = "Add new alert type details - Maintain alerts reference data" %}
+{% set heading = "Add new alert details" %}
+{% set pageTitle = "Add new alert details - Maintain alerts reference data" %}
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% block content %}
   <div class="govuk-grid-row govuk-!-margin-top-6">
@@ -15,7 +15,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {{ govukInput({
           label: {
-            text: "Enter an alert type code"
+            text: "Enter an alert code"
           },
           classes: "govuk-input--width-5",
           errorMessage: validationErrors | findError('code'),
@@ -25,7 +25,7 @@
         }) }}
         {{ govukInput({
           label: {
-            text: "Enter a description of the alert type"
+            text: "Enter a description of the alert"
           },
           classes: "govuk-input--width-full",
           errorMessage: validationErrors | findError('description'),

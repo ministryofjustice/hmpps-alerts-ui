@@ -12,6 +12,7 @@ import AlertsApiClient from '../../../data/alertsApiClient'
 import AuditService from '../../../services/auditService'
 import UpdateReferenceDataConfirmationRoutes from './confirmation/routes'
 import SelectAlertTypeRoutes from './select-alert-type/routes'
+import AddAlertCodeRoutes from './add-alert-code/routes'
 
 export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
@@ -33,8 +34,9 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   })
 
   router.use('/select-change', SelectChangeRoutes())
-  router.use('/add-alert-type', AddAlertTypeRoutes())
+  router.use('/add-alert-type', AddAlertTypeRoutes(alertsApiClient))
   router.use('/select-alert-type', SelectAlertTypeRoutes(alertsApiClient))
+  router.use('/add-alert-code', AddAlertCodeRoutes(alertsApiClient))
   router.use('/check-answers', UpdateReferenceDataCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', UpdateReferenceDataConfirmationRoutes())
 

@@ -6,9 +6,9 @@ context('test /update-reference-data/select-change screen', () => {
   let uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
-  const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /DB description$/ })
-  const getAlertTypeRadio2 = () => cy.findByRole('radio', { name: /A description$/ })
-  const getAlertTypeRadio3 = () => cy.findByRole('radio', { name: /Deactivated Type$/ })
+  const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /AA \(A description\)$/ })
+  const getAlertTypeRadio2 = () => cy.findByRole('radio', { name: /DB \(DB description\)$/ })
+  const getAlertTypeRadio3 = () => cy.findByRole('radio', { name: /DE \(Deactivated Type\) Deactivated$/ })
 
   beforeEach(() => {
     cy.task('reset')

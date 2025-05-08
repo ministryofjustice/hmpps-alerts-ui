@@ -75,6 +75,12 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
       } else {
         switch (journey.changeType) {
           case 'ADD_NEW':
+            await this.alertsApiService.createAlertCode(req.middleware.clientToken, {
+              code: journey.code!,
+              description: journey.description!,
+              parent: journey.alertType!.code!,
+            })
+            break
           case 'EDIT_DESCRIPTION':
           case 'DEACTIVATE':
           case 'REACTIVATE':

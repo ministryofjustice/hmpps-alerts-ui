@@ -22,5 +22,5 @@ const uploadedFileTooLargeHandler: ErrorRequestHandler = (err: Error, req, res, 
       file: ['The selected file must be smaller than 1MB'],
     }),
   )
-  return res.redirect('back')
+  return res.redirect(req.get('Referrer') || '/')
 }

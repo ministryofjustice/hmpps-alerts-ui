@@ -1,0 +1,70 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% extends "partials/layout.njk" %}
+
+{% set heading = "Check your changes" %}
+{% set pageTitle = "Check your changes - Maintain alerts reference data" %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-!-margin-top-6">
+  <div class="govuk-grid-column-two-thirds">
+  {% include 'update-reference-data/common/components/caption.njk' %}
+  <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ heading }}</h1>
+
+  {% if journey.referenceDataType === 'ALERT_TYPE' and journey.changeType === 'ADD_NEW' %}
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "New alert type"
+        },
+          value: {
+          text: journey.code
+        },
+          actions: {
+          items: [
+            {
+              href: "add-alert-type#code",
+              text: "Change",
+              visuallyHiddenText: "the alert type code",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "New alert description"
+        },
+          value: {
+          text: journey.description
+        },
+          actions: {
+          items: [
+            {
+              href: "add-alert-type#description",
+              text: "Change",
+              visuallyHiddenText: "the alert type description",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}
+  {% endif %}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Confirm and save",
+          preventDoubleClick: true
+        }) }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

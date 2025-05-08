@@ -17,7 +17,7 @@ export default function JourneyRoutes(dataAccess: DataAccess, services: Services
   router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess, services))
   router.use('/alert-code', AlertCodeRoutes(dataAccess.alertsApiClient, services.auditService))
   router.use('/alert-type', AlertTypeRoutes(dataAccess.alertsApiClient, services.auditService))
-  router.use('/update-reference-data', UpdateReferenceDataRoutes())
+  router.use('/update-reference-data', UpdateReferenceDataRoutes(dataAccess.alertsApiClient, services.auditService))
 
   if (process.env.NODE_ENV === 'e2e-test') {
     /* eslint-disable no-param-reassign */

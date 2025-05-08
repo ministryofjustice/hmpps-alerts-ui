@@ -29,6 +29,7 @@ import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
 import sentryMiddleware from './middleware/sentryMiddleware'
+import { handleApiError } from './middleware/handleApiError'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -77,6 +78,7 @@ export default function createApp(services: Services): express.Application {
   if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
 
   app.use((_req, _res, next) => next(createError(404, 'Not found')))
+  app.use(handleApiError)
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app

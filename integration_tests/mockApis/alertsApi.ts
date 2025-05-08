@@ -71,6 +71,12 @@ const stubGetAlertTypes = () => {
           isActive: true,
           alertCodes: [],
         },
+        {
+          code: 'DE',
+          description: 'Deactivated Type',
+          isActive: false,
+          alertCodes: [],
+        },
       ],
     },
   })

@@ -4,6 +4,8 @@ import AlertsApiClient from '../../../../data/alertsApiClient'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
 import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 
+const ERROR_MSG = 'You must select an alert type'
+
 export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: Request) => {
   const types = await alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true)
 
@@ -25,7 +27,7 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
   )
 
   return createSchema({
-    alertType: z.string().transform(validateAndTransformReferenceData(alertTypeMap, 'You must select an alert type')),
+    alertType: z.string({ message: ERROR_MSG }).transform(validateAndTransformReferenceData(alertTypeMap, ERROR_MSG)),
   })
 }
 

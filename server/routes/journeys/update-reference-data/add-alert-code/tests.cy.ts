@@ -71,10 +71,20 @@ context('test /update-reference-data/add-alert-code screen', () => {
       .should('be.visible')
       .click()
     getDescriptionInput().should('be.focused')
+
+    getCodeInput().type('AA', { delay: 0 })
+    getContinueButton().click()
+
+    cy.findByRole('link', {
+      name: 'Alert code ‘AA’ already exists',
+    })
+      .should('be.visible')
+      .click()
+    getCodeInput().should('be.focused')
   }
 
   const proceedToNextPage = () => {
-    getCodeInput().type('ABC', { delay: 0 })
+    getCodeInput().clear().type('ABC', { delay: 0 })
     getDescriptionInput().type('Some text', { delay: 0 })
     getContinueButton().click()
     cy.url().should('to.match', /\/update-reference-data\/check-answers$/)

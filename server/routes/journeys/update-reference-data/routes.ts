@@ -34,9 +34,9 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   })
 
   router.use('/select-change', SelectChangeRoutes())
-  router.use('/add-alert-type', AddAlertTypeRoutes())
+  router.use('/add-alert-type', AddAlertTypeRoutes(alertsApiClient))
   router.use('/select-alert-type', SelectAlertTypeRoutes(alertsApiClient))
-  router.use('/add-alert-code', AddAlertCodeRoutes())
+  router.use('/add-alert-code', AddAlertCodeRoutes(alertsApiClient))
   router.use('/check-answers', UpdateReferenceDataCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', UpdateReferenceDataConfirmationRoutes())
 

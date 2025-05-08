@@ -2,22 +2,20 @@ import { Request } from 'express'
 import { z } from 'zod'
 import AlertsApiClient from '../../../../data/alertsApiClient'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
-import { getAlertTypeFilter } from './utils'
+import { getAlertCodeFilter } from './utils'
 
-const ERROR_MSG = 'You must select an alert type'
+const ERROR_MSG = 'You must select an alert'
 
 export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: Request) => {
-  const alertTypeMap = new Map(
+  const alertCodeMap = new Map(
     (await alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-      .filter(getAlertTypeFilter(req.journeyData.updateRefData!))
-      .map(type => {
-        const { alertCodes, ...rest } = type
-        return [type.code, rest]
-      }),
+      .find(type => type.code === req.journeyData.updateRefData?.alertType?.code)!
+      .alertCodes.filter(getAlertCodeFilter(req.journeyData.updateRefData!))
+      .map(code => [code.code, code]),
   )
 
   return createSchema({
-    alertType: z.string({ message: ERROR_MSG }).transform(validateAndTransformReferenceData(alertTypeMap, ERROR_MSG)),
+    alertCode: z.string({ message: ERROR_MSG }).transform(validateAndTransformReferenceData(alertCodeMap, ERROR_MSG)),
   })
 }
 

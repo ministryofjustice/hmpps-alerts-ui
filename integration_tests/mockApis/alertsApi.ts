@@ -69,7 +69,13 @@ const stubGetAlertTypes = () => {
           code: 'AA',
           description: 'A description',
           isActive: true,
-          alertCodes: [],
+          alertCodes: [
+            {
+              code: 'BB',
+              description: 'BB description',
+              isActive: false,
+            },
+          ],
         },
         {
           code: 'DE',

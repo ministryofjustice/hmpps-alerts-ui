@@ -84,6 +84,7 @@ context('test /update-reference-data/add-alert-code screen', () => {
   }
 
   const proceedToNextPage = () => {
+    getCodeInput().type('ABC', { delay: 0 })
     getCodeInput().clear().type('ABC', { delay: 0 })
     getDescriptionInput().type('Some text', { delay: 0 })
     getContinueButton().click()

@@ -2,12 +2,12 @@ import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
-context('test /update-reference-data/add-alert-type screen', () => {
+context('test /update-reference-data/add-alert-code screen', () => {
   const uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
-  const getCodeInput = () => cy.findByRole('textbox', { name: /Enter an alert type code$/ })
-  const getDescriptionInput = () => cy.findByRole('textbox', { name: /Enter a description of the alert type$/ })
+  const getCodeInput = () => cy.findByRole('textbox', { name: /Enter an alert code$/ })
+  const getDescriptionInput = () => cy.findByRole('textbox', { name: /Enter a description of the alert$/ })
 
   beforeEach(() => {
     cy.task('reset')
@@ -19,7 +19,7 @@ context('test /update-reference-data/add-alert-type screen', () => {
 
   it('should try out all cases', () => {
     navigateToTestPage()
-    cy.url().should('to.match', /\/add-alert-type$/)
+    cy.url().should('to.match', /\/add-alert-code$/)
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()
@@ -30,15 +30,23 @@ context('test /update-reference-data/add-alert-type screen', () => {
     cy.signIn()
     cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
-      updateRefData: { referenceDataType: 'ALERT_TYPE', changeType: 'ADD_NEW' },
+      updateRefData: {
+        referenceDataType: 'ALERT_CODE',
+        changeType: 'ADD_NEW',
+        alertType: {
+          code: 'AB',
+          description: 'Type Name',
+          isActive: true,
+        },
+      },
     })
-    cy.visit(`/${uuid}/update-reference-data/add-alert-type`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/update-reference-data/add-alert-code`, { failOnStatusCode: false })
   }
 
   const validatePageContents = () => {
-    cy.title().should('match', /Add new alert type details - Maintain alerts reference data - DPS/)
+    cy.title().should('match', /Add new alert details - Maintain alerts reference data - DPS/)
     cy.findByRole('heading', {
-      name: /Add new alert type details/,
+      name: /Add new alert details/,
     }).should('be.visible')
     getContinueButton().should('be.visible')
     getCodeInput().should('be.visible').and('have.value', '')
@@ -46,20 +54,20 @@ context('test /update-reference-data/add-alert-type screen', () => {
     cy.findByRole('link', { name: /^Back$/ })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('match', /select-change$/)
+      .and('match', /select-alert-type$/)
   }
 
   const validateErrorMessages = () => {
     getContinueButton().click()
 
     cy.findByRole('link', {
-      name: /An alert type code must be an uppercase series of letters between 1-12 characters long$/,
+      name: /An alert code must be an uppercase series of letters between 1-12 characters long$/,
     })
       .should('be.visible')
       .click()
     getCodeInput().should('be.focused')
 
-    cy.findByRole('link', { name: /An alert type description must be between 1 and 40 characters$/ })
+    cy.findByRole('link', { name: /An alert description must be between 1 and 40 characters$/ })
       .should('be.visible')
       .click()
     getDescriptionInput().should('be.focused')

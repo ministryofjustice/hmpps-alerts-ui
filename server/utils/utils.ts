@@ -73,3 +73,12 @@ export const sleep = (seconds: number) =>
   new Promise(resolve => {
     setTimeout(resolve, seconds * 1000)
   })
+
+export const escapeHtml = (unsafe: string) => {
+  return unsafe
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
+}

@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import BaseController from '../../../common/controller'
 import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
+import { escapeHtml } from '../../../../utils/utils'
 
 export default class SelectAlertTypeController extends BaseController {
   GET = async (req: Request, res: Response) => {
@@ -21,9 +22,14 @@ export default class SelectAlertTypeController extends BaseController {
     const alertTypeOptions = [
       ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, true))
         .filter(typeFilter)
+        .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
           value: refData.code,
-          text: refData.description,
+          html: `${escapeHtml(refData.code)} (${escapeHtml(refData.description)})${
+            refData.isActive
+              ? ''
+              : ' <strong class="govuk-tag status-tag govuk-tag--blue govuk-!-margin-left-1">Deactivated</strong>'
+          }`,
           checked: typeof alertType === 'string' ? refData.code === alertType : refData.code === alertType?.code,
         })),
     ]

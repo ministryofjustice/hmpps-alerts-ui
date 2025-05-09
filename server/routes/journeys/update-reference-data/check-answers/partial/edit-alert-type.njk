@@ -23,17 +23,17 @@
         },
         {
           key: {
-          text: "Alert to be reactivated"
+          text: "New alert type description"
         },
           value: {
-          text: journey.alertCode.code + ' (' + journey.alertCode.description + ')'
+          text: journey.description
         },
           actions: {
           items: [
             {
-              href: "select-alert-code",
+              href: "edit-alert-type",
               text: "Change",
-              visuallyHiddenText: "the alert to be reactivated",
+              visuallyHiddenText: "the new alert type description",
               classes: "govuk-link--no-visited-state"
             }
           ]

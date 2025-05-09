@@ -68,7 +68,10 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
             })
             break
           case 'EDIT_DESCRIPTION':
-          case 'DEACTIVATE':
+            await this.alertsApiService.updateAlertType(req.middleware.clientToken, journey.alertType!.code, {
+              description: journey.description!,
+            })
+            break
           case 'REACTIVATE':
           default:
             break
@@ -83,7 +86,10 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
             })
             break
           case 'EDIT_DESCRIPTION':
-          case 'DEACTIVATE':
+            await this.alertsApiService.updateAlertCode(req.middleware.clientToken, journey.alertCode!.code, {
+              description: journey.description!,
+            })
+            break
           case 'REACTIVATE':
             await this.alertsApiService.reactivateAlertCode(req.middleware.clientToken, journey.alertCode!.code)
             break

@@ -6,6 +6,9 @@
 {% if journey.referenceDataType === 'ALERT_TYPE' and journey.changeType === 'ADD_NEW' %}
   {% set pageTitle = "Alert type added" %}
   {% set body = "You have added the " + journey.description + " alert type." %}
+{% elseif journey.referenceDataType === 'ALERT_TYPE' and journey.changeType === 'EDIT_DESCRIPTION' %}
+  {% set pageTitle = "Alert type description updated" %}
+  {% set body = "You have updated the description for the " + journey.alertType.code + " alert type to ‘" + journey.description + "’." %}
 {% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'ADD_NEW' %}
   {% set pageTitle = "Alert added" %}
   {% set body = "You have added the " + journey.description + " alert." %}

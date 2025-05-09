@@ -1,0 +1,43 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Alert type"
+        },
+          value: {
+          text: journey.alertType.code + ' (' + journey.alertType.description + ')'
+        },
+          actions: {
+          items: [
+            {
+              href: "select-alert-type",
+              text: "Change",
+              visuallyHiddenText: "the alert type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "New alert type description"
+        },
+          value: {
+          text: journey.description
+        },
+          actions: {
+          items: [
+            {
+              href: "edit-alert-type",
+              text: "Change",
+              visuallyHiddenText: "the new alert type description",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}

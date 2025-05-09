@@ -12,6 +12,7 @@ context('test /update-reference-data/check-answers', () => {
     cy.task('stubCreateAlertCode')
     cy.task('stubReactivateAlertCode')
     cy.task('stubUpdateAlertCode')
+    cy.task('stubUpdateAlertType')
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
@@ -42,6 +43,42 @@ context('test /update-reference-data/check-answers', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /add-alert-type#description$/)
+
+    continueToConfirmation()
+  })
+
+  it('should check answers for Edit Alert Type', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_TYPE',
+      changeType: 'EDIT_DESCRIPTION',
+      alertType: {
+        code: 'DB',
+        description: 'Type Name',
+        isActive: true,
+        listSequence: 0,
+        createdAt: '',
+        createdBy: '',
+      },
+      description: 'New Name',
+    })
+    cy.url().should('to.match', /\/check-answers$/)
+
+    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
+
+    cy.contains('dt', 'Alert type').next().should('include.text', 'DB (Type Name)')
+    cy.contains('dt', 'New alert type description').next().should('include.text', 'New Name')
+
+    cy.findByRole('link', { name: /Change the alert type/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /select-alert-type$/)
+
+    cy.findByRole('link', { name: /Change the new alert type description/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /edit-alert-type$/)
 
     continueToConfirmation()
   })
@@ -122,6 +159,7 @@ context('test /update-reference-data/check-answers', () => {
     cy.contains('dt', /Alert\s+$/)
       .next()
       .should('include.text', 'AA (Code Name)')
+    cy.contains('dt', 'New alert description').next().should('include.text', 'New Name')
 
     cy.findByRole('link', { name: /Change the alert type/i })
       .should('be.visible')

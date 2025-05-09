@@ -12,6 +12,8 @@
   <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ heading }}</h1>
     {% if journey.referenceDataType === 'ALERT_TYPE' and journey.changeType === 'ADD_NEW' %}
       {% include './partial/add-new-alert-type.njk' %}
+    {% elseif journey.referenceDataType === 'ALERT_TYPE' and journey.changeType === 'EDIT_DESCRIPTION' %}
+      {% include './partial/edit-alert-type.njk' %}
     {% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'ADD_NEW' %}
       {% include './partial/add-new-alert-code.njk' %}
     {% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'EDIT_DESCRIPTION' %}

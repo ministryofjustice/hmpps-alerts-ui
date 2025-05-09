@@ -45,6 +45,30 @@ context('test /update-reference-data/confirmation', () => {
     validateCommonPageContents()
   })
 
+  it('should show EDIT_DESCRIPTION ALERT_CODE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_CODE',
+      changeType: 'EDIT_DESCRIPTION',
+      alertCode: {
+        code: 'AA',
+        description: 'Code Name',
+        isActive: false,
+        createdAt: '',
+        createdBy: '',
+        listSequence: 0,
+        alertTypeCode: 'A',
+      },
+      description: 'New Name',
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert description updated - DPS')
+    cy.findByText('Alert description updated').should('be.visible')
+    cy.findByText('You have updated the description for the AA alert to ‘New Name’.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
   it('should show REACTIVATE ALERT_CODE confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({

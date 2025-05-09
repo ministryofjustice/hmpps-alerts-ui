@@ -69,6 +69,29 @@ context('test /update-reference-data/confirmation', () => {
     validateCommonPageContents()
   })
 
+  it('should show DEACTIVATE ALERT_CODE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_CODE',
+      changeType: 'DEACTIVATE',
+      alertCode: {
+        code: 'A',
+        description: 'Code Name',
+        isActive: false,
+        createdAt: '',
+        createdBy: '',
+        listSequence: 0,
+        alertTypeCode: 'A',
+      },
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert deactivated - DPS')
+    cy.findByText('Alert deactivated').should('be.visible')
+    cy.findByText('You have deactivated the A (Code Name) alert.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
   it('should show REACTIVATE ALERT_CODE confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({
@@ -87,7 +110,7 @@ context('test /update-reference-data/confirmation', () => {
     cy.url().should('to.match', /\/confirmation$/)
     cy.title().should('equal', 'Alert reactivated - DPS')
     cy.findByText('Alert reactivated').should('be.visible')
-    cy.findByText('You have reactivated the Code Name alert.').should('be.visible')
+    cy.findByText('You have reactivated the A (Code Name) alert.').should('be.visible')
 
     validateCommonPageContents()
   })

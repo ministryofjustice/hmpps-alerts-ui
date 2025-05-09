@@ -12,9 +12,12 @@
 {% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'EDIT_DESCRIPTION' %}
   {% set pageTitle = "Alert description updated" %}
   {% set body = "You have updated the description for the " + journey.alertCode.code + " alert to ‘" + journey.description + "’." %}
+{% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'DEACTIVATE' %}
+  {% set pageTitle = "Alert deactivated" %}
+  {% set body = "You have deactivated the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
 {% elseif journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'REACTIVATE' %}
   {% set pageTitle = "Alert reactivated" %}
-  {% set body = "You have reactivated the " + journey.alertCode.description + " alert." %}
+  {% set body = "You have reactivated the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
 {% endif %}
 
 {% block content %}

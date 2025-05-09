@@ -15,6 +15,7 @@ import SelectAlertTypeRoutes from './select-alert-type/routes'
 import AddAlertCodeRoutes from './add-alert-code/routes'
 import SelectAlertCodeRoutes from './select-alert-code/routes'
 import EditAlertCodeRoutes from './edit-alert-code/routes'
+import DeactivateAlertCodeRoutes from './deactivate-alert-code/routes'
 
 export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
@@ -41,6 +42,7 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   router.use('/add-alert-code', AddAlertCodeRoutes(alertsApiClient))
   router.use('/select-alert-code', SelectAlertCodeRoutes(alertsApiClient))
   router.use('/edit-alert-code', EditAlertCodeRoutes())
+  router.use('/deactivate-alert-code', DeactivateAlertCodeRoutes(alertsApiClient, auditService))
   router.use('/check-answers', UpdateReferenceDataCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', UpdateReferenceDataConfirmationRoutes())
 

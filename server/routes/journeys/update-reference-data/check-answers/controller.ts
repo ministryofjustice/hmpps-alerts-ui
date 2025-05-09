@@ -73,6 +73,8 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
             })
             break
           case 'REACTIVATE':
+            await this.alertsApiService.reactivateAlertType(req.middleware.clientToken, journey.alertType!.code)
+            break
           default:
             break
         }

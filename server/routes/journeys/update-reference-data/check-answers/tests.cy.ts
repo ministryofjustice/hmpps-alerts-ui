@@ -11,6 +11,7 @@ context('test /update-reference-data/check-answers', () => {
     cy.task('stubCreateAlertType')
     cy.task('stubCreateAlertCode')
     cy.task('stubReactivateAlertCode')
+    cy.task('stubReactivateAlertType')
     cy.task('stubUpdateAlertCode')
     cy.task('stubUpdateAlertType')
     cy.task('stubSignIn', {
@@ -79,6 +80,35 @@ context('test /update-reference-data/check-answers', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /edit-alert-type$/)
+
+    continueToConfirmation()
+  })
+
+  it('should check answers for Reactivate Alert Type', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_TYPE',
+      changeType: 'REACTIVATE',
+      alertType: {
+        code: 'DB',
+        description: 'Type Name',
+        isActive: true,
+        listSequence: 0,
+        createdAt: '',
+        createdBy: '',
+      },
+    })
+    cy.url().should('to.match', /\/check-answers$/)
+
+    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
+
+    cy.contains('dt', 'Alert type to be reactivated').next().should('include.text', 'DB (Type Name)')
+
+    cy.findByRole('link', { name: /Change the alert type to be reactivated/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /select-alert-type$/)
 
     continueToConfirmation()
   })

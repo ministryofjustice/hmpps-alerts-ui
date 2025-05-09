@@ -1,0 +1,25 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Alert type to be reactivated"
+        },
+          value: {
+          text: journey.alertType.code + ' (' + journey.alertType.description + ')'
+        },
+          actions: {
+          items: [
+            {
+              href: "select-alert-type",
+              text: "Change",
+              visuallyHiddenText: "the alert type to be reactivated",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}

@@ -17,6 +17,7 @@ import SelectAlertCodeRoutes from './select-alert-code/routes'
 import EditAlertCodeRoutes from './edit-alert-code/routes'
 import DeactivateAlertCodeRoutes from './deactivate-alert-code/routes'
 import EditAlertTypeRoutes from './edit-alert-type/routes'
+import DeactivateAlertTypeRoutes from './deactivate-alert-type/routes'
 
 export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
@@ -30,10 +31,16 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   post('/', validate(schema), controller.POST)
 
   router.get('*any', (req, res, next) => {
-    const { referenceDataType } = req.journeyData.updateRefData!
+    const { referenceDataType, alertType, alertCode } = req.journeyData.updateRefData!
     if (referenceDataType) {
       res.locals.auditEvent.subjectType = referenceDataType
+      if (referenceDataType === 'ALERT_TYPE' && alertType) {
+        res.locals.auditEvent.subjectId = alertType.code
+      } else if (referenceDataType === 'ALERT_CODE' && alertCode) {
+        res.locals.auditEvent.subjectId = alertCode.code
+      }
     }
+    res.locals.auditEvent.who = res.locals.user.username
     next()
   })
 
@@ -45,6 +52,7 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   router.use('/edit-alert-code', EditAlertCodeRoutes())
   router.use('/edit-alert-type', EditAlertTypeRoutes())
   router.use('/deactivate-alert-code', DeactivateAlertCodeRoutes(alertsApiClient, auditService))
+  router.use('/deactivate-alert-type', DeactivateAlertTypeRoutes(alertsApiClient, auditService))
   router.use('/check-answers', UpdateReferenceDataCheckAnswersRoutes(alertsApiClient, auditService))
   router.use('/confirmation', UpdateReferenceDataConfirmationRoutes())
 

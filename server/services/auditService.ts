@@ -50,6 +50,7 @@ export default class AuditService {
         ...(journeyData?.refData?.alertTypeDescription && {
           alertTypeDescription: journeyData?.refData?.alertTypeDescription,
         }),
+        ...(journeyData?.updateRefData?.changeType && { changeType: journeyData?.updateRefData?.changeType }),
       },
     }
     await this.hmppsAuditClient.sendMessage(event)

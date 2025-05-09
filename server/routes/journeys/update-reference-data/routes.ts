@@ -21,7 +21,7 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
 
   router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER], false))
 
-  router.use(redirectCheckAnswersMiddleware([/check-answers$/]))
+  router.use(redirectCheckAnswersMiddleware([/select-alert-type$/, /select-alert-code$/, /check-answers$/]))
 
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)

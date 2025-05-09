@@ -10,6 +10,7 @@ context('test /bulk-alerts/check-answers', () => {
     cy.task('reset')
     cy.task('stubCreateAlertType')
     cy.task('stubCreateAlertCode')
+    cy.task('stubReactivateAlertCode')
     cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
@@ -83,6 +84,50 @@ context('test /bulk-alerts/check-answers', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /add-alert-code#description$/)
+
+    continueToConfirmation()
+  })
+
+  it('should check answers for Reactivate Alert Code', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_CODE',
+      changeType: 'REACTIVATE',
+      alertType: {
+        code: 'AB',
+        description: 'Type Name',
+        isActive: true,
+        listSequence: 0,
+        createdAt: '',
+        createdBy: '',
+      },
+      alertCode: {
+        code: 'AA',
+        description: 'Code Name',
+        isActive: true,
+        listSequence: 0,
+        createdAt: '',
+        createdBy: '',
+        alertTypeCode: 'AB',
+      },
+    })
+    cy.url().should('to.match', /\/check-answers$/)
+
+    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
+
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AB (Type Name)')
+    cy.contains('dt', 'Alert to be reactivated').next().should('include.text', 'AA (Code Name)')
+
+    cy.findByRole('link', { name: /Change the alert type/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /select-alert-type$/)
+
+    cy.findByRole('link', { name: /Change the alert code to be reactivated/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /select-alert-code$/)
 
     continueToConfirmation()
   })

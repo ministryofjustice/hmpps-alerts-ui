@@ -45,6 +45,29 @@ context('test /update-reference-data/confirmation', () => {
     validateCommonPageContents()
   })
 
+  it('should show REACTIVATE ALERT_CODE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_CODE',
+      changeType: 'REACTIVATE',
+      alertCode: {
+        code: 'A',
+        description: 'Code Name',
+        isActive: false,
+        createdAt: '',
+        createdBy: '',
+        listSequence: 0,
+        alertTypeCode: 'A',
+      },
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert reactivated - DPS')
+    cy.findByText('Alert reactivated').should('be.visible')
+    cy.findByText('You have reactivated the Code Name alert.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
   const validateCommonPageContents = () => {
     cy.findByRole('button', { name: 'Return to manage prisoner alerts' })
       .should('be.visible')

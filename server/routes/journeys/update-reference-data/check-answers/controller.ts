@@ -40,6 +40,7 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
 
   GET = async (req: Request, res: Response) => {
     req.journeyData.isCheckAnswers = true
+    delete req.journeyData.updateRefData!.updateAlertCodeSubJourney
 
     res.render('update-reference-data/check-answers/view', {
       journey: req.journeyData.updateRefData,
@@ -84,6 +85,8 @@ export default class UpdateReferenceDataCheckAnswersController extends BaseContr
           case 'EDIT_DESCRIPTION':
           case 'DEACTIVATE':
           case 'REACTIVATE':
+            await this.alertsApiService.reactivateAlertCode(req.middleware.clientToken, journey.alertCode!.code)
+            break
           default:
             break
         }

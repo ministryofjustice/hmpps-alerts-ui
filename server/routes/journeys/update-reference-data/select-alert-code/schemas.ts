@@ -9,7 +9,12 @@ const ERROR_MSG = 'You must select an alert'
 export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: Request) => {
   const alertCodeMap = new Map(
     (await alertsApiClient.retrieveAlertTypes(req.middleware.clientToken, true))
-      .find(type => type.code === req.journeyData.updateRefData?.alertType?.code)!
+      .find(
+        type =>
+          type.code ===
+          (req.journeyData.updateRefData?.updateAlertCodeSubJourney?.alertType?.code ??
+            req.journeyData.updateRefData?.alertType?.code),
+      )!
       .alertCodes.filter(getAlertCodeFilter(req.journeyData.updateRefData!))
       .map(code => [code.code, code]),
   )

@@ -2,7 +2,7 @@ import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
-context('test /update-reference-data/select-change screen', () => {
+context('test /update-reference-data/select-alert-type screen', () => {
   let uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })

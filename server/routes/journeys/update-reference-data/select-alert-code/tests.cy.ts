@@ -1,14 +1,15 @@
 import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 
-context('test /update-reference-data/select-change screen', () => {
+context('test /update-reference-data/select-alert-code screen', () => {
   let uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
-  const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /AA \(A description\)$/ })
-  const getAlertTypeRadio2 = () => cy.findByRole('radio', { name: /DB \(DB description\)$/ })
-  const getAlertTypeRadio3 = () => cy.findByRole('radio', { name: /DE \(Deactivated Type\) Deactivated$/ })
+  const getAlertCodeRadio1 = () => cy.findByRole('radio', { name: /AA \(AA description\)$/ })
+  const getAlertCodeRadio2 = () => cy.findByRole('radio', { name: /DOCGM \(OCG Nominal\)$/ })
+  const getAlertCodeRadio3 = () => cy.findByRole('radio', { name: /BB \(BB description\) Deactivated$/ })
 
   beforeEach(() => {
     cy.task('reset')
@@ -18,140 +19,87 @@ context('test /update-reference-data/select-change screen', () => {
     })
   })
 
-  it('should try out ALERT_TYPE EDIT_DESCRIPTION cases', () => {
-    navigateToTestPage('ALERT_TYPE', 'EDIT_DESCRIPTION')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('exist')
-    getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('exist')
-
-    getContinueButton().click()
-    cy.findByRole('link', { name: /You must select an alert type$/i })
-      .should('be.visible')
-      .click()
-    getAlertTypeRadio1().should('be.focused')
-
-    getAlertTypeRadio1().click()
-    getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/edit-alert-type$/)
-    cy.go('back')
-    cy.reload()
-    getAlertTypeRadio1().should('be.checked')
-  })
-
-  it('should try out ALERT_TYPE DEACTIVATE cases', () => {
-    uuid = uuidV4()
-    navigateToTestPage('ALERT_TYPE', 'DEACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('exist')
-    getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('not.exist')
-
-    getAlertTypeRadio1().click()
-    getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/deactivate-alert-type$/)
-  })
-
-  it('should try out ALERT_TYPE REACTIVATE cases', () => {
-    uuid = uuidV4()
-    navigateToTestPage('ALERT_TYPE', 'REACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('not.exist')
-    getAlertTypeRadio2().should('not.exist')
-    getAlertTypeRadio3().should('exist')
-
-    getAlertTypeRadio3().click()
-    getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/check-answers$/)
-  })
-
-  it('should try out ALERT_CODE ADD_NEW cases', () => {
-    uuid = uuidV4()
-    navigateToTestPage('ALERT_CODE', 'ADD_NEW')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('exist')
-    getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('exist')
-
-    getAlertTypeRadio1().click()
-    getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/add-alert-code$/)
-  })
-
   it('should try out ALERT_CODE EDIT_DESCRIPTION cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('ALERT_CODE', 'EDIT_DESCRIPTION')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('exist')
-    getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('not.exist')
-
-    getAlertTypeRadio1().click()
-    getContinueButton().click()
+    navigateToTestPage('EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    validatePageContents('Select an alert to edit')
+
+    getAlertCodeRadio1().should('exist')
+    getAlertCodeRadio2().should('exist')
+
+    getContinueButton().click()
+    cy.findByRole('link', { name: /You must select an alert$/i })
+      .should('be.visible')
+      .click()
+    getAlertCodeRadio1().should('be.focused')
+
+    getAlertCodeRadio1().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/update-reference-data\/edit-alert-code$/)
   })
 
   it('should try out ALERT_CODE DEACTIVATE cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('ALERT_CODE', 'DEACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('not.exist')
-    getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('not.exist')
-
-    getAlertTypeRadio2().click()
-    getContinueButton().click()
+    navigateToTestPage('DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    validatePageContents('Select an alert to deactivate')
+
+    getAlertCodeRadio1().should('exist')
+    getAlertCodeRadio2().should('exist')
+
+    getAlertCodeRadio1().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/update-reference-data\/deactivate-alert-code$/)
   })
 
   it('should try out ALERT_CODE REACTIVATE cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('ALERT_CODE', 'REACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
-    validatePageContents()
-
-    getAlertTypeRadio1().should('exist')
-    getAlertTypeRadio2().should('not.exist')
-    getAlertTypeRadio3().should('not.exist')
-
-    getAlertTypeRadio1().click()
-    getContinueButton().click()
+    navigateToTestPage('REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    validatePageContents('Select an alert to reactivate')
+
+    getAlertCodeRadio3().should('exist')
+
+    getAlertCodeRadio3().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/update-reference-data\/check-answers$/)
   })
 
-  const navigateToTestPage = (
-    referenceDataType: 'ALERT_TYPE' | 'ALERT_CODE',
-    changeType: 'ADD_NEW' | 'EDIT_DESCRIPTION' | 'DEACTIVATE' | 'REACTIVATE',
-  ) => {
+  const navigateToTestPage = (changeType: 'EDIT_DESCRIPTION' | 'DEACTIVATE' | 'REACTIVATE') => {
     cy.signIn()
     cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
+    const alertType =
+      changeType === 'REACTIVATE'
+        ? {
+            code: 'AA',
+            description: 'A description',
+            isActive: true,
+          }
+        : {
+            code: 'DB',
+            description: 'DB description',
+            isActive: true,
+          }
     injectJourneyDataAndReload(uuid, {
-      updateRefData: { referenceDataType, changeType },
+      updateRefData: {
+        referenceDataType: 'ALERT_CODE',
+        changeType,
+        updateAlertCodeSubJourney: { alertType: alertType as AlertType },
+      },
     })
-    cy.visit(`/${uuid}/update-reference-data/select-alert-type`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/update-reference-data/select-alert-code`, { failOnStatusCode: false })
   }
 
-  const validatePageContents = () => {
-    cy.title().should('match', /Select an alert type - Maintain alerts reference data - DPS/)
+  const validatePageContents = (heading: string) => {
+    cy.title().should('equal', `${heading} - Maintain alerts reference data - DPS`)
     cy.findByRole('heading', {
-      name: /Select an alert type/,
+      name: heading,
     }).should('be.visible')
     getContinueButton().should('be.visible')
     cy.findByRole('link', { name: /^Back$/ })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('match', /select-change$/)
+      .and('match', /select-alert-type$/)
   }
 })

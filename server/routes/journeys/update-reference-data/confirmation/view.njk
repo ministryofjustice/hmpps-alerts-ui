@@ -13,6 +13,11 @@
   {% set body = "You have added the " + journey.description + " alert." %}
 {% endif %}
 
+{% if journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'REACTIVATE' %}
+  {% set pageTitle = "Alert reactivated" %}
+  {% set body = "You have reactivated the " + journey.alertCode.description + " alert." %}
+{% endif %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

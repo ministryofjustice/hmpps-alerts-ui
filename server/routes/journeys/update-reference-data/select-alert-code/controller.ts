@@ -8,9 +8,14 @@ export default class SelectAlertCodeController extends BaseController {
   GET = async (req: Request, res: Response) => {
     const alertCode = res.locals.formResponses?.['alertCode'] ?? req.journeyData.updateRefData!.alertCode
 
-    const alertTypeOptions = [
+    const alertCodeOptions = [
       ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, true))
-        .find(type => type.code === req.journeyData.updateRefData?.alertType?.code)!
+        .find(
+          type =>
+            type.code ===
+            (req.journeyData.updateRefData?.updateAlertCodeSubJourney?.alertType?.code ??
+              req.journeyData.updateRefData?.alertType?.code),
+        )!
         .alertCodes.filter(getAlertCodeFilter(req.journeyData.updateRefData!))
         .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
@@ -25,8 +30,12 @@ export default class SelectAlertCodeController extends BaseController {
     ]
 
     res.render('update-reference-data/select-alert-code/view', {
-      alertTypeOptions,
-      backUrl: 'select-alert-type',
+      journey: req.journeyData.updateRefData!,
+      alertCodeOptions,
+      backUrl:
+        req.journeyData.isCheckAnswers && !req.journeyData.updateRefData!.updateAlertCodeSubJourney
+          ? 'check-answers'
+          : 'select-alert-type',
     })
   }
 
@@ -34,10 +43,14 @@ export default class SelectAlertCodeController extends BaseController {
     const journey = req.journeyData.updateRefData!
 
     journey.alertCode = req.body.alertCode
+    if (journey.updateAlertCodeSubJourney) {
+      journey.alertType = journey.updateAlertCodeSubJourney!.alertType
+      delete journey.updateAlertCodeSubJourney
+    }
 
     switch (journey.changeType) {
       case 'EDIT_DESCRIPTION':
-        res.redirect('edit-alert-code')
+        res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'edit-alert-code')
         break
       case 'DEACTIVATE':
         res.redirect('deactivate-alert-code')

@@ -3,8 +3,15 @@
 
 {% extends "partials/layout.njk" %}
 
-{% set heading = "Select an alert type" %}
-{% set pageTitle = "Select an alert type - Maintain alerts reference data" %}
+{% if journey.changeType === 'EDIT_DESCRIPTION' %}
+  {% set heading = "Select an alert to edit" %}
+{% elseif journey.changeType === 'DEACTIVATE' %}
+  {% set heading = "Select an alert to deactivate" %}
+{% elseif journey.changeType === 'REACTIVATE' %}
+  {% set heading = "Select an alert to reactivate" %}
+{% endif %}
+
+{% set pageTitle = heading + " - Maintain alerts reference data" %}
 {% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
 {% block content %}
   <div class="govuk-grid-row govuk-!-margin-top-6">
@@ -13,7 +20,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {% include 'update-reference-data/common/components/caption.njk' %}
         {{ govukRadios({
-          name: "alertType",
+          name: "alertCode",
           fieldset: {
             legend: {
               text: heading,
@@ -21,8 +28,8 @@
               isPageHeading: true
             }
           },
-          items: alertTypeOptions,
-          errorMessage: validationErrors | findError('alertType')
+          items: alertCodeOptions,
+          errorMessage: validationErrors | findError('alertCode')
         }) }}
         <div class="govuk-button-group">
           {{ govukButton({

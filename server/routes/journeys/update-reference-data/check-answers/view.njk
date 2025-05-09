@@ -16,6 +16,9 @@
     {% if journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'ADD_NEW' %}
       {% include './partial/add-new-alert-code.njk' %}
     {% endif %}
+    {% if journey.referenceDataType === 'ALERT_CODE' and journey.changeType === 'REACTIVATE' %}
+      {% include './partial/reactivate-alert-code.njk' %}
+    {% endif %}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       <div class="govuk-button-group">

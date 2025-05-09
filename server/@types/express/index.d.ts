@@ -51,7 +51,9 @@ export type ReferenceDataJourney = Partial<{
 export type UpdateReferenceDataJourney = Partial<{
   referenceDataType: 'ALERT_CODE' | 'ALERT_TYPE'
   changeType: 'ADD_NEW' | 'EDIT_DESCRIPTION' | 'DEACTIVATE' | 'REACTIVATE'
+  updateAlertCodeSubJourney: { alertType: Omit<AlertType, 'alertCodes'> }
   alertType: Omit<AlertType, 'alertCodes'>
+  alertCode: AlertCode
   code: string
   description: string
 }>

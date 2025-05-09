@@ -2,7 +2,7 @@ import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
-context('test /update-reference-data/select-change screen', () => {
+context('test /update-reference-data/select-alert-type screen', () => {
   let uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
@@ -94,7 +94,37 @@ context('test /update-reference-data/select-change screen', () => {
 
     getAlertTypeRadio1().should('exist')
     getAlertTypeRadio2().should('exist')
-    getAlertTypeRadio3().should('exist')
+    getAlertTypeRadio3().should('not.exist')
+
+    getAlertTypeRadio1().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+  })
+
+  it('should try out ALERT_CODE DEACTIVATE cases', () => {
+    uuid = uuidV4()
+    navigateToTestPage('ALERT_CODE', 'DEACTIVATE')
+    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    validatePageContents()
+
+    getAlertTypeRadio1().should('not.exist')
+    getAlertTypeRadio2().should('exist')
+    getAlertTypeRadio3().should('not.exist')
+
+    getAlertTypeRadio2().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+  })
+
+  it('should try out ALERT_CODE REACTIVATE cases', () => {
+    uuid = uuidV4()
+    navigateToTestPage('ALERT_CODE', 'REACTIVATE')
+    cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    validatePageContents()
+
+    getAlertTypeRadio1().should('exist')
+    getAlertTypeRadio2().should('not.exist')
+    getAlertTypeRadio3().should('not.exist')
 
     getAlertTypeRadio1().click()
     getContinueButton().click()

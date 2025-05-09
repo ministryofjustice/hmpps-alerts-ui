@@ -1,27 +1,19 @@
 import { Request, Response } from 'express'
 import { SchemaType } from './schemas'
 import BaseController from '../../../common/controller'
-import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 import { escapeHtml } from '../../../../utils/utils'
+import { getAlertTypeFilter } from './utils'
 
 export default class SelectAlertTypeController extends BaseController {
   GET = async (req: Request, res: Response) => {
-    const journey = req.journeyData.updateRefData!
-    const alertType = res.locals.formResponses?.['alertType'] ?? journey.alertType
-
-    let typeFilter = (_type: AlertType) => true
-
-    if (journey.referenceDataType === 'ALERT_TYPE') {
-      if (journey.changeType === 'DEACTIVATE') {
-        typeFilter = (type: AlertType) => type.isActive
-      } else if (journey.changeType === 'REACTIVATE') {
-        typeFilter = (type: AlertType) => !type.isActive
-      }
-    }
+    const alertType =
+      res.locals.formResponses?.['alertType'] ??
+      req.journeyData.updateRefData!.updateAlertCodeSubJourney?.alertType ??
+      req.journeyData.updateRefData!.alertType
 
     const alertTypeOptions = [
       ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, true))
-        .filter(typeFilter)
+        .filter(getAlertTypeFilter(req.journeyData.updateRefData!))
         .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
           value: refData.code,
@@ -36,36 +28,37 @@ export default class SelectAlertTypeController extends BaseController {
 
     res.render('update-reference-data/select-alert-type/view', {
       alertTypeOptions,
-      backUrl: 'select-change',
+      backUrl: req.journeyData.isCheckAnswers ? 'check-answers' : 'select-change',
     })
   }
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
     const journey = req.journeyData.updateRefData!
 
-    journey.alertType = req.body.alertType
-
     if (journey.referenceDataType === 'ALERT_TYPE') {
+      journey.alertType = req.body.alertType
       switch (journey.changeType) {
         case 'EDIT_DESCRIPTION':
-          res.redirect('edit-alert-type')
+          res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'edit-alert-type')
           break
         case 'DEACTIVATE':
-          res.redirect('deactivate-alert-type')
+          res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'deactivate-alert-type')
           break
         case 'REACTIVATE':
         default:
-          res.redirect('check-answers')
+          res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'check-answers')
       }
     } else {
       switch (journey.changeType) {
         case 'ADD_NEW':
-          res.redirect('add-alert-code')
+          journey.alertType = req.body.alertType
+          res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'add-alert-code')
           break
         case 'EDIT_DESCRIPTION':
         case 'DEACTIVATE':
         case 'REACTIVATE':
         default:
+          journey.updateAlertCodeSubJourney = { alertType: req.body.alertType }
           res.redirect('select-alert-code')
           break
       }

@@ -75,6 +75,11 @@ const stubGetAlertTypes = () => {
               description: 'BB description',
               isActive: false,
             },
+            {
+              code: 'CC',
+              description: 'CC description',
+              isActive: false,
+            },
           ],
         },
         {
@@ -178,7 +183,7 @@ const stubReactivateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-codes/AA/reactivate',
+      urlPattern: '/alerts-api/alert-codes/BB/reactivate',
     },
     response: {
       status: 200,
@@ -234,7 +239,7 @@ const stubUpdateAlertType = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-types/DB',
+      urlPattern: '/alerts-api/alert-types/AA',
     },
     response: {
       status: 200,
@@ -253,7 +258,7 @@ const stubUpdateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-codes/AA',
+      urlPattern: '/alerts-api/alert-codes/CC',
     },
     response: {
       status: 200,

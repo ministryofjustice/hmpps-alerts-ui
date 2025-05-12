@@ -10,6 +10,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
   const getAlertCodeRadio1 = () => cy.findByRole('radio', { name: /AA \(AA description\)$/ })
   const getAlertCodeRadio2 = () => cy.findByRole('radio', { name: /DOCGM \(OCG Nominal\)$/ })
   const getAlertCodeRadio3 = () => cy.findByRole('radio', { name: /BB \(BB description\) Deactivated$/ })
+  const getAlertCodeRadio4 = () => cy.findByRole('radio', { name: /CC \(CC description\) Deactivated$/ })
 
   beforeEach(() => {
     cy.task('reset')
@@ -60,6 +61,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
     validatePageContents('Select an alert to reactivate')
 
     getAlertCodeRadio3().should('exist')
+    getAlertCodeRadio4().should('exist')
 
     getAlertCodeRadio3().click()
     getContinueButton().click()

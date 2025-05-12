@@ -1,10 +1,4 @@
-import Page from '../pages/page'
-import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeForAlertCodeDeactivation'
-import SelectAlertCodePage from '../pages/selectAlertCodePage'
-import AlertCodeDeactivationConfirmationPage from '../pages/alertCodeDeactivationConfirmationPage'
-import DeactivateAlertCodeSuccessPage from '../pages/deactivateAlertCodeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
-import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Deactivate an alert code', () => {
   beforeEach(() => {
@@ -16,16 +10,34 @@ context('Deactivate an alert code', () => {
 
   it('Deactivate an existing alert code - happy path', () => {
     cy.signIn()
-    ReferenceDataHomepage.goTo().deactivateAlertCodeLink().click()
-    const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertTypeForAlertCodeDeactivation)
-    selectAlertTypePage.selectCode().click()
-    selectAlertTypePage.continue().click()
-    const selectAlertCodePage = Page.verifyOnPage(SelectAlertCodePage)
-    selectAlertCodePage.selectCode().click()
-    selectAlertCodePage.continue().click()
-    const confirmationPage = Page.verifyOnPageWithArgs(AlertCodeDeactivationConfirmationPage, 'AA')
-    confirmationPage.selectYes().click()
-    confirmationPage.continue().click()
-    Page.verifyOnPage(DeactivateAlertCodeSuccessPage)
+
+    cy.clickLink('Update alerts and alert types')
+
+    cy.clickRadio(/Alert$/)
+    cy.clickContinueButton()
+
+    cy.clickRadio('Deactivate alert')
+    cy.clickContinueButton()
+
+    cy.clickRadio('DB (DB description)')
+    cy.clickContinueButton()
+
+    cy.clickRadio('AA (AA description)')
+    cy.clickContinueButton()
+
+    // confirm and save
+    cy.clickRadio('Yes')
+    cy.clickContinueButton(/Confirm and save/)
+
+    cy.findByText('Alert deactivated').should('be.visible')
+    cy.findByText('You have deactivated the AA (AA description) alert.').should('be.visible')
+
+    cy.verifyLastAPICall(
+      {
+        method: 'POST',
+        urlPath: `/alerts-api/alert-codes/AA/deactivate`,
+      },
+      undefined,
+    )
   })
 })

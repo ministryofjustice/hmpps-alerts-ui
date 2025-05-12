@@ -1,10 +1,4 @@
-import Page from '../pages/page'
-import AddAnAlertCode from '../pages/addAnAlertCode'
-import SelectAnAlertType from '../pages/selectAnAlertType'
-import AddAnAlertCodeConfirmationPage from '../pages/addAnAlertCodeConfirmationPage'
-import AlertCodeSuccessPage from '../pages/alertCodeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
-import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Create an alert code', () => {
   beforeEach(() => {
@@ -16,20 +10,59 @@ context('Create an alert code', () => {
 
   it('Create a new alert code - happy path', () => {
     cy.signIn()
-    ReferenceDataHomepage.goTo().createAlertCodeLink().click()
-    const selectAlertType = Page.verifyOnPage(SelectAnAlertType)
-    selectAlertType.selectCode().check({ force: true })
-    selectAlertType.selectCode().should('be.checked')
-    selectAlertType.continue().click()
-    const addDetails = Page.verifyOnPage(AddAnAlertCode)
-    addDetails.codeInput().type('AA')
-    addDetails.descriptionInput().type('A description')
-    addDetails.continue().click()
-    const confirmation = Page.verifyOnPage(AddAnAlertCodeConfirmationPage)
-    confirmation.code().should('have.value', 'AA')
-    confirmation.description().should('have.value', 'A description')
-    confirmation.parent().should('have.value', 'DB')
-    confirmation.continue().click()
-    Page.verifyOnPage(AlertCodeSuccessPage)
+
+    cy.clickLink('Update alerts and alert types')
+
+    cy.clickRadio(/Alert$/)
+    cy.clickContinueButton()
+
+    cy.clickRadio('Add new alert')
+    cy.clickContinueButton()
+
+    cy.clickRadio('DB (DB description)')
+    cy.clickContinueButton()
+
+    cy.fillTextbox('Enter an alert code', 'ZYX')
+    cy.fillTextbox('Enter a description of the alert', 'Some text')
+    cy.clickContinueButton()
+
+    // can change answers
+    cy.findByRole('heading', { name: 'Check your changes' }).should('be.visible')
+    cy.contains('dt', 'Alert type').next().should('include.text', 'DB (DB description)')
+    cy.contains('dt', 'New alert code').next().should('include.text', 'ZYX')
+    cy.contains('dt', 'New alert description').next().should('include.text', 'Some text')
+
+    cy.clickLink('Change the alert type')
+    cy.clickRadio('AA (A description)')
+    cy.clickContinueButton()
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AA (A description)')
+
+    cy.clickLink('Change the alert code')
+    cy.fillTextbox('Enter an alert code', 'ABC')
+    cy.clickContinueButton()
+    cy.contains('dt', 'New alert code').next().should('include.text', 'ABC')
+
+    cy.clickLink('Change the alert description')
+    cy.fillTextbox('Enter a description of the alert', 'This is a description')
+    cy.clickContinueButton()
+    cy.contains('dt', 'New alert description').next().should('include.text', 'This is a description')
+
+    // confirm and save
+    cy.clickContinueButton(/Confirm and save/)
+
+    cy.findByText('Alert added').should('be.visible')
+    cy.findByText('You have added the This is a description alert.').should('be.visible')
+
+    cy.verifyLastAPICall(
+      {
+        method: 'POST',
+        urlPath: `/alerts-api/alert-codes`,
+      },
+      {
+        parent: 'AA',
+        code: 'ABC',
+        description: 'This is a description',
+      },
+    )
   })
 })

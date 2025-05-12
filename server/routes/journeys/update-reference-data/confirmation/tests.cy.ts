@@ -52,6 +52,50 @@ context('test /update-reference-data/confirmation', () => {
     validateCommonPageContents()
   })
 
+  it('should show DEACTIVATE ALERT_TYPE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_TYPE',
+      changeType: 'DEACTIVATE',
+      alertType: {
+        code: 'A',
+        description: 'Type Name',
+        isActive: false,
+        createdAt: '',
+        createdBy: '',
+        listSequence: 0,
+      },
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert type deactivated - DPS')
+    cy.findByText('Alert type deactivated').should('be.visible')
+    cy.findByText('You have deactivated the A (Type Name) alert type.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
+  it('should show REACTIVATE ALERT_TYPE confirmation page', () => {
+    uuid = uuidV4()
+    navigateToTestPage({
+      referenceDataType: 'ALERT_TYPE',
+      changeType: 'REACTIVATE',
+      alertType: {
+        code: 'A',
+        description: 'Type Name',
+        isActive: false,
+        createdAt: '',
+        createdBy: '',
+        listSequence: 0,
+      },
+    })
+    cy.url().should('to.match', /\/confirmation$/)
+    cy.title().should('equal', 'Alert type reactivated - DPS')
+    cy.findByText('Alert type reactivated').should('be.visible')
+    cy.findByText('You have reactivated the A (Type Name) alert type.').should('be.visible')
+
+    validateCommonPageContents()
+  })
+
   it('should show ADD_NEW ALERT_CODE confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({

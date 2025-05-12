@@ -165,7 +165,7 @@ const stubDeactivateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-codes/AA/deactivate',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/deactivate',
     },
     response: {
       status: 200,
@@ -183,7 +183,7 @@ const stubReactivateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-codes/BB/reactivate',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/reactivate',
     },
     response: {
       status: 200,
@@ -201,7 +201,7 @@ const stubDeactivateAlertType = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-types/DB/deactivate',
+      urlPattern: '/alerts-api/alert-types/[A-Z]*/deactivate',
     },
     response: {
       status: 200,
@@ -220,7 +220,7 @@ const stubReactivateAlertType = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-types/DB/reactivate',
+      urlPattern: '/alerts-api/alert-types/[A-Z]*/reactivate',
     },
     response: {
       status: 200,
@@ -239,7 +239,7 @@ const stubUpdateAlertType = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-types/AA',
+      urlPattern: '/alerts-api/alert-types/[A-Z]*',
     },
     response: {
       status: 200,
@@ -258,7 +258,7 @@ const stubUpdateAlertCode = () => {
   return stubFor({
     request: {
       method: 'PATCH',
-      urlPattern: '/alerts-api/alert-codes/CC',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*',
     },
     response: {
       status: 200,

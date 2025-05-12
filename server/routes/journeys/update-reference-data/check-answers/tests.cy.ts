@@ -3,7 +3,7 @@ import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 import { UpdateReferenceDataJourney } from '../../../../@types/express'
 
-context('test /bulk-alerts/check-answers', () => {
+context('test /update-reference-data/check-answers', () => {
   let uuid = uuidV4()
 
   beforeEach(() => {

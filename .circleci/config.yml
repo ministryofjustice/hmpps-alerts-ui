@@ -139,7 +139,6 @@ workflows:
             branches:
               only:
                 - main
-                - feature/MIAD-464
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -151,7 +150,6 @@ workflows:
             branches:
               only:
                 - main
-                - feature/MIAD-464
           requires:
             - helm_lint
             - integration_tests

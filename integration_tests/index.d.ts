@@ -5,5 +5,20 @@ declare namespace Cypress {
      * @example cy.signIn({ failOnStatusCode: boolean })
      */
     signIn(options?: { failOnStatusCode: boolean }): Chainable<AUTWindow>
+
+    /**
+     * Custom command to verify that the last API call matching the parameter is deeply equal to the expected value.
+     * @param matching a wiremock request to /requests/find. For options see: https://wiremock.org/docs/standalone/admin-api-reference/#tag/Requests/operation/removeRequestsByMetadata
+     * @param expected the request body to match
+     */
+    verifyLastAPICall(matching: string | object, expected: object): Chainable<*>
+
+    clickLink(name: string | RegExp): Chainable<JQuery>
+
+    clickRadio(name: string | RegExp): Chainable<JQuery>
+
+    clickContinueButton(name?: string | RegExp): Chainable<JQuery>
+
+    fillTextbox(name: string | RegExp, value: string): Chainable<JQuery>
   }
 }

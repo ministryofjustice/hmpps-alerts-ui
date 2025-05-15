@@ -1,9 +1,4 @@
-import Page from '../pages/page'
-import SelectAnAlertTypeForAlertCodeDeactivation from '../pages/selectAlertTypeForAlertCodeDeactivation'
-import AlertTypeDeactivationConfirmationPage from '../pages/alertTypeDeactivationConfirmationPage'
-import DeactivateAlertTypeSuccessPage from '../pages/deactivateAlertTypeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
-import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Deactivate an alert type', () => {
   beforeEach(() => {
@@ -15,13 +10,30 @@ context('Deactivate an alert type', () => {
 
   it('Deactivate an existing alert type - happy path', () => {
     cy.signIn()
-    ReferenceDataHomepage.goTo().deactivateAlertTypeLink().click()
-    const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertTypeForAlertCodeDeactivation)
-    selectAlertTypePage.selectCode().click()
-    selectAlertTypePage.continue().click()
-    const confirmationPage = Page.verifyOnPageWithArgs(AlertTypeDeactivationConfirmationPage, 'DB')
-    confirmationPage.selectYes().click()
-    confirmationPage.continue().click()
-    Page.verifyOnPage(DeactivateAlertTypeSuccessPage)
+    cy.clickLink('Update alerts and alert types')
+
+    cy.clickRadio(/Alert type$/)
+    cy.clickContinueButton()
+
+    cy.clickRadio('Deactivate alert type')
+    cy.clickContinueButton()
+
+    cy.clickRadio('DB (DB description)')
+    cy.clickContinueButton()
+
+    // confirm and save
+    cy.clickRadio('Yes')
+    cy.clickContinueButton(/Confirm and save/)
+
+    cy.findByText('Alert type deactivated').should('be.visible')
+    cy.findByText('You have deactivated the DB (DB description) alert type.').should('be.visible')
+
+    cy.verifyLastAPICall(
+      {
+        method: 'POST',
+        urlPath: `/alerts-api/alert-types/DB/deactivate`,
+      },
+      undefined,
+    )
   })
 })

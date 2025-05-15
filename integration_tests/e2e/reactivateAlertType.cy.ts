@@ -1,9 +1,4 @@
-import Page from '../pages/page'
-import SelectAnAlertType from '../pages/selectAnAlertType'
-import AlertTypeReactivationConfirmationPage from '../pages/alertTypeReactivationConfirmationPage'
-import ReactivateAlertTypeSuccessPage from '../pages/reactivateAlertTypeSuccessPage'
 import AuthorisedRoles from '../../server/authentication/authorisedRoles'
-import ReferenceDataHomepage from '../pages/referenceDataHomepage'
 
 context('Reactivate an alert type', () => {
   beforeEach(() => {
@@ -15,13 +10,39 @@ context('Reactivate an alert type', () => {
 
   it('Reactivate a reactivated alert type - happy path', () => {
     cy.signIn()
-    ReferenceDataHomepage.goTo().reactivateAlertTypeLink().click()
-    const selectAlertTypePage = Page.verifyOnPage(SelectAnAlertType)
-    selectAlertTypePage.selectCode().click()
-    selectAlertTypePage.continue().click()
-    const confirmationPage = Page.verifyOnPageWithArgs(AlertTypeReactivationConfirmationPage, 'DB')
-    confirmationPage.selectYes().click()
-    confirmationPage.continue().click()
-    Page.verifyOnPage(ReactivateAlertTypeSuccessPage)
+
+    cy.clickLink('Update alerts and alert types')
+
+    cy.clickRadio(/Alert type$/)
+    cy.clickContinueButton()
+
+    cy.clickRadio('Reactivate alert type')
+    cy.clickContinueButton()
+
+    cy.clickRadio('AA (A description) Deactivated')
+    cy.clickContinueButton()
+
+    // can change answers
+    cy.findByRole('heading', { name: 'Check your changes' }).should('be.visible')
+    cy.contains('dt', 'Alert type to be reactivated').next().should('include.text', 'AA (A description)')
+
+    cy.clickLink('Change the alert type to be reactivated')
+    cy.clickRadio('DB (A description) Deactivated')
+    cy.clickContinueButton()
+    cy.contains('dt', 'Alert type to be reactivated').next().should('include.text', 'DB (A description)')
+
+    // confirm and save
+    cy.clickContinueButton(/Confirm and save/)
+
+    cy.findByText('Alert type reactivated').should('be.visible')
+    cy.findByText('You have reactivated the DB (A description) alert type.').should('be.visible')
+
+    cy.verifyLastAPICall(
+      {
+        method: 'POST',
+        urlPath: `/alerts-api/alert-types/DB/reactivate`,
+      },
+      undefined,
+    )
   })
 })

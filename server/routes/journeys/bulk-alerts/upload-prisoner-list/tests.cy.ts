@@ -20,6 +20,7 @@ context('test /bulk-alerts/upload-prisoner-list screen', () => {
     cy.task('stubPatchBulkAlertsPlan')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/upload-prisoner-list$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Upload your list of prison numbers - Upload alerts in bulk - DPS')
     cy.findByRole('heading', { name: /Upload your list of prison numbers/ }).should('be.visible')
@@ -61,6 +62,7 @@ context('test /bulk-alerts/upload-prisoner-list screen', () => {
     cy.task('stubPatchBulkAlertsPlanFailureToAddPrisoner')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/upload-prisoner-list$/)
+    cy.checkAxeAccessibility()
 
     getChooseFile().attachFile({
       fileContent: new Blob(['Prison number\nA1111AA']),

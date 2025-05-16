@@ -18,6 +18,7 @@ context('test /bulk-alerts/enter-alert-reason screen', () => {
   it('should try out all cases', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/enter-alert-reason$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

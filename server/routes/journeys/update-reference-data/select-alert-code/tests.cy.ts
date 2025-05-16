@@ -24,6 +24,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
     uuid = uuidV4()
     navigateToTestPage('EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    cy.checkAxeAccessibility()
     validatePageContents('Select an alert to edit')
 
     getAlertCodeRadio1().should('exist')
@@ -44,6 +45,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
     uuid = uuidV4()
     navigateToTestPage('DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    cy.checkAxeAccessibility()
     validatePageContents('Select an alert to deactivate')
 
     getAlertCodeRadio1().should('exist')
@@ -58,6 +60,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
     uuid = uuidV4()
     navigateToTestPage('REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    cy.checkAxeAccessibility()
     validatePageContents('Select an alert to reactivate')
 
     getAlertCodeRadio3().should('exist')

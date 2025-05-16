@@ -21,6 +21,7 @@ context('test /update-reference-data/deactivate-alert-type', () => {
     uuid = uuidV4()
     navigateToTestPage()
     cy.url().should('to.match', /\/deactivate-alert-type$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should(
       'equal',

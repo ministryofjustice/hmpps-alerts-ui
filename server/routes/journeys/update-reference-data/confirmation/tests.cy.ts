@@ -22,6 +22,7 @@ context('test /update-reference-data/confirmation', () => {
       description: 'Type Name',
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert type added - DPS')
     cy.findByText('Alert type added').should('be.visible')
     cy.findByText('You have added the Type Name alert type.').should('be.visible')
@@ -45,6 +46,7 @@ context('test /update-reference-data/confirmation', () => {
       description: 'New Name',
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert type description updated - DPS')
     cy.findByText('Alert type description updated').should('be.visible')
     cy.findByText('You have updated the description for the AA alert type to ‘New Name’.').should('be.visible')
@@ -67,6 +69,7 @@ context('test /update-reference-data/confirmation', () => {
       },
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert type deactivated - DPS')
     cy.findByText('Alert type deactivated').should('be.visible')
     cy.findByText('You have deactivated the A (Type Name) alert type.').should('be.visible')
@@ -89,6 +92,7 @@ context('test /update-reference-data/confirmation', () => {
       },
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert type reactivated - DPS')
     cy.findByText('Alert type reactivated').should('be.visible')
     cy.findByText('You have reactivated the A (Type Name) alert type.').should('be.visible')
@@ -105,6 +109,7 @@ context('test /update-reference-data/confirmation', () => {
       description: 'Type Name',
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert added - DPS')
     cy.findByText('Alert added').should('be.visible')
     cy.findByText('You have added the Type Name alert.').should('be.visible')
@@ -129,6 +134,7 @@ context('test /update-reference-data/confirmation', () => {
       description: 'New Name',
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert description updated - DPS')
     cy.findByText('Alert description updated').should('be.visible')
     cy.findByText('You have updated the description for the AA alert to ‘New Name’.').should('be.visible')
@@ -152,6 +158,7 @@ context('test /update-reference-data/confirmation', () => {
       },
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert deactivated - DPS')
     cy.findByText('Alert deactivated').should('be.visible')
     cy.findByText('You have deactivated the A (Code Name) alert.').should('be.visible')
@@ -175,6 +182,7 @@ context('test /update-reference-data/confirmation', () => {
       },
     })
     cy.url().should('to.match', /\/confirmation$/)
+    cy.checkAxeAccessibility()
     cy.title().should('equal', 'Alert reactivated - DPS')
     cy.findByText('Alert reactivated').should('be.visible')
     cy.findByText('You have reactivated the A (Code Name) alert.').should('be.visible')

@@ -19,6 +19,7 @@ context('test /update-reference-data screen', () => {
   it('should try out all cases', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/update-reference-data$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

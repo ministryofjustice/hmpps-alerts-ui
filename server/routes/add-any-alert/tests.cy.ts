@@ -26,6 +26,7 @@ context('test /add-any-alert screen', () => {
 
     navigateToTestPage()
     cy.url().should('to.match', /add-any-alert$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getPrisonNumberInput().type('A1234BC', { delay: 0 })

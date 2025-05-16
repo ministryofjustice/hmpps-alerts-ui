@@ -1,4 +1,6 @@
+import { Spec } from 'axe-core'
 import { getLastAPICallMatching } from '../mockApis/wiremock'
+import { checkAxeAccessibility } from './accessibilityViolations'
 
 Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.request('/')
@@ -21,3 +23,5 @@ Cypress.Commands.add('fillTextbox', (name, value) => {
   cy.findByRole('textbox', { name }).clear()
   return cy.findByRole('textbox', { name }).type(value, { delay: 0 })
 })
+
+Cypress.Commands.add('checkAxeAccessibility', () => checkAxeAccessibility)

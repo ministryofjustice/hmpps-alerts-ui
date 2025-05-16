@@ -18,7 +18,7 @@ context('test /bulk-alerts/review-prisoners screen', () => {
     cy.task('stubGetBulkAlertsPlanPrisonersTwoFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/review-prisoners$/)
-
+    cy.checkAxeAccessibility()
     // test with 2 selected prisoners
     cy.title().should(
       'equal',
@@ -64,6 +64,7 @@ context('test /bulk-alerts/review-prisoners screen', () => {
     cy.task('stubGetBulkAlertsPlanPrisonersNoneFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/review-prisoners$/)
+    cy.checkAxeAccessibility()
 
     // test with no selected prisoner
     cy.title().should('equal', 'There are no prisoners selected - Upload alerts in bulk - DPS')

@@ -21,6 +21,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   it('should try out ALERT_TYPE EDIT_DESCRIPTION cases', () => {
     navigateToTestPage('ALERT_TYPE', 'EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')
@@ -45,6 +46,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_TYPE', 'DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')
@@ -60,6 +62,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_TYPE', 'REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('not.exist')
@@ -75,6 +78,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_CODE', 'ADD_NEW')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')
@@ -90,6 +94,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_CODE', 'EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')
@@ -105,6 +110,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_CODE', 'DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('not.exist')
@@ -120,6 +126,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_CODE', 'REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')

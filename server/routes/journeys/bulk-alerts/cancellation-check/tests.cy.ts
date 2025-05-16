@@ -15,6 +15,7 @@ context('test /bulk-alerts/cancellation-check', () => {
   it('should render the view and proceed to homepage', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/cancellation-check$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Are you sure you want to cancel this bulk alerts upload? - Upload alerts in bulk - DPS')
     cy.findByRole('heading', { name: /Are you sure you want to cancel this bulk alerts upload\?/ }).should('be.visible')

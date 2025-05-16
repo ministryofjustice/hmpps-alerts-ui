@@ -18,6 +18,7 @@ context('test /update-reference-data/add-alert-type screen', () => {
   it('should try out all cases', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/edit-alert-type$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

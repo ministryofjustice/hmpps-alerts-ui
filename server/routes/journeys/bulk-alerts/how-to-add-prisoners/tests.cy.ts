@@ -21,6 +21,7 @@ context('test /bulk-alerts/how-to-add-prisoners screen', () => {
     // test OCG Nominal path
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/how-to-add-prisoners$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

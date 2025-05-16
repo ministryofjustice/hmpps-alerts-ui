@@ -5,6 +5,7 @@ import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import alertsApi from './integration_tests/mockApis/alertsApi'
 import prisonerSearchApi from './integration_tests/mockApis/prisonerSearchApi'
+import logAccessibilityViolations from './integration_tests/support/accessibilityViolations'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -25,6 +26,7 @@ export default defineConfig({
         ...tokenVerification,
         ...alertsApi,
         ...prisonerSearchApi,
+        ...logAccessibilityViolations,
       })
       return config
     },

@@ -20,6 +20,7 @@ context('test /bulk-alerts/check-answers', () => {
   it('should be able to change answers and proceed to confirmation', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your answers before uploading alerts in bulk - Upload alerts in bulk - DPS')
     cy.findByRole('heading', { name: /Check your answers before uploading alerts in bulk/ }).should('be.visible')

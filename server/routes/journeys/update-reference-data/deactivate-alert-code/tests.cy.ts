@@ -21,6 +21,7 @@ context('test /update-reference-data/deactivate-alert-code', () => {
     uuid = uuidV4()
     navigateToTestPage()
     cy.url().should('to.match', /\/deactivate-alert-code$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Are you sure you want to deactivate the alert? - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: 'Are you sure you want to deactivate the AA (Code Name) alert?' }).should(

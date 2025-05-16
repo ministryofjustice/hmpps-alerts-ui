@@ -23,6 +23,7 @@ context('test /bulk-alerts/select-prisoner screen', () => {
     cy.task('stubPostPrisonerSearchOneFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/select-prisoner$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     // test validation error for query text field
@@ -44,6 +45,7 @@ context('test /bulk-alerts/select-prisoner screen', () => {
     cy.task('stubPostPrisonerSearchTwoFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/select-prisoner$/)
+    cy.checkAxeAccessibility()
 
     getQueryInput().type('A1111AA', { delay: 0 })
     getSearchButton().click()
@@ -67,6 +69,7 @@ context('test /bulk-alerts/select-prisoner screen', () => {
     cy.task('stubPostPrisonerSearchNoneFound')
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/select-prisoner$/)
+    cy.checkAxeAccessibility()
 
     getQueryInput().type('A1111AA', { delay: 0 })
     getSearchButton().click()

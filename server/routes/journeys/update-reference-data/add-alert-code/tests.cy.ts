@@ -20,6 +20,7 @@ context('test /update-reference-data/add-alert-code screen', () => {
   it('should try out all cases', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/add-alert-code$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

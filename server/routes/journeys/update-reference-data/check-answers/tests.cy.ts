@@ -28,6 +28,7 @@ context('test /update-reference-data/check-answers', () => {
       description: 'Some text',
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
@@ -64,6 +65,7 @@ context('test /update-reference-data/check-answers', () => {
       description: 'New Name',
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
@@ -99,6 +101,7 @@ context('test /update-reference-data/check-answers', () => {
       },
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
@@ -130,6 +133,7 @@ context('test /update-reference-data/check-answers', () => {
       },
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
@@ -181,6 +185,7 @@ context('test /update-reference-data/check-answers', () => {
       description: 'New Name',
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
@@ -233,6 +238,7 @@ context('test /update-reference-data/check-answers', () => {
       },
     })
     cy.url().should('to.match', /\/check-answers$/)
+    cy.checkAxeAccessibility()
 
     cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')

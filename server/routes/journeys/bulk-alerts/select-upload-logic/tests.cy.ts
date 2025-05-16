@@ -23,6 +23,7 @@ context('test /bulk-alerts/select-upload-logic screen', () => {
   it('should try out all cases', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts\/select-upload-logic$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
     proceedToNextPage()

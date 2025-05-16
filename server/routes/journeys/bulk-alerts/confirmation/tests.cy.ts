@@ -17,7 +17,7 @@ context('test /bulk-alerts/confirmation', () => {
     navigateToTestPage()
     cy.url().should('to.match', /\/confirmation$/)
     cy.title().should('equal', 'Alerts uploaded in bulk successfully - DPS')
-
+    cy.checkAxeAccessibility()
     validatePageContents()
   })
 

@@ -1,4 +1,3 @@
-import { Spec } from 'axe-core'
 import { getLastAPICallMatching } from '../mockApis/wiremock'
 import { checkAxeAccessibility } from './accessibilityViolations'
 

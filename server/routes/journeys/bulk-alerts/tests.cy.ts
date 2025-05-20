@@ -18,6 +18,7 @@ context('test /bulk-alerts screen', () => {
 
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
 
@@ -42,6 +43,7 @@ context('test /bulk-alerts screen', () => {
     })
     navigateToTestPage()
     cy.url().should('to.match', /\/bulk-alerts$/)
+    cy.checkAxeAccessibility()
     cy.findByText('You are not authorised to use this application.').should('be.visible')
     cy.findByRole('heading', { name: /Select alert/i }).should('not.exist')
   })

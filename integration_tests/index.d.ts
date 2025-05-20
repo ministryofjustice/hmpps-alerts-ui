@@ -20,5 +20,7 @@ declare namespace Cypress {
     clickContinueButton(name?: string | RegExp): Chainable<JQuery>
 
     fillTextbox(name: string | RegExp, value: string): Chainable<JQuery>
+
+    checkAxeAccessibility(): void
   }
 }

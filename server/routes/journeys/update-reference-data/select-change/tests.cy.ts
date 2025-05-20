@@ -26,6 +26,7 @@ context('test /update-reference-data/select-change screen', () => {
   it('should try out ALERT_TYPE cases', () => {
     navigateToTestPage('ALERT_TYPE')
     cy.url().should('to.match', /\/update-reference-data\/select-change$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertTypeRadio1().should('exist')
@@ -51,6 +52,7 @@ context('test /update-reference-data/select-change screen', () => {
     uuid = uuidV4()
     navigateToTestPage('ALERT_CODE')
     cy.url().should('to.match', /\/update-reference-data\/select-change$/)
+    cy.checkAxeAccessibility()
     validatePageContents()
 
     getAlertCodeRadio1().should('exist')

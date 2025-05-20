@@ -21,6 +21,8 @@ context('test / homepage', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /\/update-reference-data$/)
+
+    cy.checkAxeAccessibility()
   })
 
   it('shows only ref data tile if user only has ROLE_ALERTS_REFERENCE_DATA_MANAGER', () => {
@@ -36,6 +38,8 @@ context('test / homepage', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /\/update-reference-data$/)
+
+    cy.checkAxeAccessibility()
   })
 
   it('shows only add alert tile if user only has ROLE_BULK_PRISON_ESTATE_ALERTS', () => {
@@ -51,6 +55,8 @@ context('test / homepage', () => {
       .and('to.match', /\/add-any-alert$/)
 
     cy.findByRole('link', { name: /Update alerts and alert types/i }).should('not.exist')
+
+    cy.checkAxeAccessibility()
   })
 
   it('shows unauthorised message if user does not have any of the required roles', () => {
@@ -60,6 +66,8 @@ context('test / homepage', () => {
     navigateToTestPage()
     cy.findByText('You are not authorised to use this application.').should('be.visible')
     cy.findByRole('heading', { name: /Manage prisoner alerts/i }).should('not.exist')
+
+    cy.checkAxeAccessibility()
   })
 
   const navigateToTestPage = () => {

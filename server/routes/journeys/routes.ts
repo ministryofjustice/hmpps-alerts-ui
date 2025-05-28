@@ -3,8 +3,6 @@ import { DataAccess } from '../../data'
 import BulkAlertsRoutes from './bulk-alerts/routes'
 import journeyStateMachine from '../../middleware/journeyStateMachine'
 import setUpJourneyData from '../../middleware/setUpJourneyData'
-import AlertCodeRoutes from './alert-code/routes'
-import AlertTypeRoutes from './alert-type/routes'
 import { Services } from '../../services'
 import UpdateReferenceDataRoutes from './update-reference-data/routes'
 
@@ -15,8 +13,6 @@ export default function JourneyRoutes(dataAccess: DataAccess, services: Services
   router.use(journeyStateMachine())
 
   router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess, services))
-  router.use('/alert-code', AlertCodeRoutes(dataAccess.alertsApiClient, services.auditService))
-  router.use('/alert-type', AlertTypeRoutes(dataAccess.alertsApiClient, services.auditService))
   router.use('/update-reference-data', UpdateReferenceDataRoutes(dataAccess.alertsApiClient, services.auditService))
 
   if (process.env.NODE_ENV === 'e2e-test') {

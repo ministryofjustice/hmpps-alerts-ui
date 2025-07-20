@@ -131,7 +131,7 @@
     "superagent": "^10.2.1",
     "url-value-parser": "^2.2.0",
     "uuid": "^11.1.0",
-    "zod": "^3.24.4"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",

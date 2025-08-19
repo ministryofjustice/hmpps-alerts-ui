@@ -31,6 +31,7 @@ export const dataAccess = () => ({
   alertsApiClient: new AlertsApiClient(hmppsAuthClient),
   prisonerSearchApiClient: new PrisonerSearchApiClient(hmppsAuthClient),
   hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+  hmppsAuthClient,
   tokenStore,
 })
 

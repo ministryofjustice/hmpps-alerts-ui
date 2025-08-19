@@ -29,6 +29,7 @@ import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
 import sentryMiddleware from './middleware/sentryMiddleware'
 import { handleApiError } from './middleware/handleApiError'
+import populateClientToken from './middleware/populateClientToken'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -54,6 +55,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
+  app.use(populateClientToken())
   app.use(populateValidationErrors())
 
   app.get(

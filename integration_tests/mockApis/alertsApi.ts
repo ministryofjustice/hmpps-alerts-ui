@@ -1,5 +1,18 @@
 import { stubFor } from './wiremock'
 
+const stubAlertsApiPing = (httpStatus = 200) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/alerts-api/health/ping',
+    },
+    response: {
+      status: httpStatus,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
+    },
+  })
+
 const stubCreateAlertType = () => {
   return stubFor({
     request: {
@@ -496,6 +509,7 @@ const stubGetBulkAlertsPlanResult = () => {
 }
 
 export default {
+  stubAlertsApiPing,
   stubCreateAlertType,
   stubGetAlertTypes,
   stubGetDeactivatedAlertTypes,

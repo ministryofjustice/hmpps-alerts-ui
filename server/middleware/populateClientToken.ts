@@ -8,7 +8,7 @@ export default function populateClientToken(): RequestHandler {
   return async (req, res, next) => {
     try {
       if (res.locals.user) {
-        const clientToken = await hmppsAuthClient.getToken()
+        const clientToken = await hmppsAuthClient.getToken(res.locals.user.username)
         if (clientToken) {
           req.middleware = {
             ...(req.middleware ?? {}),

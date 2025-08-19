@@ -1,6 +1,6 @@
+import { TokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import { NextFunction, Request, Response } from 'express'
 import { JourneyData } from '../@types/express'
-import TokenStore from '../data/tokenStore/tokenStore'
 
 export default function setUpJourneyData(store: TokenStore) {
   return async (req: Request, res: Response, next: NextFunction) => {

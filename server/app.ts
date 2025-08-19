@@ -23,7 +23,6 @@ import { auditPageViewMiddleware } from './middleware/auditPageViewMiddleware'
 import routes from './routes'
 import type { Services } from './services'
 import AuthorisedRoles from './authentication/authorisedRoles'
-import populateClientToken from './middleware/populateClientToken'
 import logger from '../logger'
 import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
@@ -55,7 +54,6 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
-  app.use(populateClientToken())
   app.use(populateValidationErrors())
 
   app.get(

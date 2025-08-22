@@ -1,5 +1,4 @@
-import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
-import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import { RestClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
 import logger from '../../logger'
 import {
@@ -19,13 +18,13 @@ import {
 } from '../@types/alerts/alertsApiTypes'
 
 export default class AlertsApiClient extends RestClient {
-  constructor(authenticationClient: AuthenticationClient) {
-    super('Alerts API', config.apis.alertsApi, logger, authenticationClient)
+  constructor() {
+    super('Alerts API', config.apis.alertsApi, logger)
   }
 
   createAlertType(token: string, requestBody: CreateAlertTypeRequest) {
     logger.info(`Creating an alert type with body ${JSON.stringify(requestBody)}`)
-    return this.post({ path: '/alert-types', data: requestBody }, asUser(token))
+    return this.post({ path: '/alert-types', data: requestBody }, token)
   }
 
   retrieveAlertTypes(token: string, includeInactive: boolean = false): Promise<AlertType[]> {
@@ -34,33 +33,33 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/alert-types${includeInactive ? '?includeInactive=true' : ''}`,
       },
-      asUser(token),
+      token,
     )
   }
 
   createAlertCode(token: string, requestBody: CreateAlertCodeRequest) {
     logger.info(`Creating an alert code with body ${JSON.stringify(requestBody)}`)
-    return this.post({ path: '/alert-codes', data: requestBody }, asUser(token))
+    return this.post({ path: '/alert-codes', data: requestBody }, token)
   }
 
   deactivateAlertCode(token: string, alertCode: string) {
     logger.info(`Deactivating alert code ${alertCode}`)
-    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/deactivate` }, asUser(token))
+    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/deactivate` }, token)
   }
 
   reactivateAlertCode(token: string, alertCode: string) {
     logger.info(`Reactivating alert code ${alertCode}`)
-    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/reactivate` }, asUser(token))
+    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/reactivate` }, token)
   }
 
   deactivateAlertType(token: string, alertCode: string) {
     logger.info(`Deactivating alert type ${alertCode}`)
-    return this.patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/deactivate` }, asUser(token))
+    return this.patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/deactivate` }, token)
   }
 
   reactivateAlertType(token: string, alertCode: string) {
     logger.info(`Reactivating alert type ${alertCode}`)
-    return this.patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/reactivate` }, asUser(token))
+    return this.patch({ path: `/alert-types/${encodeURIComponent(alertCode)}/reactivate` }, token)
   }
 
   updateAlertType(token: string, code: string, requestBody: UpdateAlertTypeRequest): Promise<AlertType> {
@@ -70,7 +69,7 @@ export default class AlertsApiClient extends RestClient {
         path: `/alert-types/${encodeURIComponent(code)}`,
         data: requestBody,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -81,7 +80,7 @@ export default class AlertsApiClient extends RestClient {
         path: `/alert-codes/${encodeURIComponent(code)}`,
         data: requestBody,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -91,7 +90,7 @@ export default class AlertsApiClient extends RestClient {
         path: `/prisoners/${prisonNumber}/alerts?allowInactiveCode=true`,
         data: requestBody,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -100,7 +99,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/prisoners/${prisonNumber}/alerts?isActive=true&alertCode=${code}`,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -109,7 +108,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/bulk-alerts/plan`,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -124,7 +123,7 @@ export default class AlertsApiClient extends RestClient {
           },
         ],
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -139,7 +138,7 @@ export default class AlertsApiClient extends RestClient {
           },
         ],
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -162,7 +161,7 @@ export default class AlertsApiClient extends RestClient {
           },
         ],
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -171,7 +170,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/bulk-alerts/plan/${planId}/start`,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -180,7 +179,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/bulk-alerts/plan/${planId}/prisoners`,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -189,7 +188,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/bulk-alerts/plan/${planId}/status`,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -198,7 +197,7 @@ export default class AlertsApiClient extends RestClient {
       {
         path: `/bulk-alerts/plan/${planId}/affects`,
       },
-      asUser(token),
+      token,
     )
   }
 }

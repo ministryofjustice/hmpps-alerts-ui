@@ -1,5 +1,4 @@
-import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
-import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import { RestClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
 import logger from '../../logger'
 
@@ -12,12 +11,12 @@ export interface Prisoner {
 }
 
 export default class PrisonerSearchApiClient extends RestClient {
-  constructor(authenticationClient: AuthenticationClient) {
-    super('Prisoner Search API', config.apis.prisonerSearchApi, logger, authenticationClient)
+  constructor() {
+    super('Prisoner Search API', config.apis.prisonerSearchApi, logger)
   }
 
   async getPrisonerDetails(token: string, prisonerNumber: string): Promise<Prisoner> {
-    return this.get<Prisoner>({ path: `/prisoner/${prisonerNumber}` }, asUser(token))
+    return this.get<Prisoner>({ path: `/prisoner/${prisonerNumber}` }, token)
   }
 
   async searchPrisoners(
@@ -29,7 +28,7 @@ export default class PrisonerSearchApiClient extends RestClient {
         path: `/prisoner-search/match-prisoners`,
         data: payload,
       },
-      asUser(token),
+      token,
     )
   }
 
@@ -46,15 +45,5 @@ export default class PrisonerSearchApiClient extends RestClient {
     ])
 
     return results[0].concat(results[1])
-  }
-
-  async searchByPrisonNumbers(token: string, payload: { prisonerNumbers: string[] }): Promise<Prisoner[]> {
-    return this.post<Prisoner[]>(
-      {
-        path: `/prisoner-search/prisoner-numbers`,
-        data: payload,
-      },
-      asUser(token),
-    )
   }
 }

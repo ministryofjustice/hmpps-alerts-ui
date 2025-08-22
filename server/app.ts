@@ -23,13 +23,13 @@ import { auditPageViewMiddleware } from './middleware/auditPageViewMiddleware'
 import routes from './routes'
 import type { Services } from './services'
 import AuthorisedRoles from './authentication/authorisedRoles'
+import populateClientToken from './middleware/populateClientToken'
 import logger from '../logger'
 import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
 import sentryMiddleware from './middleware/sentryMiddleware'
 import { handleApiError } from './middleware/handleApiError'
-import populateClientToken from './middleware/populateClientToken'
 
 export default function createApp(services: Services): express.Application {
   const app = express()

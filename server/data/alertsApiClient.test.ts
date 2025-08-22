@@ -1,19 +1,14 @@
 import nock from 'nock'
-import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import AlertsApiClient from './alertsApiClient'
 import config from '../config'
 
 describe('The alerts API client', () => {
   let fakeAlertsApi: nock.Scope
   let alertsApiClient: AlertsApiClient
-  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
 
   beforeEach(() => {
-    mockAuthenticationClient = {
-      getToken: jest.fn().mockResolvedValue('test-system-token'),
-    } as unknown as jest.Mocked<AuthenticationClient>
     fakeAlertsApi = nock(config.apis.alertsApi.url)
-    alertsApiClient = new AlertsApiClient(mockAuthenticationClient)
+    alertsApiClient = new AlertsApiClient()
   })
 
   afterEach(() => {

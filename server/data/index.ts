@@ -28,8 +28,8 @@ const hmppsAuthClient = new AuthenticationClient(
 
 export const dataAccess = () => ({
   applicationInfo,
-  alertsApiClient: new AlertsApiClient(hmppsAuthClient),
-  prisonerSearchApiClient: new PrisonerSearchApiClient(hmppsAuthClient),
+  alertsApiClient: new AlertsApiClient(),
+  prisonerSearchApiClient: new PrisonerSearchApiClient(),
   hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
   hmppsAuthClient,
   tokenStore,

@@ -1,5 +1,6 @@
-import RestClient from './restClient'
+import { RestClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
+import logger from '../../logger'
 
 export interface Prisoner {
   prisonerNumber: string
@@ -9,25 +10,26 @@ export interface Prisoner {
   prisonId: string
 }
 
-export default class PrisonerSearchApiClient {
-  constructor() {}
-
-  private static restClient(token: string): RestClient {
-    return new RestClient('Prisoner Search Api Client', config.apis.prisonerSearchApi, token)
+export default class PrisonerSearchApiClient extends RestClient {
+  constructor() {
+    super('Prisoner Search API', config.apis.prisonerSearchApi, logger)
   }
 
   async getPrisonerDetails(token: string, prisonerNumber: string): Promise<Prisoner> {
-    return PrisonerSearchApiClient.restClient(token).get<Prisoner>({ path: `/prisoner/${prisonerNumber}` })
+    return this.get<Prisoner>({ path: `/prisoner/${prisonerNumber}` }, token)
   }
 
   async searchPrisoners(
     token: string,
     payload: { prisonerIdentifier?: string; firstName?: string | undefined; lastName?: string | undefined },
   ): Promise<Prisoner[]> {
-    return PrisonerSearchApiClient.restClient(token).post<Prisoner[]>({
-      path: `/prisoner-search/match-prisoners`,
-      data: payload,
-    })
+    return this.post<Prisoner[]>(
+      {
+        path: `/prisoner-search/match-prisoners`,
+        data: payload,
+      },
+      token,
+    )
   }
 
   async searchPrisonersByQueryString(token: string, query: string) {
@@ -43,12 +45,5 @@ export default class PrisonerSearchApiClient {
     ])
 
     return results[0].concat(results[1])
-  }
-
-  async searchByPrisonNumbers(token: string, payload: { prisonerNumbers: string[] }): Promise<Prisoner[]> {
-    return PrisonerSearchApiClient.restClient(token).post<Prisoner[]>({
-      path: `/prisoner-search/prisoner-numbers`,
-      data: payload,
-    })
   }
 }

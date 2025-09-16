@@ -31,28 +31,6 @@
                     }) }}
                 {% else %}
                     <p class="govuk-body">Add or remove people, or continue with the current {{ "prisoner" if prisonersSelected.length == 1 else "list of prisoners" }}.</p>
-                    <div>
-                    {{ govukButton({
-                        text: "Add another person individually",
-                        href: 'select-prisoner',
-                        classes: "govuk-button--secondary",
-                        preventDoubleClick: true
-                    }) }}
-                    </div>
-                    <div>
-                        {{ govukButton({
-                            text: "Add people using a CSV file",
-                            href: 'upload-prisoner-list',
-                            classes: "govuk-button--secondary",
-                            preventDoubleClick: true
-                        }) }}
-                    </div>
-                    <div>
-                        {{ govukButton({
-                            text: "Continue",
-                            preventDoubleClick: true
-                        }) }}
-                    </div>
                     {% set prisonersList = [] %}
                     {% for prisoner in prisonersSelected %}
                         {% set prisonerNameHyperlink %}
@@ -92,6 +70,23 @@
                         ]), prisonersList) %}
                     {% endfor %}
 
+                    <div>
+                      {{ govukButton({
+                        text: "Add another person individually",
+                        href: 'select-prisoner',
+                        classes: "govuk-button--secondary",
+                        preventDoubleClick: true
+                      }) }}
+                    </div>
+                    <div>
+                      {{ govukButton({
+                        text: "Add people using a CSV file",
+                        href: 'upload-prisoner-list',
+                        classes: "govuk-button--secondary",
+                        preventDoubleClick: true
+                      }) }}
+                    </div>
+
                     {{ govukTable({
                         attributes: {
                             'data-module': 'moj-sortable-table',
@@ -114,22 +109,6 @@
                         rows: prisonersList
                     }) }}
 
-                    <div>
-                        {{ govukButton({
-                            text: "Add another person individually",
-                            href: 'select-prisoner',
-                            classes: "govuk-button--secondary",
-                            preventDoubleClick: true
-                        }) }}
-                    </div>
-                    <div>
-                        {{ govukButton({
-                            text: "Add people using a CSV file",
-                            href: 'upload-prisoner-list',
-                            classes: "govuk-button--secondary",
-                            preventDoubleClick: true
-                        }) }}
-                    </div>
                     <div>
                         {{ govukButton({
                             text: "Continue",

@@ -2,7 +2,7 @@ import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 import { v4 as uuidv4 } from 'uuid'
 
-import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import flash from 'connect-flash'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
@@ -65,11 +65,11 @@ function appSetup(
   app.use(populateValidationErrors())
   app.get(
     '*any',
-    dpsComponents.getPageComponents({
+    getFrontendComponents({
       logger,
-      includeSharedData: true,
+      componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      timeoutOptions: { response: 50, deadline: 50 },
+      requestOptions: { includeSharedData: true },
     }),
   )
   app.use(routes(services))

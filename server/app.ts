@@ -1,5 +1,5 @@
 import express from 'express'
-import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import createError from 'http-errors'
 // @ts-expect-error Import untyped middleware for cypress coverage
@@ -60,14 +60,11 @@ export default function createApp(services: Services): express.Application {
 
   app.get(
     '*any',
-    dpsComponents.getPageComponents({
+    getFrontendComponents({
       logger,
-      includeSharedData: true,
+      componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      timeoutOptions: {
-        response: config.apis.componentApi.timeout.response,
-        deadline: config.apis.componentApi.timeout.deadline,
-      },
+      requestOptions: { includeSharedData: true },
     }),
   )
 

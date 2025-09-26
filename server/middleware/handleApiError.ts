@@ -23,3 +23,5 @@ export const handleApiError = (error: HTTPError, req: Request, res: Response, ne
     next(error)
   }
 }
+
+export default { handleApiError }

@@ -6,7 +6,7 @@ import { getAlertCodeFilter } from './utils'
 
 export default class SelectAlertCodeController extends BaseController {
   GET = async (req: Request, res: Response) => {
-    const alertCode = res.locals.formResponses?.['alertCode'] ?? req.journeyData.updateRefData!.alertCode
+    const alertCode = res.locals.formResponses?.alertCode ?? req.journeyData.updateRefData!.alertCode
 
     const alertCodeOptions = [
       ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, true))

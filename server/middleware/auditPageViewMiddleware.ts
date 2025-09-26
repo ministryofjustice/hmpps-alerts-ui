@@ -42,3 +42,5 @@ export const auditPageViewMiddleware = (auditService: AuditService): RequestHand
     next()
   }
 }
+
+export default { auditPageViewMiddleware }

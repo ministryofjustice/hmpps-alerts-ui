@@ -7,7 +7,7 @@ import { getAlertTypeFilter } from './utils'
 export default class SelectAlertTypeController extends BaseController {
   GET = async (req: Request, res: Response) => {
     const alertType =
-      res.locals.formResponses?.['alertType'] ??
+      res.locals.formResponses?.alertType ??
       req.journeyData.updateRefData!.updateAlertCodeSubJourney?.alertType ??
       req.journeyData.updateRefData!.alertType
 

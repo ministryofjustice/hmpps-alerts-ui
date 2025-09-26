@@ -11,3 +11,5 @@ export const getAlertCodeFilter = (journey: UpdateReferenceDataJourney): ((code:
       return (_code: AlertCode) => true
   }
 }
+
+export default { getAlertCodeFilter }

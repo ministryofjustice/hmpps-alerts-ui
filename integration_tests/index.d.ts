@@ -11,7 +11,7 @@ declare namespace Cypress {
      * @param matching a wiremock request to /requests/find. For options see: https://wiremock.org/docs/standalone/admin-api-reference/#tag/Requests/operation/removeRequestsByMetadata
      * @param expected the request body to match
      */
-    verifyLastAPICall(matching: string | object, expected: object): Chainable<*>
+    verifyLastAPICall<ReturnValue = unknown>(matching: string | object, expected: object): Chainable<ReturnValue>
 
     clickLink(name: string | RegExp): Chainable<JQuery>
 

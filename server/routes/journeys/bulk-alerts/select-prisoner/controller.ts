@@ -32,7 +32,7 @@ export default class SelectPrisonerController {
     res.render('bulk-alerts/select-prisoner/view', {
       prisoners,
       alertCode: req.journeyData.bulkAlert!.alertCode,
-      query: res.locals.formResponses?.['query'] ?? req.journeyData.bulkAlert!.query,
+      query: res.locals.formResponses?.query ?? req.journeyData.bulkAlert!.query,
       backUrl: req.journeyData.isCheckAnswers ? 'review-prisoners' : 'how-to-add-prisoners',
     })
   }

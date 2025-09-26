@@ -3,7 +3,7 @@ import { SchemaType } from './schemas'
 
 export default class HowToAddPrisonersController {
   GET = async (req: Request, res: Response) => {
-    const useCsvUpload = res.locals.formResponses?.['useCsvUpload'] ?? String(req.journeyData.bulkAlert!.useCsvUpload)
+    const useCsvUpload = res.locals.formResponses?.useCsvUpload ?? String(req.journeyData.bulkAlert!.useCsvUpload)
 
     res.render('bulk-alerts/how-to-add-prisoners/view', {
       useCsvUpload,

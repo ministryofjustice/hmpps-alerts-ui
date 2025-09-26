@@ -25,3 +25,5 @@ export const getAlertTypeFilter = (journey: UpdateReferenceDataJourney): ((type:
   }
   return (_type: AlertType) => true
 }
+
+export default { getAlertTypeFilter }

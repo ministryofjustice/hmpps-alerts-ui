@@ -1,34 +1,25 @@
 {
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "isolatedModules": true,
     "outDir": "./dist",
     "sourceMap": true,
-    "skipLibCheck": true,
     "noEmit": false,
-    "allowJs": true,
-    "checkJs": true,
+    "allowJs": false,
+    "strict": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
-    "strict": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true,
     "exactOptionalPropertyTypes": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "inlineSources": true,
-    "lib": ["dom", "es2015.promise", "DOM.Iterable", "ESNext"],
-    "types": ["jest"],
-    "sourceRoot": "/"
+    "typeRoots": ["./server/@types", "./node_modules/@types"]
   },
-  "include": ["**/*.js", "**/*.ts"],
   "exclude": [
     "node_modules",
     "assets/**/*.js",
@@ -41,5 +32,6 @@
     "test_results",
     "codecov_reports",
     "eslint.config.mjs"
-  ]
+  ],
+  "include": ["**/*.js", "**/*.ts"]
 }

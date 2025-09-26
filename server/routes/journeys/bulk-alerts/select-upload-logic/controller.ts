@@ -3,7 +3,7 @@ import { SchemaType } from './schemas'
 
 export default class SelectUploadLogicController {
   GET = async (req: Request, res: Response) => {
-    const cleanupMode = res.locals.formResponses?.['cleanupMode'] ?? req.journeyData.bulkAlert!.cleanupMode
+    const cleanupMode = res.locals.formResponses?.cleanupMode ?? req.journeyData.bulkAlert!.cleanupMode
 
     res.render('bulk-alerts/select-upload-logic/view', {
       cleanupMode,

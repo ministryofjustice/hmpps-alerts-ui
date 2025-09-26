@@ -15,11 +15,11 @@ export default class BulkAlertsController extends BaseController {
   GET = async (req: Request, res: Response) => {
     req.journeyData.bulkAlert ??= {}
     const alertType =
-      res.locals.formResponses?.['alertType'] ??
+      res.locals.formResponses?.alertType ??
       req.journeyData.bulkAlert.alertCodeSubJourney?.alertType?.code ??
       req.journeyData.bulkAlert.alertType?.code
     const alertCode =
-      res.locals.formResponses?.['alertCode'] ??
+      res.locals.formResponses?.alertCode ??
       req.journeyData.bulkAlert.alertCodeSubJourney?.alertCode?.code ??
       req.journeyData.bulkAlert.alertCode?.code
 

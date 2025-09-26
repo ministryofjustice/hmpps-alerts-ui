@@ -5,7 +5,7 @@ export default class EditAlertCodeController {
   GET = async (req: Request, res: Response) => {
     res.render('update-reference-data/edit-alert-code/view', {
       description:
-        res.locals.formResponses?.['description'] ??
+        res.locals.formResponses?.description ??
         req.journeyData.updateRefData!.description ??
         req.journeyData.updateRefData!.alertCode?.description,
       backUrl: 'select-alert-code',

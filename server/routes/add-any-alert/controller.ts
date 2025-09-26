@@ -17,15 +17,15 @@ export default class AddAnyAlertController extends BaseController {
   }
 
   GET = async (req: Request, res: Response) => {
-    const alertType = res.locals.formResponses?.['alertType'] ?? req.query['alertType']
-    const alertCode = res.locals.formResponses?.['alertCode'] ?? req.query['alertCode']
-    const prisonNumber = res.locals.formResponses?.['prisonNumber']
+    const alertType = res.locals.formResponses?.alertType ?? req.query.alertType
+    const alertCode = res.locals.formResponses?.alertCode ?? req.query.alertCode
+    const prisonNumber = res.locals.formResponses?.prisonNumber
     if (prisonNumber) {
       res.locals.auditEvent.subjectId = prisonNumber
       res.locals.auditEvent.subjectType = prisonNumber
     }
     if (alertCode) {
-      res.locals.auditEvent.details['alertCode'] = alertCode
+      res.locals.auditEvent.details.alertCode = alertCode
     }
 
     const { alertTypes, alertCodes, typeCodeMap } = await this.mapAlertTypes({
@@ -38,9 +38,9 @@ export default class AddAnyAlertController extends BaseController {
       prisonNumber,
       alertType,
       alertCode,
-      description: res.locals.formResponses?.['description'],
-      activeFrom: res.locals.formResponses?.['activeFrom'] ?? todayStringGBFormat(),
-      activeTo: res.locals.formResponses?.['activeTo'],
+      description: res.locals.formResponses?.description,
+      activeFrom: res.locals.formResponses?.activeFrom ?? todayStringGBFormat(),
+      activeTo: res.locals.formResponses?.activeTo,
       today: todayStringGBFormat(),
       todayMinus8: pastDateStringGBFormat(7),
       alertTypes,

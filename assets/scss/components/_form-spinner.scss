@@ -29,7 +29,7 @@
 
 // Source: https://loading.io/css/
 $size: 50px;
-$scale: $size / 80px;
+$scale: math.div($size, 80px);
 .lds-spinner {
   display: inline-block;
   position: relative;

@@ -3,7 +3,7 @@ import { SchemaType } from './schemas'
 
 export default class EnterAlertReasonController {
   GET = async (req: Request, res: Response) => {
-    const description = res.locals.formResponses?.['description'] ?? req.journeyData.bulkAlert!.description
+    const description = res.locals.formResponses?.description ?? req.journeyData.bulkAlert!.description
 
     res.render('bulk-alerts/enter-alert-reason/view', {
       description,

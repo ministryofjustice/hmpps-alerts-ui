@@ -4,7 +4,7 @@ import { JourneyData } from '../@types/express'
 
 export default function setUpJourneyData(store: TokenStore) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const journeyId = req.params['journeyId'] ?? 'default'
+    const journeyId = req.params.journeyId ?? 'default'
     const journeyTokenKey = `journey.${req.user?.username}.${journeyId}`
 
     const cached = await store.getToken(journeyTokenKey)

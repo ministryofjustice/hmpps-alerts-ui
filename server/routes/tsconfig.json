@@ -3,6 +3,7 @@
   "include": ["**/*.cy.ts"],
   "exclude": [],
   "compilerOptions": {
+    "noEmit": true,
     "types": [
       "cypress",
       "express",
@@ -11,6 +12,7 @@
       "cypress-file-upload",
       "../../integration_tests/index.d.ts",
       "../@types/environment.d.ts"
-    ]
+    ],
+    "typeRoots": ["../@types", "../../node_modules/@types", "../../node_modules"],
   }
 }

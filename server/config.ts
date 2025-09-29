@@ -106,8 +106,8 @@ export default {
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   sentry: {
-    dsn: process.env['SENTRY_DSN'],
-    loaderScriptId: process.env['SENTRY_LOADER_SCRIPT_ID'],
+    dsn: process.env.SENTRY_DSN,
+    loaderScriptId: process.env.SENTRY_LOADER_SCRIPT_ID,
     environment: get('SENTRY_ENVIRONMENT', 'local', requiredInProduction),
     tracesSampleRate: Number(get('SENTRY_TRACES_SAMPLE_RATE', 0.05)),
     replaySampleRate: Number(get('SENTRY_REPLAY_SAMPLE_RATE', 0.0)),

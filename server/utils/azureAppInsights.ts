@@ -21,16 +21,16 @@ export function initialiseAppInsights(): void {
 }
 
 function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObjects: Record<string, unknown> | undefined) {
-  const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString['Request']
+  const isRequest = envelope.data.baseType === Contracts.TelemetryTypeString.Request
   if (isRequest) {
     const { username, activeCaseLoadId } =
       (contextObjects?.['http.ServerRequest'] as Request | undefined)?.res?.locals?.user || {}
     if (username && activeCaseLoadId) {
-      const properties = envelope.data.baseData?.['properties']
+      const properties = envelope.data.baseData?.properties
       // eslint-disable-next-line no-param-reassign
       envelope.data.baseData ??= {}
       // eslint-disable-next-line no-param-reassign
-      envelope.data.baseData['properties'] = {
+      envelope.data.baseData.properties = {
         username,
         activeCaseLoadId,
         ...properties,
@@ -60,7 +60,8 @@ export function buildAppInsightsClient(
         const { correlationContext } = contextObjects!
         const operationNameOverride = correlationContext?.customProperties?.getProperty('operationName')
         if (operationNameOverride) {
-          tags['ai.operation.name'] = data.baseData['name'] = operationNameOverride // eslint-disable-line no-param-reassign,no-multi-assign
+          // eslint-disable-next-line no-param-reassign,no-multi-assign
+          tags['ai.operation.name'] = data.baseData.name = operationNameOverride
         }
       }
       return true

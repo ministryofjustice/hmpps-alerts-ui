@@ -1,18 +1,18 @@
-import { RequestHandler, Router } from 'express'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
+import { Router } from 'express'
 
-const BaseRouter = () => {
+interface BaseRouter {
+  router: Router
+  get: Router['get']
+  post: Router['post']
+}
+
+const BaseRouter = (): BaseRouter => {
   const router = Router({ mergeParams: true })
-
-  const get = (path: string, ...handlers: RequestHandler[]) =>
-    router.get(path, ...handlers.slice(0, -1), asyncMiddleware(handlers.slice(-1)[0]!))
-  const post = (path: string, ...handlers: RequestHandler[]) =>
-    router.post(path, ...handlers.slice(0, -1), asyncMiddleware(handlers.slice(-1)[0]!))
 
   return {
     router,
-    get,
-    post,
+    get: router.get.bind(router),
+    post: router.post.bind(router),
   }
 }
 

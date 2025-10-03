@@ -1,6 +1,5 @@
-import { RequestHandler, Router } from 'express'
+import { Router } from 'express'
 import { dataAccess } from '../data'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import AddAnyAlertRoutes from './add-any-alert/routes'
 import ManageReferenceDataRoutes from './manage-reference-data/routes'
 import insertJourneyIdentifier from '../middleware/insertJourneyIdentifier'
@@ -10,15 +9,14 @@ import { Services } from '../services'
 
 export default function routes(services: Services): Router {
   const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const apiClient = dataAccess()
   const { alertsApiClient, prisonerSearchApiClient } = apiClient
 
-  get('/', async (_req, res) => {
+  router.get('/', async (_req, res) => {
     res.render('view', { roles: res.locals.user.userRoles })
   })
 
-  get('/error-page', (req, res) => {
+  router.get('/error-page', (req, res) => {
     const { errorMessage } = req.session
     res.render('pages/errorPage', { errorMessage })
   })

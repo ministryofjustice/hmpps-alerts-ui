@@ -1,6 +1,7 @@
 # hmpps-alerts-ui
 [![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-alerts-ui)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-alerts-ui "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-alerts-ui/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-alerts-ui)
+[![Docker Repository on GHCR](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-alerts-ui)
+[![Pipeline [test -> build -> deploy]](https://github.com/ministryofjustice/hmpps-alerts-ui/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/ministryofjustice/hmpps-alerts-ui/actions/workflows/pipeline.yml)
 [![codecov](https://codecov.io/github/ministryofjustice/hmpps-alerts-ui/branch/main/graph/badge.svg)](https://codecov.io/github/ministryofjustice/hmpps-alerts-ui)
 
 This repository hosts the Alerts User Interface, a frontend application for managing, recording, and maintaining reference data for alerts across HMPPS services. Developed with Typescript, this project aims to provide a robust platform for alert data management, enhancing the operational efficiency and data accuracy within HMPPS.

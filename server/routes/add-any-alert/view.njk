@@ -123,5 +123,5 @@
 
 {% block additionalScripts %}
     <script id="typeCodeMap" type="application/json">{{ typeCodeMap | dump | safe }}</script>
-    <script src="/assets/js/extra/alerts.js"></script>
+    <script src="{{ '/assets/js/alerts.js' | assetMap }}"></script>
 {% endblock %}

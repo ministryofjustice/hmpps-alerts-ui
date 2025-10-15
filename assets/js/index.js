@@ -1,8 +1,8 @@
 import * as govukFrontend from 'govuk-frontend'
 import * as mojFrontend from '@ministryofjustice/frontend'
-import { nodeListForEach } from './utils'
-import FormSpinner from './form-spinner'
-import Card from './card'
+import { nodeListForEach } from './components/utils'
+import FormSpinner from './components/form-spinner'
+import Card from './components/card'
 
 govukFrontend.initAll()
 mojFrontend.initAll()

@@ -20,7 +20,7 @@
     "security_audit": "audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open --e2e --browser chrome",
-    "clean": "rm -rf dist node_modules",
+    "clean": "rm -rf dist test_results",
     "rebuild": "npm run clean && npm i && npm run build",
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml",
     "precommit:lint": "lint-staged",
@@ -29,69 +29,6 @@
   "engines": {
     "node": "^22",
     "npm": "^11"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "isolatedModules": true
-        }
-      ]
-    },
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "server/**/*.{ts,js,jsx,mjs}"
-    ],
-    "coverageDirectory": "test_results/jest/",
-    "coverageReporters": [
-      "json",
-      "lcov"
-    ],
-    "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(test).{ts,js,jsx,mjs}"
-    ],
-    "testEnvironment": "node",
-    "reporters": [
-      "default",
-      [
-        "jest-junit",
-        {
-          "outputDirectory": "test_results/jest/"
-        }
-      ],
-      [
-        "./node_modules/jest-html-reporter",
-        {
-          "outputPath": "test_results/unit-test-reports.html"
-        }
-      ]
-    ],
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "node",
-      "ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      ".*.test.ts",
-      "node_modules",
-      "server/@types",
-      ".*jest.config.js",
-      "server/app.ts",
-      "server/index.ts",
-      ".*.cy.ts"
-    ]
-  },
-  "lint-staged": {
-    "*.{ts,js,css}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.888.0",
@@ -173,7 +110,6 @@
     "esbuild-plugin-copy": "^2.1.1",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.3.1",
-    "glob": "^11.0.3",
     "jest": "^30.1.3",
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",

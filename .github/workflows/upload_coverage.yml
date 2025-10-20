@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   coverage:
@@ -19,9 +20,9 @@ jobs:
           merge-multiple: true
       - uses: codecov/test-results-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           directory: test_artifacts
       - uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
           directory: test_artifacts

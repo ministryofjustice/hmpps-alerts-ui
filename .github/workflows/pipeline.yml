@@ -40,6 +40,13 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
+  coverage:
+    name: upload coverage report
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/upload_coverage.yml
+    needs:
+      - node_unit_tests
+      - node_integration_tests
   helm_lint:
     strategy:
       matrix:

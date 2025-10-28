@@ -1,4 +1,5 @@
 import nock from 'nock'
+import { randomUUID } from 'node:crypto'
 import AlertsApiClient from './alertsApiClient'
 import config from '../config'
 
@@ -32,9 +33,28 @@ describe('The alerts API client', () => {
       fakeAlertsApi.patch('/alert-codes/VI/deactivate').reply(200)
       await alertsApiClient.deactivateAlertCode('token', 'VI')
     })
-    it('should deactivate an alert code', async () => {
+    it('should deactivate an alert type', async () => {
       fakeAlertsApi.patch('/alert-types/VI/deactivate').reply(200)
       await alertsApiClient.deactivateAlertType('token', 'VI')
+    })
+
+    it('should delete an existing alert', async () => {
+      const uuid = randomUUID()
+      fakeAlertsApi.delete(`/alerts/${uuid}`).reply(204)
+      await alertsApiClient.deleteAlert('token', uuid)
+    })
+  })
+
+  describe('Existing alerts', () => {
+    it('should get an existing alert', async () => {
+      const uuid = randomUUID()
+      fakeAlertsApi.get(`/alerts/${uuid}`).reply(200)
+      await alertsApiClient.getAlert('token', uuid)
+    })
+    it('should delete an existing alert', async () => {
+      const uuid = randomUUID()
+      fakeAlertsApi.delete(`/alerts/${uuid}`).reply(204)
+      await alertsApiClient.deleteAlert('token', uuid)
     })
   })
 

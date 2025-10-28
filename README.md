@@ -17,3 +17,29 @@ This repository hosts the Alerts User Interface, a frontend application for mana
   * Run `npm run build` to compile the styling and build the views
   * Run `npm run start:dev` to start the UI
   * Use the new user details you got given to log in
+
+## Testing
+
+This project uses Jest for unit testing and Cypress for integration testing.
+
+### Unit Tests
+
+To run: `npm run test`
+
+### Integration Tests
+
+For local running, start a test redis and wiremock instance by:
+
+`docker compose -f docker-compose-test.yml up`
+
+Then run the server in test mode by:
+
+`npm run start-feature`
+
+And then either, run tests in headless mode with:
+
+`npm run int-test`
+
+Or run tests with the cypress UI:
+
+`npm run int-test-ui`

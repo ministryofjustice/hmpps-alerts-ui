@@ -1,5 +1,6 @@
 import { components } from './index'
 
+export type Alert = components['schemas']['Alert']
 export type AlertType = components['schemas']['AlertType']
 export type AlertCode = components['schemas']['AlertCode']
 export type PageAlert = components['schemas']['PageAlert']

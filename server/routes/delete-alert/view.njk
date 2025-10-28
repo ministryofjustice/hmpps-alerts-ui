@@ -1,0 +1,60 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "moj/components/date-picker/macro.njk" import mojDatePicker %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Delete an existing alert - Prisoner Alerts" %}
+{% set mainClasses = "govuk-body govuk-!-static-padding-top-0" %}
+{% set backLinkLabel = "Manage prisoner alerts" %}
+{% set backUrl = "/" %}
+
+{% block pageHeader %}
+    {% if successMessage %}
+        {{ govukNotificationBanner({
+            text: successMessage,
+            type: "success"
+        }) }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 id="deleteExistingAlert" class="govuk-heading-l govuk-!-margin-top-4">Delete an existing alert</h1>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post" novalidate="novalidate" autocomplete="off">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                {{ govukInput({
+                    label: {
+                        text: "Enter the alert UUID",
+                        classes: "govuk-label--s"
+                    },
+                    id: "alertUuid",
+                    name: "alertUuid",
+                    value: alertUuid,
+                    classes: "govuk-input--width-30",
+                    errorMessage: validationErrors | findError('alertUuid')
+                }) }}
+
+                <div class="govuk-button-group govuk-!-display-none-print">
+                    {{ govukButton({
+                        text: "Delete alert",
+                        type: "submit",
+                        classes: "govuk-button--warning",
+                        preventDoubleClick: true,
+                        attributes: { "data-qa": "delete-alert-submit-button" }
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -5,27 +5,6 @@ import { AlertCode, AlertType } from '../../@types/alerts/alertsApiTypes'
 export default class BaseController {
   constructor(readonly alertsApiService: AlertsApiClient) {}
 
-  getAlertTypesForRadios = async (req: Request, includeInactive?: boolean, value?: AlertType | string) => [
-    ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, includeInactive)).map(refData => ({
-      value: refData.code,
-      text: refData.description,
-      checked: typeof value === 'string' ? refData.code === value : refData.code === value?.code,
-    })),
-  ]
-
-  getAlertTypesForSelect = async (req: Request, includeInactive?: boolean, value?: AlertType | string) => [
-    {
-      value: '',
-      text: 'Choose alert type',
-      selected: !value,
-    },
-    ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, includeInactive)).map(refData => ({
-      value: refData.code,
-      text: refData.description,
-      selected: typeof value === 'string' ? refData.code === value : refData.code === value?.code,
-    })),
-  ]
-
   /**
    * Map AlertType array into structures suitable for using in type > code dropdowns.
    *

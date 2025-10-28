@@ -1,3 +1,4 @@
+import { UUID } from 'node:crypto'
 import { stubFor } from './wiremock'
 
 const stubAlertsApiPing = (httpStatus = 200) =>
@@ -340,6 +341,39 @@ const stubGetPrisonerAlertsFound = () => {
   })
 }
 
+const stubGetAlert = ({ id, responseCode = 200 }: { id: UUID; responseCode: number }) => {
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/alerts-api/alerts/${id}*`,
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        alertUuid: id,
+      },
+    },
+  })
+}
+
+const stubDeleteAlert = ({ id, responseCode = 204 }: { id: UUID; responseCode: number }) => {
+  return stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: `/alerts-api/alerts/${id}*`,
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
 const stubCreateBulkAlertsPlan = () => {
   return stubFor({
     request: {
@@ -522,6 +556,8 @@ export default {
   stubUpdateAlertType,
   stubUpdateAlertCode,
   stubCreateAlert,
+  stubGetAlert,
+  stubDeleteAlert,
   stubCreateBulkAlertsPlan,
   stubPatchBulkAlertsPlan,
   stubPatchBulkAlertsPlanFailureToAddPrisoner,

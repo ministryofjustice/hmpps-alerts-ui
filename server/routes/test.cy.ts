@@ -36,11 +36,6 @@ context('test / homepage', () => {
       .and('have.attr', 'href')
       .and('to.match', /\/restrict-alerts$/)
 
-    cy.findByRole('link', { name: /NOMIS resync/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /\/nomis-resync$/)
-
     cy.checkAxeAccessibility()
   })
 
@@ -60,7 +55,6 @@ context('test / homepage', () => {
 
     cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
     cy.findByRole('link', { name: /Restrict alerts/i }).should('not.exist')
-    cy.findByRole('link', { name: /NOMIS resync/i }).should('not.exist')
 
     cy.checkAxeAccessibility()
   })
@@ -80,7 +74,6 @@ context('test / homepage', () => {
     cy.findByRole('link', { name: /Update alerts and alert types/i }).should('not.exist')
     cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
     cy.findByRole('link', { name: /Restrict alerts/i }).should('not.exist')
-    cy.findByRole('link', { name: /NOMIS resync/i }).should('not.exist')
 
     cy.checkAxeAccessibility()
   })
@@ -102,11 +95,6 @@ context('test / homepage', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /\/restrict-alerts$/)
-
-    cy.findByRole('link', { name: /NOMIS resync/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /\/nomis-resync$/)
 
     cy.findByRole('link', { name: /Manage alerts in bulk for the prison estate/i }).should('not.exist')
     cy.findByRole('link', { name: /Add alert for prison number/i }).should('not.exist')

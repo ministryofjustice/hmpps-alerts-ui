@@ -3,6 +3,7 @@ import { SchemaType } from './schemas'
 import BaseController from '../../../common/controller'
 import { escapeHtml } from '../../../../utils/utils'
 import { getAlertTypeFilter } from './utils'
+import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 
 export default class SelectAlertTypeController extends BaseController {
   GET = async (req: Request, res: Response) => {
@@ -17,11 +18,7 @@ export default class SelectAlertTypeController extends BaseController {
         .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
           value: refData.code,
-          html: `${escapeHtml(refData.code)} (${escapeHtml(refData.description)})${
-            refData.isActive
-              ? ''
-              : ' <strong class="govuk-tag status-tag govuk-tag--blue govuk-!-margin-left-1">Deactivated</strong>'
-          }`,
+          html: `${escapeHtml(refData.code)} (${escapeHtml(refData.description)})${this.getTags(refData)}`,
           checked: typeof alertType === 'string' ? refData.code === alertType : refData.code === alertType?.code,
         })),
     ]
@@ -63,5 +60,11 @@ export default class SelectAlertTypeController extends BaseController {
           break
       }
     }
+  }
+
+  private getTags = (type: AlertType) => {
+    return type.isActive
+      ? ''
+      : ' <strong class="govuk-tag status-tag govuk-tag--blue govuk-!-margin-left-1">Deactivated</strong>'
   }
 }

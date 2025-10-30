@@ -1,0 +1,61 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set heading = "Select the change you want to make" %}
+{% set pageTitle = "Select the change you want to make - Manage alert restrictions" %}
+{% set mainClasses = "govuk-body govuk-!-static-padding-top-0" %}
+{% set backLinkLabel = "Manage prisoner alerts" %}
+{% set backUrl = "/" %}
+
+{% block content %}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate="novalidate" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% include 'manage-alert-restrictions/common/components/caption.njk' %}
+        {{ govukRadios({
+          name: "changeType",
+          fieldset: {
+            legend: {
+              text: heading,
+              classes: "govuk-fieldset__legend--l",
+              isPageHeading: true
+            }
+          },
+          items: [
+            {
+              value: 'RESTRICT_ALERT',
+              text: "Restrict alert",
+              checked: changeType === 'RESTRICT_ALERT'
+            },
+            {
+              value: 'REMOVE_ALERT_RESTRICTION',
+              text: "Remove alert restriction",
+              checked: changeType === 'REMOVE_ALERT_RESTRICTION'
+            },
+            {
+              value: 'ADD_PRIVILEGED_USER',
+              text: "Add privileged user",
+              checked: changeType === 'ADD_PRIVILEGED_USER'
+            },
+            {
+              value: 'REMOVE_PRIVILEGED_USER',
+              text: "Remove privileged user",
+              checked: changeType === 'REMOVE_PRIVILEGED_USER'
+            }
+          ],
+          errorMessage: validationErrors | findError('changeType')
+        }) }}
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

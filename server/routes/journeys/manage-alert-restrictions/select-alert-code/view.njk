@@ -1,0 +1,36 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% extends "partials/layout.njk" %}
+
+{% set heading = "Select an alert code" %}
+{% set pageTitle = "Select an alert code - Manage alert restrictions" %}
+{% set mainClasses = "govuk-body govuk-!-static-padding-top-0" %}
+{% block content %}
+  <div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate="novalidate" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {% include 'manage-alert-restrictions/common/components/caption.njk' %}
+        {{ govukRadios({
+          name: "alertCode",
+          fieldset: {
+            legend: {
+              text: heading,
+              classes: "govuk-fieldset__legend--l",
+              isPageHeading: true
+            }
+          },
+          items: alertCodeOptions,
+          errorMessage: validationErrors | findError('alertCode')
+        }) }}
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

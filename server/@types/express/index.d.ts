@@ -17,6 +17,7 @@ export type JourneyData = {
   bulkAlert?: BulkAlertJourney
   refData?: ReferenceDataJourney
   updateRefData?: UpdateReferenceDataJourney
+  restrictAlert?: ManageAlertRestrictionsJourney
 }
 
 export type BulkAlertJourney = Partial<{
@@ -55,6 +56,14 @@ export type UpdateReferenceDataJourney = Partial<{
   alertCode: AlertCode
   code: string
   description: string
+}>
+
+export type ManageAlertRestrictionsJourney = Partial<{
+  changeType: 'RESTRICT_ALERT' | 'REMOVE_ALERT_RESTRICTION' | 'ADD_PRIVILEGED_USER' | 'REMOVE_PRIVILEGED_USER'
+  alertType: Omit<AlertType, 'alertCodes'>
+  alertCode: AlertCode
+  username: string
+  code: string
 }>
 
 export declare global {

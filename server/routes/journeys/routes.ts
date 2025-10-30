@@ -5,6 +5,7 @@ import journeyStateMachine from '../../middleware/journeyStateMachine'
 import setUpJourneyData from '../../middleware/setUpJourneyData'
 import { Services } from '../../services'
 import UpdateReferenceDataRoutes from './update-reference-data/routes'
+import ManageAlertRestrictionRoutes from './manage-alert-restrictions/routes'
 
 export default function JourneyRoutes(dataAccess: DataAccess, services: Services) {
   const router = Router({ mergeParams: true })
@@ -14,6 +15,10 @@ export default function JourneyRoutes(dataAccess: DataAccess, services: Services
 
   router.use('/bulk-alerts', BulkAlertsRoutes(dataAccess, services))
   router.use('/update-reference-data', UpdateReferenceDataRoutes(dataAccess.alertsApiClient, services.auditService))
+  router.use(
+    '/manage-alert-restrictions',
+    ManageAlertRestrictionRoutes(dataAccess.alertsApiClient, services.auditService),
+  )
 
   if (process.env.NODE_ENV === 'e2e-test') {
     /* eslint-disable no-param-reassign */

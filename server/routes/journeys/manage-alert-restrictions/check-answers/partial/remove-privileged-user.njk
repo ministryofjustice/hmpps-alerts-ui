@@ -1,0 +1,61 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+    {{ govukSummaryList({
+      classes: "govuk-!-margin-bottom-7",
+      rows: [
+        {
+          key: {
+          text: "Alert type"
+        },
+          value: {
+          text: journey.alertType.code + ' (' + journey.alertType.description + ')'
+        },
+          actions: {
+          items: [
+            {
+              href: "select-alert-type",
+              text: "Change",
+              visuallyHiddenText: "the alert type",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Alert"
+        },
+          value: {
+          text: journey.alertCode.code + ' (' + journey.alertCode.description + ')'
+        },
+          actions: {
+          items: [
+            {
+              href: "select-alert-code",
+              text: "Change",
+              visuallyHiddenText: "the alert",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        },
+        {
+          key: {
+          text: "Privileged user to remove"
+        },
+          value: {
+          text: journey.username | upper
+        },
+          actions: {
+          items: [
+            {
+              href: "select-user",
+              text: "Change",
+              visuallyHiddenText: "the username of the privileged user to remove",
+              classes: "govuk-link--no-visited-state"
+            }
+          ]
+        }
+        }
+      ]
+    }) }}

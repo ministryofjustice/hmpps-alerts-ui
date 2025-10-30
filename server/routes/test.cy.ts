@@ -31,10 +31,10 @@ context('test / homepage', () => {
       .and('have.attr', 'href')
       .and('to.match', /\/delete-alert$/)
 
-    cy.findByRole('link', { name: /Restrict alerts/i })
+    cy.findByRole('link', { name: /Manage alert restrictions/i })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('to.match', /\/restrict-alerts$/)
+      .and('to.match', /\/manage-alert-restrictions$/)
 
     cy.checkAxeAccessibility()
   })
@@ -54,7 +54,7 @@ context('test / homepage', () => {
       .and('to.match', /\/update-reference-data$/)
 
     cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
-    cy.findByRole('link', { name: /Restrict alerts/i }).should('not.exist')
+    cy.findByRole('link', { name: /Manage alert restrictions/i }).should('not.exist')
 
     cy.checkAxeAccessibility()
   })
@@ -73,7 +73,7 @@ context('test / homepage', () => {
 
     cy.findByRole('link', { name: /Update alerts and alert types/i }).should('not.exist')
     cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
-    cy.findByRole('link', { name: /Restrict alerts/i }).should('not.exist')
+    cy.findByRole('link', { name: /Manage alert restrictions/i }).should('not.exist')
 
     cy.checkAxeAccessibility()
   })
@@ -91,10 +91,10 @@ context('test / homepage', () => {
       .and('have.attr', 'href')
       .and('to.match', /\/delete-alert$/)
 
-    cy.findByRole('link', { name: /Restrict alerts/i })
+    cy.findByRole('link', { name: /Manage alert restrictions/i })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('to.match', /\/restrict-alerts$/)
+      .and('to.match', /\/manage-alert-restrictions$/)
 
     cy.findByRole('link', { name: /Manage alerts in bulk for the prison estate/i }).should('not.exist')
     cy.findByRole('link', { name: /Add alert for prison number/i }).should('not.exist')

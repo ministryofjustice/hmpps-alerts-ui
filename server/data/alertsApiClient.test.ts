@@ -90,4 +90,26 @@ describe('The alerts API client', () => {
       await alertsApiClient.updateAlertCode('token', code, { description: 'Description was updated' })
     })
   })
+
+  describe('Alert code restriction', () => {
+    it('should restrict an alert code', async () => {
+      fakeAlertsApi.patch('/alert-codes/VI/restrict').reply(200)
+      await alertsApiClient.restrictAlertCode('token', 'VI')
+    })
+
+    it('should remove restrictions from an alert code', async () => {
+      fakeAlertsApi.patch('/alert-codes/VI/remove-restriction').reply(200)
+      await alertsApiClient.removeRestrictionsForAlertCode('token', 'VI')
+    })
+
+    it('should add a privileged user', async () => {
+      fakeAlertsApi.post('/alert-codes/VI/privileged-user/TEST_USER').reply(200)
+      await alertsApiClient.addPrivilegedUser('token', 'VI', 'TEST_USER')
+    })
+
+    it('should remove a privileged user', async () => {
+      fakeAlertsApi.delete('/alert-codes/VI/privileged-user/TEST_USER').reply(200)
+      await alertsApiClient.removePrivilegedUser('token', 'VI', 'TEST_USER')
+    })
+  })
 })

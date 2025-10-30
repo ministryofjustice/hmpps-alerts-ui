@@ -220,4 +220,30 @@ export default class AlertsApiClient extends RestClient {
       token,
     )
   }
+
+  restrictAlertCode(token: string, alertCode: string) {
+    logger.info(`Restricting alert code ${alertCode}`)
+    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/restrict` }, token)
+  }
+
+  removeRestrictionsForAlertCode(token: string, alertCode: string) {
+    logger.info(`Removing restrictions for alert code ${alertCode}`)
+    return this.patch({ path: `/alert-codes/${encodeURIComponent(alertCode)}/remove-restriction` }, token)
+  }
+
+  addPrivilegedUser(token: string, alertCode: string, username: string) {
+    logger.info(`Adding privileged user for alert code ${alertCode}`)
+    return this.post(
+      { path: `/alert-codes/${encodeURIComponent(alertCode)}/privileged-user/${encodeURIComponent(username)}` },
+      token,
+    )
+  }
+
+  removePrivilegedUser(token: string, alertCode: string, username: string) {
+    logger.info(`Removing privileged user for alert code ${alertCode}`)
+    return this.delete(
+      { path: `/alert-codes/${encodeURIComponent(alertCode)}/privileged-user/${encodeURIComponent(username)}` },
+      token,
+    )
+  }
 }

@@ -1,0 +1,39 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "partials/layout.njk" %}
+
+{% if journey.changeType === 'RESTRICT_ALERT' %}
+  {% set pageTitle = "Alert restricted" %}
+  {% set body = "You have restricted the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
+{% elseif journey.changeType === 'REMOVE_ALERT_RESTRICTION' %}
+  {% set pageTitle = "Alert restriction removed" %}
+  {% set body = "You have removed the restriction from the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
+{% elseif journey.changeType === 'ADD_PRIVILEGED_USER' %}
+  {% set pageTitle = "Privileged user added" %}
+  {% set body = "You have added " + journey.username + " as a privileged user to the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
+{% elseif journey.changeType === 'REMOVE_PRIVILEGED_USER' %}
+  {% set pageTitle = "Privileged user removed" %}
+  {% set body = "You have removed " + journey.username + " as a privileged user from the " + journey.alertCode.code + " (" + journey.alertCode.description + ") alert." %}
+{% endif %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukPanel({
+                classes: 'govuk-!-margin-bottom-7 govuk-!-margin-top-5',
+                titleText: pageTitle
+            }) }}
+
+            <p class="govuk-body govuk-!-margin-bottom-6">
+              {{ body }}
+            </p>
+
+            {{ govukButton({
+              text: "Return to manage prisoner alerts",
+              href: "/",
+              preventDoubleClick: true
+            }) }}
+        </div>
+    </div>
+{% endblock %}

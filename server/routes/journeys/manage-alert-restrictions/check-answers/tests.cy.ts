@@ -1,271 +1,181 @@
 import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
-import { UpdateReferenceDataJourney } from '../../../../@types/express'
+import { ManageAlertRestrictionsJourney } from '../../../../@types/express'
 
-context('test /update-reference-data/check-answers', () => {
+context('test /manage-alert-restrictions/check-answers', () => {
   let uuid = uuidV4()
+
+  const defaultJourneyData: ManageAlertRestrictionsJourney = {
+    alertType: {
+      code: 'AA',
+      description: 'AA description',
+      isActive: true,
+      listSequence: 1,
+      createdAt: '',
+      createdBy: '',
+    },
+    alertCode: {
+      code: 'BB',
+      alertTypeCode: 'AA',
+      description: 'BB description',
+      isActive: true,
+      isRestricted: false,
+      listSequence: 1,
+      createdAt: '',
+      createdBy: '',
+    },
+    code: 'BB',
+  }
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubCreateAlertType')
-    cy.task('stubCreateAlertCode')
-    cy.task('stubReactivateAlertCode')
-    cy.task('stubReactivateAlertType')
-    cy.task('stubUpdateAlertCode')
-    cy.task('stubUpdateAlertType')
+    cy.task('stubRestrictAlertCode')
+    cy.task('stubRemoveAlertCodeRestriction')
+    cy.task('stubAddPrivilegedUser')
+    cy.task('stubRemovePrivilegedUser')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
     })
   })
 
-  it('should check answers for Create Alert Type', () => {
+  it('should check answers for Restrict Alert', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'ADD_NEW',
-      code: 'ABC',
-      description: 'Some text',
+      ...defaultJourneyData,
+      changeType: 'RESTRICT_ALERT',
     })
     cy.url().should('to.match', /\/check-answers$/)
     cy.checkAxeAccessibility()
 
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.title().should('equal', 'Check your changes - Manage alert restrictions - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
 
-    cy.contains('dt', 'New alert type').next().should('include.text', 'ABC')
-    cy.contains('dt', 'New alert description').next().should('include.text', 'Some text')
-
-    cy.findByRole('link', { name: /Change the alert type code/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /add-alert-type#code$/)
-
-    cy.findByRole('link', { name: /Change the alert type description/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /add-alert-type#description$/)
-
-    continueToConfirmation()
-  })
-
-  it('should check answers for Edit Alert Type', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'EDIT_DESCRIPTION',
-      alertType: {
-        code: 'DB',
-        description: 'Type Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-      },
-      description: 'New Name',
-    })
-    cy.url().should('to.match', /\/check-answers$/)
-    cy.checkAxeAccessibility()
-
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
-    cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
-
-    cy.contains('dt', 'Alert type').next().should('include.text', 'DB (Type Name)')
-    cy.contains('dt', 'New alert type description').next().should('include.text', 'New Name')
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AA (AA description)')
+    cy.contains('dt', 'Alert to restrict').next().should('include.text', 'BB (BB description)')
 
     cy.findByRole('link', { name: /Change the alert type/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-type$/)
 
-    cy.findByRole('link', { name: /Change the new alert type description/i })
+    cy.findByRole('link', { name: /Change the alert to restrict/i })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('to.match', /edit-alert-type$/)
+      .and('to.match', /select-alert-code$/)
 
     continueToConfirmation()
   })
 
-  it('should check answers for Reactivate Alert Type', () => {
+  it('should check answers for Remove Alert Restriction', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'REACTIVATE',
-      alertType: {
-        code: 'DB',
-        description: 'Type Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-      },
+      ...defaultJourneyData,
+      changeType: 'REMOVE_ALERT_RESTRICTION',
     })
     cy.url().should('to.match', /\/check-answers$/)
     cy.checkAxeAccessibility()
 
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.title().should('equal', 'Check your changes - Manage alert restrictions - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
 
-    cy.contains('dt', 'Alert type to be reactivated').next().should('include.text', 'DB (Type Name)')
-
-    cy.findByRole('link', { name: /Change the alert type to be reactivated/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /select-alert-type$/)
-
-    continueToConfirmation()
-  })
-
-  it('should check answers for Create Alert Code', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'ADD_NEW',
-      code: 'ABC',
-      description: 'Some text',
-      alertType: {
-        code: 'AB',
-        description: 'Type Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-      },
-    })
-    cy.url().should('to.match', /\/check-answers$/)
-    cy.checkAxeAccessibility()
-
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
-    cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
-
-    cy.contains('dt', 'Alert type').next().should('include.text', 'AB (Type Name)')
-    cy.contains('dt', 'New alert code').next().should('include.text', 'ABC')
-    cy.contains('dt', 'New alert description').next().should('include.text', 'Some text')
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AA (AA description)')
+    cy.contains('dt', 'Alert to remove restrictions from').next().should('include.text', 'BB (BB description)')
 
     cy.findByRole('link', { name: /Change the alert type/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-type$/)
 
-    cy.findByRole('link', { name: /Change the alert code/i })
+    cy.findByRole('link', { name: /Change the alert to remove restrictions from/i })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('to.match', /add-alert-code#code$/)
-
-    cy.findByRole('link', { name: /Change the alert description/i })
-      .should('be.visible')
-      .and('have.attr', 'href')
-      .and('to.match', /add-alert-code#description$/)
+      .and('to.match', /select-alert-code$/)
 
     continueToConfirmation()
   })
 
-  it('should check answers for Edit Alert Code', () => {
+  it('should check answers for Add Privileged User', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'EDIT_DESCRIPTION',
-      alertType: {
-        code: 'AB',
-        description: 'Type Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-      },
-      alertCode: {
-        code: 'AA',
-        description: 'Code Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-        alertTypeCode: 'AB',
-      },
-      description: 'New Name',
+      ...defaultJourneyData,
+      changeType: 'ADD_PRIVILEGED_USER',
+      username: 'TEST_USER',
     })
     cy.url().should('to.match', /\/check-answers$/)
     cy.checkAxeAccessibility()
 
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.title().should('equal', 'Check your changes - Manage alert restrictions - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
 
-    cy.contains('dt', 'Alert type').next().should('include.text', 'AB (Type Name)')
-    cy.contains('dt', /Alert\s+$/)
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AA (AA description)')
+    cy.contains('dt', /Alert $/)
       .next()
-      .should('include.text', 'AA (Code Name)')
-    cy.contains('dt', 'New alert description').next().should('include.text', 'New Name')
+      .should('include.text', 'BB (BB description)')
+    cy.contains('dt', 'Privileged user to add').next().should('include.text', 'TEST_USER')
 
     cy.findByRole('link', { name: /Change the alert type/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-type$/)
 
-    cy.findByRole('link', { name: /Change the alert to be edited/i })
+    cy.findByRole('link', { name: /Change the alert$/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-code$/)
 
-    cy.findByRole('link', { name: /Change the new alert description/i })
+    cy.findByRole('link', { name: /Change the username/i })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('to.match', /edit-alert-code$/)
+      .and('to.match', /select-user$/)
 
     continueToConfirmation()
   })
 
-  it('should check answers for Reactivate Alert Code', () => {
+  it('should check answers for Remove Privileged User', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'REACTIVATE',
-      alertType: {
-        code: 'AB',
-        description: 'Type Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-      },
-      alertCode: {
-        code: 'AA',
-        description: 'Code Name',
-        isActive: true,
-        listSequence: 0,
-        createdAt: '',
-        createdBy: '',
-        alertTypeCode: 'AB',
-      },
+      ...defaultJourneyData,
+      changeType: 'REMOVE_PRIVILEGED_USER',
+      username: 'TEST_USER',
     })
     cy.url().should('to.match', /\/check-answers$/)
     cy.checkAxeAccessibility()
 
-    cy.title().should('equal', 'Check your changes - Maintain alerts reference data - DPS')
+    cy.title().should('equal', 'Check your changes - Manage alert restrictions - DPS')
     cy.findByRole('heading', { name: /Check your changes/ }).should('be.visible')
 
-    cy.contains('dt', 'Alert type').next().should('include.text', 'AB (Type Name)')
-    cy.contains('dt', 'Alert to be reactivated').next().should('include.text', 'AA (Code Name)')
+    cy.contains('dt', 'Alert type').next().should('include.text', 'AA (AA description)')
+    cy.contains('dt', /Alert $/)
+      .next()
+      .should('include.text', 'BB (BB description)')
+    cy.contains('dt', 'Privileged user to remove').next().should('include.text', 'TEST_USER')
 
     cy.findByRole('link', { name: /Change the alert type/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-type$/)
 
-    cy.findByRole('link', { name: /Change the alert to be reactivated/i })
+    cy.findByRole('link', { name: /Change the alert$/i })
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /select-alert-code$/)
 
+    cy.findByRole('link', { name: /Change the username/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /select-user$/)
+
     continueToConfirmation()
   })
 
-  const navigateToTestPage = (journeyData: UpdateReferenceDataJourney) => {
+  const navigateToTestPage = (journeyData: ManageAlertRestrictionsJourney) => {
     cy.signIn()
-    cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
-      updateRefData: journeyData,
+      restrictAlert: journeyData,
     })
-    cy.visit(`/${uuid}/update-reference-data/check-answers`)
+    cy.visit(`/${uuid}/manage-alert-restrictions/check-answers`)
   }
 
   const continueToConfirmation = () => {

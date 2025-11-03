@@ -71,11 +71,13 @@ const stubGetAlertTypes = () => {
               code: 'AA',
               description: 'AA description',
               isActive: true,
+              isRestricted: false,
             },
             {
               code: 'DOCGM',
               description: 'OCG Nominal',
               isActive: true,
+              isRestricted: false,
             },
           ],
         },
@@ -88,11 +90,13 @@ const stubGetAlertTypes = () => {
               code: 'BB',
               description: 'BB description',
               isActive: false,
+              isRestricted: false,
             },
             {
               code: 'CC',
               description: 'CC description',
               isActive: false,
+              isRestricted: false,
             },
           ],
         },
@@ -101,6 +105,25 @@ const stubGetAlertTypes = () => {
           description: 'Deactivated Type',
           isActive: false,
           alertCodes: [],
+        },
+        {
+          code: 'XX',
+          description: 'Restricted Type',
+          isActive: true,
+          alertCodes: [
+            {
+              code: 'XXA',
+              description: 'Restricted active alert',
+              isActive: true,
+              isRestricted: true,
+            },
+            {
+              code: 'XXB',
+              description: 'Restricted inactive alert',
+              isActive: false,
+              isRestricted: true,
+            },
+          ],
         },
       ],
     },
@@ -374,6 +397,66 @@ const stubDeleteAlert = ({ id, responseCode = 204 }: { id: UUID; responseCode: n
   })
 }
 
+const stubRestrictAlertCode = (responseCode: number = 200) => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/restrict',
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
+const stubRemoveAlertCodeRestriction = (responseCode: number = 200) => {
+  return stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/remove-restriction',
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
+const stubAddPrivilegedUser = (responseCode: number = 200) => {
+  return stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/privileged-user/.*',
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
+const stubRemovePrivilegedUser = (responseCode: number = 200) => {
+  return stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/alerts-api/alert-codes/[A-Z]*/privileged-user/.*',
+    },
+    response: {
+      status: responseCode,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+}
+
 const stubCreateBulkAlertsPlan = () => {
   return stubFor({
     request: {
@@ -558,6 +641,10 @@ export default {
   stubCreateAlert,
   stubGetAlert,
   stubDeleteAlert,
+  stubRestrictAlertCode,
+  stubRemoveAlertCodeRestriction,
+  stubAddPrivilegedUser,
+  stubRemovePrivilegedUser,
   stubCreateBulkAlertsPlan,
   stubPatchBulkAlertsPlan,
   stubPatchBulkAlertsPlanFailureToAddPrisoner,

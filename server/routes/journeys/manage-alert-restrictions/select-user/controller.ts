@@ -4,7 +4,7 @@ import { SchemaType } from './schemas'
 export default class SelectUserController {
   GET = async (req: Request, res: Response) => {
     res.render('manage-alert-restrictions/select-user/view', {
-      code: res.locals.formResponses?.username ?? req.journeyData.restrictAlert!.username,
+      username: res.locals.formResponses?.username ?? req.journeyData.restrictAlert!.username,
       backUrl: 'select-alert-code',
     })
   }

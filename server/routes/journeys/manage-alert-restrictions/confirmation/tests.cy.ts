@@ -1,191 +1,102 @@
 import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
-import { UpdateReferenceDataJourney } from '../../../../@types/express'
+import { ManageAlertRestrictionsJourney } from '../../../../@types/express'
 
-context('test /update-reference-data/confirmation', () => {
+context('test /manage-alert-restrictions/confirmation', () => {
   let uuid = uuidV4()
+
+  const defaultJourneyData: ManageAlertRestrictionsJourney = {
+    alertType: {
+      code: 'AA',
+      description: 'AA description',
+      isActive: true,
+      listSequence: 1,
+      createdAt: '',
+      createdBy: '',
+    },
+    alertCode: {
+      code: 'BB',
+      alertTypeCode: 'AA',
+      description: 'BB description',
+      isActive: true,
+      isRestricted: false,
+      listSequence: 1,
+      createdAt: '',
+      createdBy: '',
+    },
+    code: 'BB',
+  }
 
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
     })
   })
 
-  it('should show ADD_NEW ALERT_TYPE confirmation page', () => {
+  it('should show RESTRICT_ALERT confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'ADD_NEW',
-      code: 'ABC',
-      description: 'Type Name',
+      ...defaultJourneyData,
+      changeType: 'RESTRICT_ALERT',
     })
     cy.url().should('to.match', /\/confirmation$/)
     cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert type added - DPS')
-    cy.findByText('Alert type added').should('be.visible')
-    cy.findByText('You have added the Type Name alert type.').should('be.visible')
+    cy.title().should('equal', 'Alert restricted - DPS')
+    cy.findByText('Alert restricted').should('be.visible')
+    cy.findByText('You have restricted the BB (BB description) alert.').should('be.visible')
 
     validateCommonPageContents()
   })
 
-  it('should show EDIT_DESCRIPTION ALERT_TYPE confirmation page', () => {
+  it('should show REMOVE_ALERT_RESTRICTION confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'EDIT_DESCRIPTION',
-      alertType: {
-        code: 'AA',
-        description: 'Code Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-      },
-      description: 'New Name',
+      ...defaultJourneyData,
+      changeType: 'REMOVE_ALERT_RESTRICTION',
     })
     cy.url().should('to.match', /\/confirmation$/)
     cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert type description updated - DPS')
-    cy.findByText('Alert type description updated').should('be.visible')
-    cy.findByText('You have updated the description for the AA alert type to ‘New Name’.').should('be.visible')
+    cy.title().should('equal', 'Alert restriction removed - DPS')
+    cy.findByText('Alert restriction removed').should('be.visible')
+    cy.findByText('You have removed the restriction from the BB (BB description) alert.').should('be.visible')
 
     validateCommonPageContents()
   })
 
-  it('should show DEACTIVATE ALERT_TYPE confirmation page', () => {
+  it('should show ADD_PRIVILEGED_USER confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'DEACTIVATE',
-      alertType: {
-        code: 'A',
-        description: 'Type Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-      },
+      ...defaultJourneyData,
+      changeType: 'ADD_PRIVILEGED_USER',
+      username: 'TEST_USER',
     })
     cy.url().should('to.match', /\/confirmation$/)
     cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert type deactivated - DPS')
-    cy.findByText('Alert type deactivated').should('be.visible')
-    cy.findByText('You have deactivated the A (Type Name) alert type.').should('be.visible')
+    cy.title().should('equal', 'Privileged user added - DPS')
+    cy.findByText('Privileged user added').should('be.visible')
+    cy.findByText('You have added TEST_USER as a privileged user to the BB (BB description) alert.').should(
+      'be.visible',
+    )
 
     validateCommonPageContents()
   })
 
-  it('should show REACTIVATE ALERT_TYPE confirmation page', () => {
+  it('should show REMOVE_PRIVILEGED_USER confirmation page', () => {
     uuid = uuidV4()
     navigateToTestPage({
-      referenceDataType: 'ALERT_TYPE',
-      changeType: 'REACTIVATE',
-      alertType: {
-        code: 'A',
-        description: 'Type Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-      },
+      ...defaultJourneyData,
+      changeType: 'REMOVE_PRIVILEGED_USER',
+      username: 'TEST_USER',
     })
     cy.url().should('to.match', /\/confirmation$/)
     cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert type reactivated - DPS')
-    cy.findByText('Alert type reactivated').should('be.visible')
-    cy.findByText('You have reactivated the A (Type Name) alert type.').should('be.visible')
-
-    validateCommonPageContents()
-  })
-
-  it('should show ADD_NEW ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'ADD_NEW',
-      code: 'ABC',
-      description: 'Type Name',
-    })
-    cy.url().should('to.match', /\/confirmation$/)
-    cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert added - DPS')
-    cy.findByText('Alert added').should('be.visible')
-    cy.findByText('You have added the Type Name alert.').should('be.visible')
-
-    validateCommonPageContents()
-  })
-
-  it('should show EDIT_DESCRIPTION ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'EDIT_DESCRIPTION',
-      alertCode: {
-        code: 'AA',
-        description: 'Code Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-        alertTypeCode: 'A',
-      },
-      description: 'New Name',
-    })
-    cy.url().should('to.match', /\/confirmation$/)
-    cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert description updated - DPS')
-    cy.findByText('Alert description updated').should('be.visible')
-    cy.findByText('You have updated the description for the AA alert to ‘New Name’.').should('be.visible')
-
-    validateCommonPageContents()
-  })
-
-  it('should show DEACTIVATE ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'DEACTIVATE',
-      alertCode: {
-        code: 'A',
-        description: 'Code Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-        alertTypeCode: 'A',
-      },
-    })
-    cy.url().should('to.match', /\/confirmation$/)
-    cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert deactivated - DPS')
-    cy.findByText('Alert deactivated').should('be.visible')
-    cy.findByText('You have deactivated the A (Code Name) alert.').should('be.visible')
-
-    validateCommonPageContents()
-  })
-
-  it('should show REACTIVATE ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
-    navigateToTestPage({
-      referenceDataType: 'ALERT_CODE',
-      changeType: 'REACTIVATE',
-      alertCode: {
-        code: 'A',
-        description: 'Code Name',
-        isActive: false,
-        createdAt: '',
-        createdBy: '',
-        listSequence: 0,
-        alertTypeCode: 'A',
-      },
-    })
-    cy.url().should('to.match', /\/confirmation$/)
-    cy.checkAxeAccessibility()
-    cy.title().should('equal', 'Alert reactivated - DPS')
-    cy.findByText('Alert reactivated').should('be.visible')
-    cy.findByText('You have reactivated the A (Code Name) alert.').should('be.visible')
+    cy.title().should('equal', 'Privileged user removed - DPS')
+    cy.findByText('Privileged user removed').should('be.visible')
+    cy.findByText('You have removed TEST_USER as a privileged user from the BB (BB description) alert.').should(
+      'be.visible',
+    )
 
     validateCommonPageContents()
   })
@@ -197,12 +108,12 @@ context('test /update-reference-data/confirmation', () => {
       .and('equal', '/')
   }
 
-  const navigateToTestPage = (journeyData: UpdateReferenceDataJourney) => {
+  const navigateToTestPage = (journeyData: ManageAlertRestrictionsJourney) => {
     cy.signIn()
-    cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
-      updateRefData: journeyData,
+      restrictAlert: journeyData,
     })
-    cy.visit(`/${uuid}/update-reference-data/confirmation`)
+    cy.visit(`/${uuid}/manage-alert-restrictions/confirmation`)
   }
 })

@@ -2,24 +2,31 @@ import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
-context('test /update-reference-data/add-alert-code screen', () => {
+context('test /manage-alert-restrictions/select-user screen', () => {
   const uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
-  const getCodeInput = () => cy.findByRole('textbox', { name: /Enter an alert code$/ })
-  const getDescriptionInput = () => cy.findByRole('textbox', { name: /Enter a description of the alert$/ })
+  const getUsernameInput = () => cy.findByRole('textbox', { name: /Enter a username$/ })
 
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
     cy.task('stubSignIn', {
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+    })
+  })
+
+  it('should require the DPS_APPLICATION_DEVELOPER role to view the page', () => {
+    cy.task('stubSignIn', {
       roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
+    navigateToTestPage()
+    cy.findByRole('heading', { name: /Authorisation Error/ }).should('be.visible')
   })
 
   it('should try out all cases', () => {
     navigateToTestPage()
-    cy.url().should('to.match', /\/add-alert-code$/)
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-user$/)
     cy.checkAxeAccessibility()
     validatePageContents()
     validateErrorMessages()
@@ -29,73 +36,54 @@ context('test /update-reference-data/add-alert-code screen', () => {
 
   const navigateToTestPage = () => {
     cy.signIn()
-    cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions`, { failOnStatusCode: false })
     injectJourneyDataAndReload(uuid, {
-      updateRefData: {
-        referenceDataType: 'ALERT_CODE',
-        changeType: 'ADD_NEW',
+      restrictAlert: {
+        changeType: 'ADD_PRIVILEGED_USER',
         alertType: {
-          code: 'AB',
-          description: 'Type Name',
+          code: 'XX',
+          description: 'Restricted Type',
           isActive: true,
         },
       },
     })
-    cy.visit(`/${uuid}/update-reference-data/add-alert-code`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions/select-user`, { failOnStatusCode: false })
   }
 
   const validatePageContents = () => {
-    cy.title().should('match', /Add new alert details - Maintain alerts reference data - DPS/)
+    cy.title().should('match', /Select a user - Manage alert restrictions - DPS/)
     cy.findByRole('heading', {
-      name: /Add new alert details/,
+      name: /Select a user/,
     }).should('be.visible')
     getContinueButton().should('be.visible')
-    getCodeInput().should('be.visible').and('have.value', '')
-    getDescriptionInput().should('be.visible').and('have.value', '')
+    getUsernameInput().should('be.visible').and('have.value', '')
     cy.findByRole('link', { name: /^Back$/ })
       .should('be.visible')
       .and('have.attr', 'href')
-      .and('match', /select-alert-type$/)
+      .and('match', /select-alert-code$/)
   }
 
   const validateErrorMessages = () => {
     getContinueButton().click()
 
     cy.findByRole('link', {
-      name: /An alert code must be an uppercase series of letters between 1-12 characters long$/,
+      name: /Enter a username$/,
     })
       .should('be.visible')
       .click()
-    getCodeInput().should('be.focused')
-
-    cy.findByRole('link', { name: /An alert description must be between 1 and 40 characters$/ })
-      .should('be.visible')
-      .click()
-    getDescriptionInput().should('be.focused')
-
-    getCodeInput().type('AA', { delay: 0 })
-    getContinueButton().click()
-
-    cy.findByRole('link', {
-      name: 'Alert code ‘AA’ already exists',
-    })
-      .should('be.visible')
-      .click()
-    getCodeInput().should('be.focused')
+    getUsernameInput().should('be.focused')
   }
 
   const proceedToNextPage = () => {
-    getCodeInput().type('ABC', { delay: 0 })
-    getCodeInput().clear().type('ABC', { delay: 0 })
-    getDescriptionInput().type('Some text', { delay: 0 })
+    getUsernameInput().type('ABC', { delay: 0 })
+    getUsernameInput().clear().type('ABC', { delay: 0 })
     getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/check-answers$/)
+    cy.url().should('to.match', /\/manage-alert-restrictions\/check-answers$/)
   }
 
   const validateAnswersArePersisted = () => {
     cy.go('back')
     cy.reload()
-    getCodeInput().should('have.value', 'ABC')
-    getDescriptionInput().should('have.value', 'Some text')
+    getUsernameInput().should('have.value', 'ABC')
   }
 })

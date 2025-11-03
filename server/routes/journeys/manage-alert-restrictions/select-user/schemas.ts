@@ -6,7 +6,7 @@ const ERROR_MSG = 'Enter a username'
 
 export const schemaFactory = () => async (_req: Request) => {
   return createSchema({
-    username: z.string({ message: ERROR_MSG }),
+    username: z.string({ message: ERROR_MSG }).min(1, 'Enter a username'),
   })
 }
 

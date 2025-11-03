@@ -1,31 +1,40 @@
 import { v4 as uuidV4 } from 'uuid'
 import AuthorisedRoles from '../../../../authentication/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
-import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 
-context('test /update-reference-data/select-alert-code screen', () => {
+context('test /manage-alert-restrictions/select-alert-code screen', () => {
   let uuid = uuidV4()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getAlertCodeRadio1 = () => cy.findByRole('radio', { name: /AA \(AA description\)$/ })
   const getAlertCodeRadio2 = () => cy.findByRole('radio', { name: /DOCGM \(OCG Nominal\)$/ })
-  const getAlertCodeRadio3 = () => cy.findByRole('radio', { name: /BB \(BB description\) Deactivated$/ })
-  const getAlertCodeRadio4 = () => cy.findByRole('radio', { name: /CC \(CC description\) Deactivated$/ })
+  const getRestrictedActiveAlertRadio = () =>
+    cy.findByRole('radio', { name: /XXA \(Restricted active alert\) Restricted$/ })
+  const getRestrictedInactiveAlertRadio = () =>
+    cy.findByRole('radio', { name: /XXB \(Restricted inactive alert\) Deactivated Restricted$/ })
 
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
     })
   })
 
-  it('should try out ALERT_CODE EDIT_DESCRIPTION cases', () => {
+  it('should require the DPS_APPLICATION_DEVELOPER role to view the page', () => {
+    cy.task('stubSignIn', {
+      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+    })
+    navigateToTestPage('RESTRICT_ALERT')
+    cy.findByRole('heading', { name: /Authorisation Error/ }).should('be.visible')
+  })
+
+  it('should try out RESTRICT_ALERT cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('EDIT_DESCRIPTION')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    navigateToTestPage('RESTRICT_ALERT')
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-code$/)
     cy.checkAxeAccessibility()
-    validatePageContents('Select an alert to edit')
+    validatePageContents('Select an alert code')
 
     getAlertCodeRadio1().should('exist')
     getAlertCodeRadio2().should('exist')
@@ -38,47 +47,80 @@ context('test /update-reference-data/select-alert-code screen', () => {
 
     getAlertCodeRadio1().click()
     getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/edit-alert-code$/)
+    cy.url().should('to.match', /\/manage-alert-restrictions\/check-answers$/)
+
+    cy.go('back')
+    cy.reload()
+    getAlertCodeRadio1().should('be.checked')
   })
 
-  it('should try out ALERT_CODE DEACTIVATE cases', () => {
+  it('should try out REMOVE_ALERT_RESTRICTION cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('DEACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    navigateToTestPage('REMOVE_ALERT_RESTRICTION')
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-code$/)
     cy.checkAxeAccessibility()
-    validatePageContents('Select an alert to deactivate')
+    validatePageContents('Select an alert code')
+
+    getRestrictedActiveAlertRadio().should('exist')
+    getRestrictedInactiveAlertRadio().should('exist')
+
+    getRestrictedActiveAlertRadio().click()
+    getContinueButton().click()
+    cy.url().should('to.match', /\/manage-alert-restrictions\/check-answers$/)
+
+    cy.go('back')
+    cy.reload()
+    getRestrictedActiveAlertRadio().should('be.checked')
+  })
+
+  it('should try out ADD_PRIVILEGED_USER cases', () => {
+    uuid = uuidV4()
+    navigateToTestPage('ADD_PRIVILEGED_USER')
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-code$/)
+    cy.checkAxeAccessibility()
+    validatePageContents('Select an alert code')
 
     getAlertCodeRadio1().should('exist')
     getAlertCodeRadio2().should('exist')
 
     getAlertCodeRadio1().click()
     getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/deactivate-alert-code$/)
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-user$/)
+
+    cy.go('back')
+    cy.reload()
+    getAlertCodeRadio1().should('be.checked')
   })
 
-  it('should try out ALERT_CODE REACTIVATE cases', () => {
+  it('should try out REMOVE_PRIVILEGED_USER cases', () => {
     uuid = uuidV4()
-    navigateToTestPage('REACTIVATE')
-    cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
+    navigateToTestPage('REMOVE_PRIVILEGED_USER')
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-code$/)
     cy.checkAxeAccessibility()
-    validatePageContents('Select an alert to reactivate')
+    validatePageContents('Select an alert code')
 
-    getAlertCodeRadio3().should('exist')
-    getAlertCodeRadio4().should('exist')
+    getAlertCodeRadio1().should('exist')
+    getAlertCodeRadio2().should('exist')
 
-    getAlertCodeRadio3().click()
+    getAlertCodeRadio1().click()
     getContinueButton().click()
-    cy.url().should('to.match', /\/update-reference-data\/check-answers$/)
+    cy.url().should('to.match', /\/manage-alert-restrictions\/select-user$/)
+
+    cy.go('back')
+    cy.reload()
+    getAlertCodeRadio1().should('be.checked')
   })
 
-  const navigateToTestPage = (changeType: 'EDIT_DESCRIPTION' | 'DEACTIVATE' | 'REACTIVATE') => {
+  const navigateToTestPage = (
+    changeType: 'RESTRICT_ALERT' | 'REMOVE_ALERT_RESTRICTION' | 'ADD_PRIVILEGED_USER' | 'REMOVE_PRIVILEGED_USER',
+  ) => {
     cy.signIn()
-    cy.visit(`/${uuid}/update-reference-data`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions`, { failOnStatusCode: false })
     const alertType =
-      changeType === 'REACTIVATE'
+      changeType === 'REMOVE_ALERT_RESTRICTION'
         ? {
-            code: 'AA',
-            description: 'A description',
+            code: 'XX',
+            description: 'Restricted Type',
             isActive: true,
           }
         : {
@@ -87,17 +129,13 @@ context('test /update-reference-data/select-alert-code screen', () => {
             isActive: true,
           }
     injectJourneyDataAndReload(uuid, {
-      updateRefData: {
-        referenceDataType: 'ALERT_CODE',
-        changeType,
-        updateAlertCodeSubJourney: { alertType: alertType as AlertType },
-      },
+      restrictAlert: { changeType, alertType },
     })
-    cy.visit(`/${uuid}/update-reference-data/select-alert-code`, { failOnStatusCode: false })
+    cy.visit(`/${uuid}/manage-alert-restrictions/select-alert-code`, { failOnStatusCode: false })
   }
 
   const validatePageContents = (heading: string) => {
-    cy.title().should('equal', `${heading} - Maintain alerts reference data - DPS`)
+    cy.title().should('equal', `${heading} - Manage alert restrictions - DPS`)
     cy.findByRole('heading', {
       name: heading,
     }).should('be.visible')

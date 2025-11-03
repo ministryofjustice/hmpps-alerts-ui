@@ -8,7 +8,7 @@ export const getAlertTypeFilter = (journey: ManageAlertRestrictionsJourney): ((t
     case 'REMOVE_ALERT_RESTRICTION':
       return (type: AlertType) => type.alertCodes.some(code => code.isRestricted)
     default:
-      return (_type: AlertType) => true
+      return (type: AlertType) => type.alertCodes.length > 0
   }
 }
 

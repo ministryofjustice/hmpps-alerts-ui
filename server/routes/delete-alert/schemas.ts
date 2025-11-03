@@ -17,7 +17,7 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
     if (id && uuidRegex.test(id.toLowerCase())) {
       try {
         await alertsApiClient.getAlert(req.middleware.clientToken, id)
-      } catch (_error) {
+      } catch {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Unable to find existing alert`,

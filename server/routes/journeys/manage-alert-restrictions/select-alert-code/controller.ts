@@ -7,17 +7,12 @@ import { AlertCode } from '../../../../@types/alerts/alertsApiTypes'
 
 export default class SelectAlertCodeController extends BaseController {
   GET = async (req: Request, res: Response) => {
-    const alertCode = res.locals.formResponses?.alertCode ?? req.journeyData.updateRefData!.alertCode
+    const alertCode = res.locals.formResponses?.alertCode ?? req.journeyData.restrictAlert!.alertCode
 
     const alertCodeOptions = [
       ...(await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, true))
-        .find(
-          type =>
-            type.code ===
-            (req.journeyData.updateRefData?.updateAlertCodeSubJourney?.alertType?.code ??
-              req.journeyData.updateRefData?.alertType?.code),
-        )!
-        .alertCodes.filter(getAlertCodeFilter(req.journeyData.updateRefData!))
+        .find(type => type.code === req.journeyData.restrictAlert?.alertType?.code)!
+        .alertCodes.filter(getAlertCodeFilter(req.journeyData.restrictAlert!))
         .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
           value: refData.code,
@@ -26,33 +21,23 @@ export default class SelectAlertCodeController extends BaseController {
         })),
     ]
 
-    res.render('update-reference-data/select-alert-code/view', {
-      journey: req.journeyData.updateRefData!,
+    res.render('manage-alert-restrictions/select-alert-code/view', {
+      journey: req.journeyData.restrictAlert!,
       alertCodeOptions,
-      backUrl:
-        req.journeyData.isCheckAnswers && !req.journeyData.updateRefData!.updateAlertCodeSubJourney
-          ? 'check-answers'
-          : 'select-alert-type',
+      backUrl: 'select-alert-type',
     })
   }
 
   POST = (req: Request<unknown, unknown, SchemaType>, res: Response) => {
-    const journey = req.journeyData.updateRefData!
+    const journey = req.journeyData.restrictAlert!
 
     journey.alertCode = req.body.alertCode
-    if (journey.updateAlertCodeSubJourney) {
-      journey.alertType = journey.updateAlertCodeSubJourney!.alertType
-      delete journey.updateAlertCodeSubJourney
-    }
 
     switch (journey.changeType) {
-      case 'EDIT_DESCRIPTION':
-        res.redirect(req.journeyData.isCheckAnswers ? 'check-answers' : 'edit-alert-code')
+      case 'ADD_PRIVILEGED_USER':
+      case 'REMOVE_PRIVILEGED_USER':
+        res.redirect('select-user')
         break
-      case 'DEACTIVATE':
-        res.redirect('deactivate-alert-code')
-        break
-      case 'REACTIVATE':
       default:
         res.redirect('check-answers')
         break

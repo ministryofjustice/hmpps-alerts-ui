@@ -1,5 +1,5 @@
 import { RequestHandler, Request, Response } from 'express'
-import { z, RefinementCtx } from 'zod'
+import { z, RefinementCtx } from 'zod/v3'
 import { isValid, isBefore, parseISO, isAfter, isEqual, subDays, addDays } from 'date-fns'
 import { FLASH_KEY__FORM_RESPONSES, FLASH_KEY__VALIDATION_ERRORS } from '../utils/constants'
 
@@ -54,7 +54,7 @@ export const validateAndTransformReferenceData =
   (val: string, ctx: RefinementCtx) => {
     if (!refDataMap.has(val)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: errorMessage,
       })
       return z.NEVER
@@ -111,7 +111,7 @@ const validateDateBase = (requiredErr: string, invalidErr: string) =>
     })
     .transform(date => parseISO(date))
     .superRefine((date, ctx) => {
-      return isValid(date) || ctx.addIssue({ code: z.ZodIssueCode.custom, message: invalidErr })
+      return isValid(date) || ctx.addIssue({ code: 'custom', message: invalidErr })
     })
 
 const validateDateOptional = (invalidErr: string) =>
@@ -130,7 +130,7 @@ const validateDateOptional = (invalidErr: string) =>
     })
     .superRefine((date, ctx) => {
       if (date && !isValid(date)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: invalidErr })
+        ctx.addIssue({ code: 'custom', message: invalidErr })
       }
     })
 
@@ -144,9 +144,7 @@ export const validateTransformOptionalDate = (invalidErr: string) => {
 
 export const validateTransformPastDate = (requiredErr: string, invalidErr: string, maxErr: string) => {
   return validateDateBase(requiredErr, invalidErr)
-    .superRefine(
-      (date, ctx) => isBefore(date, new Date()) || ctx.addIssue({ code: z.ZodIssueCode.custom, message: maxErr }),
-    )
+    .superRefine((date, ctx) => isBefore(date, new Date()) || ctx.addIssue({ code: 'custom', message: maxErr }))
     .transform(date => date.toISOString().substring(0, 10))
 }
 
@@ -158,9 +156,7 @@ export const validateTransformFutureDate = (requiredErr: string, invalidErr: str
       today.setMinutes(0)
       today.setSeconds(0)
       today.setMilliseconds(0)
-      return (
-        isAfter(date, today) || isEqual(date, today) || ctx.addIssue({ code: z.ZodIssueCode.custom, message: maxErr })
-      )
+      return isAfter(date, today) || isEqual(date, today) || ctx.addIssue({ code: 'custom', message: maxErr })
     })
     .transform(date => date.toISOString().substring(0, 10))
 }
@@ -184,7 +180,7 @@ export const validateTransformDateInRange = (
       const future = addDays(today, futureDays + 1)
 
       if (isBefore(date, past) || isAfter(date, future) || isEqual(date, future)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: maxErr })
+        ctx.addIssue({ code: 'custom', message: maxErr })
       }
     })
     .transform(date => date.toISOString().substring(0, 10))

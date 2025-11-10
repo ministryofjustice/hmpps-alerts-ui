@@ -1,4 +1,4 @@
-import { z, RefinementCtx } from 'zod'
+import { z, RefinementCtx } from 'zod/v3'
 import { Request, Response } from 'express'
 import { createSchema } from '../../../../middleware/validationMiddleware'
 
@@ -10,7 +10,7 @@ export const schemaFactory = async (req: Request, _res: Response) => {
       const prisoner = req.journeyData.bulkAlert?.prisonersSearched?.find(itm => itm.prisonerNumber === val)
       if (!prisoner) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: ERROR_MSG,
         })
         return z.NEVER

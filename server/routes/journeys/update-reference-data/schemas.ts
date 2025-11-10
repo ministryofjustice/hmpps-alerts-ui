@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v3'
 import { createSchema } from '../../../middleware/validationMiddleware'
 
 const ERROR_MSG = 'Select the type of reference data you want to update'

@@ -1,6 +1,6 @@
 import superagent from 'superagent'
 import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
-import Agent, { HttpsAgent } from 'agentkeepalive'
+import { HttpAgent, HttpsAgent } from 'agentkeepalive'
 import logger from '../../logger'
 
 export type ServiceCheck = () => Promise<string>
@@ -17,7 +17,7 @@ export function serviceCheckFactory(
   agentOptions: AgentConfig,
   serviceTimeout: ServiceTimeout = new ServiceTimeout(),
 ): ServiceCheck {
-  const keepaliveAgent = url.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
+  const keepaliveAgent = url.startsWith('https') ? new HttpsAgent(agentOptions) : new HttpAgent(agentOptions)
 
   return () =>
     new Promise((resolve, reject) => {

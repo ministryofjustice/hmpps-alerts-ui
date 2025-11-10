@@ -3,6 +3,7 @@ import { SchemaType } from './schemas'
 import BaseController from '../../../common/controller'
 import { escapeHtml } from '../../../../utils/utils'
 import { getAlertCodeFilter } from './utils'
+import { AlertCode } from '../../../../@types/alerts/alertsApiTypes'
 
 export default class SelectAlertCodeController extends BaseController {
   GET = async (req: Request, res: Response) => {
@@ -20,11 +21,7 @@ export default class SelectAlertCodeController extends BaseController {
         .sort((a, b) => a.code.localeCompare(b.code))
         .map(refData => ({
           value: refData.code,
-          html: `${escapeHtml(refData.code)} (${escapeHtml(refData.description)})${
-            refData.isActive
-              ? ''
-              : ' <strong class="govuk-tag status-tag govuk-tag--blue govuk-!-margin-left-1">Deactivated</strong>'
-          }`,
+          html: `${escapeHtml(refData.code)} (${escapeHtml(refData.description)})${this.getTags(refData)}`,
           checked: typeof alertCode === 'string' ? refData.code === alertCode : refData.code === alertCode?.code,
         })),
     ]
@@ -60,5 +57,15 @@ export default class SelectAlertCodeController extends BaseController {
         res.redirect('check-answers')
         break
     }
+  }
+
+  private getTags = (code: AlertCode) => {
+    const activeTag = code.isActive
+      ? ''
+      : ' <strong class="govuk-tag status-tag govuk-tag--blue govuk-!-margin-left-1">Deactivated</strong>'
+    const restrictedTag = code.isRestricted
+      ? ' <strong class="govuk-tag status-tag govuk-tag--yellow govuk-!-margin-left-1">Restricted</strong>'
+      : ''
+    return `${activeTag}${restrictedTag}`
   }
 }

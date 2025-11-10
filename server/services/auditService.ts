@@ -68,7 +68,7 @@ export default class AuditService {
 
   async logModificationApiCall(
     auditType: 'ATTEMPT' | 'SUCCESS',
-    modificationType: 'CREATE' | 'UPDATE',
+    modificationType: 'CREATE' | 'UPDATE' | 'DELETE',
     requestUrl: string,
     journeyData: Partial<JourneyData>,
     auditEvent: Response['locals']['auditEvent'],

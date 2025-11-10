@@ -1,0 +1,34 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "partials/layout.njk" %}
+
+{% set heading = "Check your changes" %}
+{% set pageTitle = "Check your changes - Manage alert restrictions" %}
+{% set mainClasses = "govuk-body govuk-!-static-padding-top-0" %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-!-margin-top-6">
+  <div class="govuk-grid-column-two-thirds">
+  {% include 'manage-alert-restrictions/common/components/caption.njk' %}
+  <h1 class="govuk-heading-l govuk-!-margin-bottom-7">{{ heading }}</h1>
+    {% if journey.changeType === 'RESTRICT_ALERT' %}
+      {% include './partial/restrict-alert.njk' %}
+    {% elseif journey.changeType === 'REMOVE_ALERT_RESTRICTION' %}
+      {% include './partial/remove-alert-restriction.njk' %}
+    {% elseif journey.changeType === 'ADD_PRIVILEGED_USER' %}
+      {% include './partial/add-privileged-user.njk' %}
+    {% elseif journey.changeType === 'REMOVE_PRIVILEGED_USER' %}
+      {% include './partial/remove-privileged-user.njk' %}
+    {% endif %}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Confirm and save",
+          preventDoubleClick: true
+        }) }}
+        <a class="govuk-link govuk-link--no-visited-state" href="/">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+name: Upload coverage report
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  coverage:
+    name: Upload coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: test_artifacts
+          pattern: '*test_artifacts'
+          merge-multiple: true
+      - uses: codecov/test-results-action@v1
+        with:
+          use_oidc: true
+          directory: test_artifacts
+      - uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          directory: test_artifacts

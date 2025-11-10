@@ -844,6 +844,11 @@ export interface components {
        */
       isActive: boolean
       /**
+       * @description Indicates that the alert code is restricted and can only be administered by named individuals
+       * @example true
+       */
+      isRestricted: boolean
+      /**
        * Format: date-time
        * @description The date and time the alert code was created
        */

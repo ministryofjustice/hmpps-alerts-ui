@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:22-alpine as base
+FROM node:24-alpine AS base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -30,7 +30,7 @@ ENV GIT_REF=${GIT_REF}
 ENV GIT_BRANCH=${GIT_BRANCH}
 
 # Stage: build assets
-FROM base as build
+FROM base AS build
 
 ARG BUILD_NUMBER
 ARG GIT_REF

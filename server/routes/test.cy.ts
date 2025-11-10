@@ -7,7 +7,11 @@ context('test / homepage', () => {
 
   it('shows all tiles when user has all required roles', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS, AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [
+        AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS,
+        AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER,
+        AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER,
+      ],
     })
     navigateToTestPage()
 
@@ -21,6 +25,16 @@ context('test / homepage', () => {
       .should('be.visible')
       .and('have.attr', 'href')
       .and('to.match', /\/update-reference-data$/)
+
+    cy.findByRole('link', { name: /Delete alert/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /\/delete-alert$/)
+
+    cy.findByRole('link', { name: /Manage alert restrictions/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /\/manage-alert-restrictions$/)
 
     cy.checkAxeAccessibility()
   })
@@ -39,6 +53,9 @@ context('test / homepage', () => {
       .and('have.attr', 'href')
       .and('to.match', /\/update-reference-data$/)
 
+    cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
+    cy.findByRole('link', { name: /Manage alert restrictions/i }).should('not.exist')
+
     cy.checkAxeAccessibility()
   })
 
@@ -54,6 +71,33 @@ context('test / homepage', () => {
       .and('have.attr', 'href')
       .and('to.match', /\/add-any-alert$/)
 
+    cy.findByRole('link', { name: /Update alerts and alert types/i }).should('not.exist')
+    cy.findByRole('link', { name: /Delete alert/i }).should('not.exist')
+    cy.findByRole('link', { name: /Manage alert restrictions/i }).should('not.exist')
+
+    cy.checkAxeAccessibility()
+  })
+
+  it('shows only DPS admin tiles if user only has ROLE_DPS_APPLICATION_DEVELOPER', () => {
+    cy.task('stubSignIn', {
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+    })
+    navigateToTestPage()
+
+    cy.findByRole('heading', { name: /Manage prisoner alerts/i }).should('be.visible')
+
+    cy.findByRole('link', { name: /Delete alert/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /\/delete-alert$/)
+
+    cy.findByRole('link', { name: /Manage alert restrictions/i })
+      .should('be.visible')
+      .and('have.attr', 'href')
+      .and('to.match', /\/manage-alert-restrictions$/)
+
+    cy.findByRole('link', { name: /Manage alerts in bulk for the prison estate/i }).should('not.exist')
+    cy.findByRole('link', { name: /Add alert for prison number/i }).should('not.exist')
     cy.findByRole('link', { name: /Update alerts and alert types/i }).should('not.exist')
 
     cy.checkAxeAccessibility()

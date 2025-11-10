@@ -8,7 +8,7 @@
 {% extends "partials/layout.njk" %}
 
 {% set pageTitle = "Add any alert - Prisoner Alerts" %}
-{% set mainClasses = "app-container govuk-body govuk-!-static-padding-top-0" %}
+{% set mainClasses = "govuk-body govuk-!-static-padding-top-0" %}
 {% set backLinkLabel = "Manage prisoner alerts" %}
 {% set backUrl = "/" %}
 
@@ -26,7 +26,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h1 id="addCaseNote">Add an alert</h1>
+            <h1 id="addCaseNote" class="govuk-heading-l govuk-!-margin-top-4">Add an alert</h1>
         </div>
     </div>
 
@@ -123,5 +123,5 @@
 
 {% block additionalScripts %}
     <script id="typeCodeMap" type="application/json">{{ typeCodeMap | dump | safe }}</script>
-    <script src="/assets/js/extra/alerts.js"></script>
+    <script src="{{ '/assets/js/alerts.js' | assetMap }}"></script>
 {% endblock %}

@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { z, RefinementCtx } from 'zod/v3'
+import { z, RefinementCtx } from 'zod'
 import { isBefore, parseISO } from 'date-fns'
 import {
   createSchema,

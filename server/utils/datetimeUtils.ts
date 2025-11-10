@@ -1,4 +1,4 @@
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import { addDays, subDays } from 'date-fns'
 
 const DATE_FORMAT_GB = new Intl.DateTimeFormat('en-GB', {

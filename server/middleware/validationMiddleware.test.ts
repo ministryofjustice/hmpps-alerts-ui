@@ -1,4 +1,4 @@
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import { Request, Response } from 'express'
 import { fail } from 'assert'
 import { createSchema, validate } from './validationMiddleware'
@@ -6,7 +6,9 @@ import { createSchema, validate } from './validationMiddleware'
 it('should normalise new lines', async () => {
   const schema = createSchema({
     descriptionOfConcern: z
-      .string({ message: 'Required' })
+      .string({
+        error: 'Required',
+      })
       .max(4000, 'Max')
       .refine(val => val && val.trim().length > 0, 'Required'),
   })

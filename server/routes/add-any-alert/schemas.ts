@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { z, RefinementCtx } from 'zod'
+import { z, RefinementCtx } from 'zod/v3'
 import { isBefore, parseISO } from 'date-fns'
 import {
   createSchema,
@@ -33,7 +33,7 @@ export const schemaFactory =
             return await prisonerSearchApiClient.getPrisonerDetails(req.middleware.clientToken, val.toUpperCase())
           } catch {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: 'custom',
               message: `The prison number ‘${val}’ was not recognised`,
             })
             return z.NEVER
@@ -53,14 +53,14 @@ export const schemaFactory =
     }).superRefine(async (val, ctx) => {
       if (val.alertCode?.code !== 'DOCGM' && (val.alertCode as unknown as string) !== 'DOCGM' && !val.description) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: 'Enter why you are creating this alert',
           path: ['description'],
         })
       }
       if (val.activeTo && isBefore(lenientParseDate(val.activeTo), lenientParseDate(val.activeFrom))) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: 'The alert end date must be after the alert start date',
           path: ['activeTo'],
         })
@@ -73,7 +73,7 @@ export const schemaFactory =
         )
         if (existingActiveAlerts.totalElements) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             message: `${firstNameSpaceLastName(val.prisonNumber)} already has the ‘${val.alertCode.description}’ alert active`,
             path: ['alertCode'],
           })

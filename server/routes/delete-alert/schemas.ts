@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { z, RefinementCtx } from 'zod'
+import { z, RefinementCtx } from 'zod/v3'
 import { UUID } from 'node:crypto'
 import { createSchema } from '../../middleware/validationMiddleware'
 import AlertsApiClient from '../../data/alertsApiClient'
@@ -19,7 +19,7 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
         await alertsApiClient.getAlert(req.middleware.clientToken, id)
       } catch {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: `Unable to find existing alert`,
           path: ['alertUuid'],
         })

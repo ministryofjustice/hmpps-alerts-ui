@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v3'
 import { createSchema } from '../../../../middleware/validationMiddleware'
 
 const DESCRIPTION_ERROR_MSG = 'An alert description must be between 1 and 40 characters'

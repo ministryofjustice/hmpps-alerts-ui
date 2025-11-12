@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { z } from 'zod'
+import { z } from 'zod/v3'
 import AlertsApiClient from '../../../../data/alertsApiClient'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
 import { getAlertCodeFilter } from './utils'

@@ -14,6 +14,7 @@ export default function nunjucksSetup(app: express.Express): void {
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'HMPPS Alerts'
+  app.locals.environment = config.environment
   app.locals.environmentName = config.environmentName
   app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
   app.locals.digitalPrisonServicesUrl = config.serviceUrls.digitalPrison

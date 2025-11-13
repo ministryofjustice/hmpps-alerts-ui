@@ -94,6 +94,7 @@ export declare global {
       buildNumber?: string
       asset_path: string
       applicationName: string
+      environment: 'local' | 'dev' | 'preprod' | 'prod'
       environmentName: string
       environmentNameColour: string
       csrfToken: string

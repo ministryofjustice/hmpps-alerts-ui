@@ -1,5 +1,6 @@
 import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 
+/** true in all k8s namespaces and in docker image */
 const production = process.env.NODE_ENV === 'production'
 
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
@@ -104,6 +105,9 @@ export default {
     audit: auditConfig(),
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  /** k8s namespace suffix & github environment or "local" */
+  environment: get('ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
+  /** Phase banner tag label (blank in prod namespace) */
   environmentName: get('ENVIRONMENT_NAME', ''),
   sentry: {
     dsn: process.env.SENTRY_DSN,

@@ -13,6 +13,7 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     MANAGE_USERS_API_URL: "https://manage-users-api-preprod.hmpps.service.justice.gov.uk"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-preprod.prison.service.justice.gov.uk"
+    ENVIRONMENT: preprod             # k8s namespace suffix & github environment
     ENVIRONMENT_NAME: PRE-PRODUCTION # Phase banner tag label
     SENTRY_ENVIRONMENT: PRE-PRODUCTION
     AUDIT_ENABLED: "false"

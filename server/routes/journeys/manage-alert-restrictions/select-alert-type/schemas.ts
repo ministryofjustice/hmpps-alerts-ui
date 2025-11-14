@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import AlertsApiClient from '../../../../data/alertsApiClient'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
 import { getAlertTypeFilter } from './utils'
@@ -17,7 +17,7 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
   )
 
   return createSchema({
-    alertType: z.string({ message: ERROR_MSG }).transform(validateAndTransformReferenceData(alertTypeMap, ERROR_MSG)),
+    alertType: z.string({ error: ERROR_MSG }).transform(validateAndTransformReferenceData(alertTypeMap, ERROR_MSG)),
   })
 }
 

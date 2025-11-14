@@ -1,14 +1,14 @@
-import { z } from 'zod/v3'
+import { z } from 'zod'
 
 const AlertCodeCodeSchema = z
   .string({
-    errorMap: () => ({ message: 'An alert code must be an uppercase series of letters between 1-12 characters long' }),
+    error: () => 'An alert code must be an uppercase series of letters between 1-12 characters long',
   })
   .regex(/[A-Z]/)
   .min(1)
   .max(12)
 const AlertCodeDescriptionSchema = z
-  .string({ errorMap: () => ({ message: 'An alert code description must be between 1 and 40 characters' }) })
+  .string({ error: () => 'An alert code description must be between 1 and 40 characters' })
   .min(1)
   .max(40)
 

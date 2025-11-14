@@ -1,5 +1,5 @@
 import { RequestHandler, Request, Response } from 'express'
-import { z, RefinementCtx } from 'zod/v3'
+import { z, RefinementCtx } from 'zod'
 import { isValid, isBefore, parseISO, isAfter, isEqual, subDays, addDays } from 'date-fns'
 import { FLASH_KEY__FORM_RESPONSES, FLASH_KEY__VALIDATION_ERRORS } from '../utils/constants'
 
@@ -35,7 +35,7 @@ export const customErrorOrderBuilder = (errorSummaryList: { href: string }[], or
 
 export const createSchema = <T = object>(shape: T) => zodAlwaysRefine(zObjectStrict(shape))
 
-const zObjectStrict = <T = object>(shape: T) => z.object({ _csrf: z.string().optional(), ...shape }).strict()
+const zObjectStrict = <T = object>(shape: T) => z.strictObject({ _csrf: z.string().optional(), ...shape })
 
 /*
  * Ensure that all parts of the schema get tried and can fail before exiting schema checks - this ensures we don't have to
@@ -45,7 +45,9 @@ const zObjectStrict = <T = object>(shape: T) => z.object({ _csrf: z.string().opt
 const zodAlwaysRefine = <T extends z.ZodTypeAny>(zodType: T) =>
   z.any().transform(async (val, ctx) => {
     const res = await zodType.safeParseAsync(val)
-    if (!res.success) res.error.issues.forEach(ctx.addIssue)
+    if (!res.success) {
+      ctx.issues.push(...(res.error.issues as z.core.$ZodRawIssue[]))
+    }
     return res.data || val
   }) as unknown as T
 
@@ -84,12 +86,15 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory, failureUrl?: stri
     req.flash(FLASH_KEY__FORM_RESPONSES, JSON.stringify(req.body))
 
     const deduplicatedFieldErrors = Object.fromEntries(
-      Object.entries(result.error.flatten().fieldErrors).map(([key, value]) => [key, [...new Set(value || [])]]),
+      Object.entries(z.flattenError(result.error).fieldErrors).map(([key, value]) => [
+        key,
+        [...new Set((value as unknown[] | undefined) || [])],
+      ]),
     )
     if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'e2e-test') {
       // eslint-disable-next-line no-console
       console.error(
-        `There were validation errors: ${JSON.stringify(result.error.format())} || body was: ${JSON.stringify(req.body)}`,
+        `There were validation errors: ${JSON.stringify(z.treeifyError(result.error))} || body was: ${JSON.stringify(req.body)}`,
       )
     }
     req.flash(FLASH_KEY__VALIDATION_ERRORS, JSON.stringify(deduplicatedFieldErrors))
@@ -100,8 +105,8 @@ export const validate = (schema: z.ZodTypeAny | SchemaFactory, failureUrl?: stri
 
 const validateDateBase = (requiredErr: string, invalidErr: string) =>
   z
-    .string({ message: requiredErr })
-    .min(1, { message: requiredErr })
+    .string({ error: requiredErr })
+    .min(1, { error: requiredErr })
     .transform(value => value.split(/[-/]/).reverse())
     .transform(value => {
       // Prefix month and date with a 0 if needed
@@ -111,7 +116,9 @@ const validateDateBase = (requiredErr: string, invalidErr: string) =>
     })
     .transform(date => parseISO(date))
     .superRefine((date, ctx) => {
-      return isValid(date) || ctx.addIssue({ code: 'custom', message: invalidErr })
+      if (!isValid(date)) {
+        ctx.addIssue({ code: 'custom', message: invalidErr })
+      }
     })
 
 const validateDateOptional = (invalidErr: string) =>
@@ -144,7 +151,11 @@ export const validateTransformOptionalDate = (invalidErr: string) => {
 
 export const validateTransformPastDate = (requiredErr: string, invalidErr: string, maxErr: string) => {
   return validateDateBase(requiredErr, invalidErr)
-    .superRefine((date, ctx) => isBefore(date, new Date()) || ctx.addIssue({ code: 'custom', message: maxErr }))
+    .superRefine((date, ctx) => {
+      if (!isBefore(date, new Date())) {
+        ctx.addIssue({ code: 'custom', message: maxErr })
+      }
+    })
     .transform(date => date.toISOString().substring(0, 10))
 }
 
@@ -156,7 +167,9 @@ export const validateTransformFutureDate = (requiredErr: string, invalidErr: str
       today.setMinutes(0)
       today.setSeconds(0)
       today.setMilliseconds(0)
-      return isAfter(date, today) || isEqual(date, today) || ctx.addIssue({ code: 'custom', message: maxErr })
+      if (!(isAfter(date, today) || isEqual(date, today))) {
+        ctx.addIssue({ code: 'custom', message: maxErr })
+      }
     })
     .transform(date => date.toISOString().substring(0, 10))
 }

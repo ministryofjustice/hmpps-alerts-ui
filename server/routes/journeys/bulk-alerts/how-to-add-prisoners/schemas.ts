@@ -1,4 +1,4 @@
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import { createSchema, validateAndTransformReferenceData } from '../../../../middleware/validationMiddleware'
 
 const ERROR_MSG = 'You must select one option'
@@ -9,7 +9,7 @@ const BOOLEAN_MAP = new Map([
 ])
 
 export const schema = createSchema({
-  useCsvUpload: z.string({ message: ERROR_MSG }).transform(validateAndTransformReferenceData(BOOLEAN_MAP, ERROR_MSG)),
+  useCsvUpload: z.string({ error: ERROR_MSG }).transform(validateAndTransformReferenceData(BOOLEAN_MAP, ERROR_MSG)),
 })
 
 export type SchemaType = z.infer<typeof schema>

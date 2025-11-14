@@ -1,4 +1,4 @@
-import { z } from 'zod/v3'
+import { z } from 'zod'
 import { Request } from 'express'
 import { createSchema } from '../../../../middleware/validationMiddleware'
 import AlertsApiClient from '../../../../data/alertsApiClient'
@@ -12,11 +12,11 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
 
   return createSchema({
     code: z
-      .string({ message: CODE_ERROR_MSG })
+      .string({ error: CODE_ERROR_MSG })
       .regex(/^[A-Z]{1,12}$/, CODE_ERROR_MSG)
       .refine(val => !alertCodes.includes(val), `Alert code ‘${req.body.code}’ already exists`),
     description: z
-      .string({ message: DESCRIPTION_ERROR_MSG })
+      .string({ error: DESCRIPTION_ERROR_MSG })
       .min(1, DESCRIPTION_ERROR_MSG)
       .max(40, DESCRIPTION_ERROR_MSG),
   })

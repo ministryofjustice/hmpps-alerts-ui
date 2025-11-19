@@ -1,14 +1,12 @@
 import { z } from 'zod'
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { fail } from 'assert'
 import { createSchema, validate } from './validationMiddleware'
 
 it('should normalise new lines', async () => {
   const schema = createSchema({
     descriptionOfConcern: z
-      .string({
-        error: 'Required',
-      })
+      .string({ message: 'Required' })
       .max(4000, 'Max')
       .refine(val => val && val.trim().length > 0, 'Required'),
   })
@@ -21,5 +19,11 @@ it('should normalise new lines', async () => {
 
   mockRequest.flash = () => fail('Validation failed')
 
-  validate(schema)(mockRequest, jest.fn() as unknown as Response, jest.fn())
+  const res = jest.fn() as unknown as Response
+  res.redirect = () => fail('Validation failed')
+  const next: NextFunction = jest.fn()
+
+  await validate(schema)(mockRequest, res, next)
+
+  expect(next).toHaveBeenCalled()
 })

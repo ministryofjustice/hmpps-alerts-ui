@@ -50,22 +50,47 @@ export const schemaFactory =
         0,
       ),
       activeTo: validateTransformOptionalDate('The alert end date must be a real date'),
-    }).superRefine(async (val, ctx) => {
-      if (val.alertCode?.code !== 'DOCGM' && (val.alertCode as unknown as string) !== 'DOCGM' && !val.description) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Enter why you are creating this alert',
-          path: ['description'],
-        })
-      }
-      if (val.activeTo && isBefore(lenientParseDate(val.activeTo), lenientParseDate(val.activeFrom))) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'The alert end date must be after the alert start date',
-          path: ['activeTo'],
-        })
-      }
-      if (val.alertCode?.code && val.prisonNumber?.prisonerNumber) {
+    })
+      .refine(({ description }) => description.length > 0, {
+        error: 'Enter why you are creating this alert',
+        path: ['description'],
+        when(payload): boolean {
+          const { value, issues } = payload
+          if (!value) {
+            return false
+          }
+          if (typeof value !== 'object' || !('alertCode' in value)) {
+            return false
+          }
+          if (
+            value.alertCode &&
+            typeof value.alertCode === 'object' &&
+            'code' in value.alertCode &&
+            value.alertCode.code === 'DOCGM'
+          ) {
+            return false
+          }
+          if (typeof value.alertCode === 'string' && value.alertCode === 'DOCGM') {
+            return false
+          }
+          return issues.every(iss => iss.path?.[0] !== 'description')
+        },
+      })
+      .refine(({ activeFrom, activeTo }) => !isBefore(lenientParseDate(activeTo!), lenientParseDate(activeFrom)), {
+        error: 'The alert end date must be after the alert start date',
+        path: ['activeTo'],
+        when(payload): boolean {
+          const { value, issues } = payload
+          if (!value) {
+            return false
+          }
+          if (typeof value !== 'object' || !('activeFrom' in value) || !('activeTo' in value) || !value.activeTo) {
+            return false
+          }
+          return issues.every(iss => iss.path?.[0] !== 'activeFrom' && iss.path?.[0] !== 'activeTo')
+        },
+      })
+      .superRefine(async (val, ctx) => {
         const existingActiveAlerts = await alertsApiClient.getPrisonerActiveAlertForAlertCode(
           req.middleware.clientToken,
           val.prisonNumber.prisonerNumber,
@@ -78,8 +103,7 @@ export const schemaFactory =
             path: ['alertCode'],
           })
         }
-      }
-    })
+      })
   }
 
 const lenientParseDate = (ds: string) => {

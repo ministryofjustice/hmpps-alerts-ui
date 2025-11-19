@@ -33,23 +33,7 @@ export const findError = (errors: fieldErrors, fieldName: string) => {
 export const customErrorOrderBuilder = (errorSummaryList: { href: string }[], order: string[]) =>
   order.map(key => errorSummaryList.find(error => error.href === `#${key}`)).filter(Boolean)
 
-export const createSchema = <T = object>(shape: T) => zodAlwaysRefine(zObjectStrict(shape))
-
-const zObjectStrict = <T = object>(shape: T) => z.strictObject({ _csrf: z.string().optional(), ...shape })
-
-/*
- * Ensure that all parts of the schema get tried and can fail before exiting schema checks - this ensures we don't have to
- * have complicated schemas if we want to both ensure the order of fields and have all the schema validation run
- * more info regarding this issue and workaround on: https://github.com/colinhacks/zod/issues/479#issuecomment-2067278879
- */
-const zodAlwaysRefine = <T extends z.ZodTypeAny>(zodType: T) =>
-  z.any().transform(async (val, ctx) => {
-    const res = await zodType.safeParseAsync(val)
-    if (!res.success) {
-      ctx.issues.push(...(res.error.issues as z.core.$ZodRawIssue[]))
-    }
-    return res.data || val
-  }) as unknown as T
+export const createSchema = <T>(shape: T) => z.strictObject({ _csrf: z.string().optional(), ...shape })
 
 export const validateAndTransformReferenceData =
   <T>(refDataMap: Map<string, T>, errorMessage: string) =>
@@ -115,11 +99,7 @@ const validateDateBase = (requiredErr: string, invalidErr: string) =>
       return `${value[0]}-${month}-${date}T00:00:00Z` // We put a full timestamp on it so it gets parsed as UTC time and the date doesn't get changed due to locale
     })
     .transform(date => parseISO(date))
-    .superRefine((date, ctx) => {
-      if (!isValid(date)) {
-        ctx.addIssue({ code: 'custom', message: invalidErr })
-      }
-    })
+    .refine(date => isValid(date), { error: invalidErr })
 
 const validateDateOptional = (invalidErr: string) =>
   z
@@ -135,11 +115,7 @@ const validateDateOptional = (invalidErr: string) =>
       }
       return null
     })
-    .superRefine((date, ctx) => {
-      if (date && !isValid(date)) {
-        ctx.addIssue({ code: 'custom', message: invalidErr })
-      }
-    })
+    .refine(date => date === null || isValid(date), { error: invalidErr })
 
 export const validateTransformDate = (requiredErr: string, invalidErr: string) => {
   return validateDateBase(requiredErr, invalidErr).transform(date => date.toISOString().substring(0, 10))

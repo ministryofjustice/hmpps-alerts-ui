@@ -32,10 +32,7 @@ export const schemaFactory =
           try {
             return await prisonerSearchApiClient.getPrisonerDetails(req.middleware.clientToken, val.toUpperCase())
           } catch {
-            ctx.addIssue({
-              code: 'custom',
-              message: `The prison number ‘${val}’ was not recognised`,
-            })
+            ctx.addIssue(`The prison number ‘${val}’ was not recognised`)
             return z.NEVER
           }
         }),

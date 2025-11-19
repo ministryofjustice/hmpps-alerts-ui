@@ -39,10 +39,7 @@ export const validateAndTransformReferenceData =
   <T>(refDataMap: Map<string, T>, errorMessage: string) =>
   (val: string, ctx: RefinementCtx) => {
     if (!refDataMap.has(val)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: errorMessage,
-      })
+      ctx.addIssue(errorMessage)
       return z.NEVER
     }
     return refDataMap.get(val)!
@@ -129,7 +126,7 @@ export const validateTransformPastDate = (requiredErr: string, invalidErr: strin
   return validateDateBase(requiredErr, invalidErr)
     .superRefine((date, ctx) => {
       if (!isBefore(date, new Date())) {
-        ctx.addIssue({ code: 'custom', message: maxErr })
+        ctx.addIssue(maxErr)
       }
     })
     .transform(date => date.toISOString().substring(0, 10))
@@ -144,7 +141,7 @@ export const validateTransformFutureDate = (requiredErr: string, invalidErr: str
       today.setSeconds(0)
       today.setMilliseconds(0)
       if (!(isAfter(date, today) || isEqual(date, today))) {
-        ctx.addIssue({ code: 'custom', message: maxErr })
+        ctx.addIssue(maxErr)
       }
     })
     .transform(date => date.toISOString().substring(0, 10))
@@ -169,7 +166,7 @@ export const validateTransformDateInRange = (
       const future = addDays(today, futureDays + 1)
 
       if (isBefore(date, past) || isAfter(date, future) || isEqual(date, future)) {
-        ctx.addIssue({ code: 'custom', message: maxErr })
+        ctx.addIssue(maxErr)
       }
     })
     .transform(date => date.toISOString().substring(0, 10))

@@ -9,10 +9,7 @@ export const schemaFactory = async (req: Request, _res: Response) => {
     selectedPrisoner: z.string({ error: ERROR_MSG }).transform((val: string, ctx: RefinementCtx) => {
       const prisoner = req.journeyData.bulkAlert?.prisonersSearched?.find(itm => itm.prisonerNumber === val)
       if (!prisoner) {
-        ctx.addIssue({
-          code: 'custom',
-          message: ERROR_MSG,
-        })
+        ctx.addIssue(ERROR_MSG)
         return z.NEVER
       }
       return prisoner!

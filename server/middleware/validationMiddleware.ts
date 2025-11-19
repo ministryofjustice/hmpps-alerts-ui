@@ -33,7 +33,7 @@ export const findError = (errors: fieldErrors, fieldName: string) => {
 export const customErrorOrderBuilder = (errorSummaryList: { href: string }[], order: string[]) =>
   order.map(key => errorSummaryList.find(error => error.href === `#${key}`)).filter(Boolean)
 
-export const createSchema = <T>(shape: T) => z.strictObject({ _csrf: z.string().optional(), ...shape })
+export const createSchema = <T extends object>(shape: T) => z.strictObject({ _csrf: z.string().optional(), ...shape })
 
 export const validateAndTransformReferenceData =
   <T>(refDataMap: Map<string, T>, errorMessage: string) =>
@@ -96,7 +96,7 @@ const validateDateBase = (requiredErr: string, invalidErr: string) =>
       return `${value[0]}-${month}-${date}T00:00:00Z` // We put a full timestamp on it so it gets parsed as UTC time and the date doesn't get changed due to locale
     })
     .transform(date => parseISO(date))
-    .refine(date => isValid(date), { error: invalidErr })
+    .refine(date => isValid(date), { error: invalidErr, abort: true })
 
 const validateDateOptional = (invalidErr: string) =>
   z
@@ -112,7 +112,7 @@ const validateDateOptional = (invalidErr: string) =>
       }
       return null
     })
-    .refine(date => date === null || isValid(date), { error: invalidErr })
+    .refine(date => date === null || isValid(date), { error: invalidErr, abort: true })
 
 export const validateTransformDate = (requiredErr: string, invalidErr: string) => {
   return validateDateBase(requiredErr, invalidErr).transform(date => date.toISOString().substring(0, 10))
@@ -124,26 +124,33 @@ export const validateTransformOptionalDate = (invalidErr: string) => {
 
 export const validateTransformPastDate = (requiredErr: string, invalidErr: string, maxErr: string) => {
   return validateDateBase(requiredErr, invalidErr)
-    .superRefine((date, ctx) => {
-      if (!isBefore(date, new Date())) {
-        ctx.addIssue(maxErr)
-      }
-    })
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(0)
+        today.setMinutes(0)
+        today.setSeconds(0)
+        today.setMilliseconds(0)
+        return isBefore(date, today) || isEqual(date, today)
+      },
+      { error: maxErr, abort: true },
+    )
     .transform(date => date.toISOString().substring(0, 10))
 }
 
 export const validateTransformFutureDate = (requiredErr: string, invalidErr: string, maxErr: string) => {
   return validateDateBase(requiredErr, invalidErr)
-    .superRefine((date, ctx) => {
-      const today = new Date()
-      today.setHours(0)
-      today.setMinutes(0)
-      today.setSeconds(0)
-      today.setMilliseconds(0)
-      if (!(isAfter(date, today) || isEqual(date, today))) {
-        ctx.addIssue(maxErr)
-      }
-    })
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(0)
+        today.setMinutes(0)
+        today.setSeconds(0)
+        today.setMilliseconds(0)
+        return isAfter(date, today) || isEqual(date, today)
+      },
+      { error: maxErr, abort: true },
+    )
     .transform(date => date.toISOString().substring(0, 10))
 }
 
@@ -155,19 +162,20 @@ export const validateTransformDateInRange = (
   futureDays: number,
 ) => {
   return validateDateBase(requiredErr, invalidErr)
-    .superRefine((date, ctx) => {
-      const today = new Date()
-      today.setHours(0)
-      today.setMinutes(0)
-      today.setSeconds(0)
-      today.setMilliseconds(0)
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(0)
+        today.setMinutes(0)
+        today.setSeconds(0)
+        today.setMilliseconds(0)
 
-      const past = subDays(today, pastDays)
-      const future = addDays(today, futureDays + 1)
+        const past = subDays(today, pastDays)
+        const future = addDays(today, futureDays + 1)
 
-      if (isBefore(date, past) || isAfter(date, future) || isEqual(date, future)) {
-        ctx.addIssue(maxErr)
-      }
-    })
+        return isEqual(date, past) || (isAfter(date, past) && isBefore(date, future))
+      },
+      { error: maxErr, abort: true },
+    )
     .transform(date => date.toISOString().substring(0, 10))
 }

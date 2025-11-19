@@ -1,6 +1,6 @@
 import { Request } from 'express'
-import { z, RefinementCtx } from 'zod/v3'
-import { isBefore, parseISO } from 'date-fns'
+import { z, RefinementCtx } from 'zod'
+import { isAfter } from 'date-fns'
 import {
   createSchema,
   validateAndTransformReferenceData,
@@ -32,10 +32,7 @@ export const schemaFactory =
           try {
             return await prisonerSearchApiClient.getPrisonerDetails(req.middleware.clientToken, val.toUpperCase())
           } catch {
-            ctx.addIssue({
-              code: 'custom',
-              message: `The prison number ‘${val}’ was not recognised`,
-            })
+            ctx.addIssue(`The prison number ‘${val}’ was not recognised`)
             return z.NEVER
           }
         }),
@@ -50,22 +47,45 @@ export const schemaFactory =
         0,
       ),
       activeTo: validateTransformOptionalDate('The alert end date must be a real date'),
-    }).superRefine(async (val, ctx) => {
-      if (val.alertCode?.code !== 'DOCGM' && (val.alertCode as unknown as string) !== 'DOCGM' && !val.description) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Enter why you are creating this alert',
-          path: ['description'],
-        })
-      }
-      if (val.activeTo && isBefore(lenientParseDate(val.activeTo), lenientParseDate(val.activeFrom))) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'The alert end date must be after the alert start date',
-          path: ['activeTo'],
-        })
-      }
-      if (val.alertCode?.code && val.prisonNumber?.prisonerNumber) {
+    })
+      .refine(({ description }) => description.length > 0, {
+        error: 'Enter why you are creating this alert',
+        path: ['description'],
+        when(payload): boolean {
+          const { value, issues } = payload
+          if (!value || typeof value !== 'object' || !('alertCode' in value)) {
+            return false
+          }
+          if (
+            (value.alertCode &&
+              typeof value.alertCode === 'object' &&
+              'code' in value.alertCode &&
+              value.alertCode.code === 'DOCGM') ||
+            (typeof value.alertCode === 'string' && value.alertCode === 'DOCGM')
+          ) {
+            return false
+          }
+          return issues.every(iss => iss.path?.[0] !== 'description')
+        },
+      })
+      .refine(({ activeFrom, activeTo }) => isAfter(activeTo!, activeFrom), {
+        error: 'The alert end date must be after the alert start date',
+        path: ['activeTo'],
+        when(payload): boolean {
+          const { value, issues } = payload
+          if (
+            !value ||
+            typeof value !== 'object' ||
+            !('activeFrom' in value) ||
+            !('activeTo' in value) ||
+            !value.activeTo
+          ) {
+            return false
+          }
+          return issues.every(iss => iss.path?.[0] !== 'activeFrom' && iss.path?.[0] !== 'activeTo')
+        },
+      })
+      .superRefine(async (val, ctx) => {
         const existingActiveAlerts = await alertsApiClient.getPrisonerActiveAlertForAlertCode(
           req.middleware.clientToken,
           val.prisonNumber.prisonerNumber,
@@ -78,20 +98,7 @@ export const schemaFactory =
             path: ['alertCode'],
           })
         }
-      }
-    })
+      })
   }
-
-const lenientParseDate = (ds: string) => {
-  if (ds.match(/[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}/)) {
-    const value = ds.split(/[-/]/).reverse()
-    // Prefix month and date with a 0 if needed
-    const month = value[1]?.length === 2 ? value[1] : `0${value[1]}`
-    const date = value[2]?.length === 2 ? value[2] : `0${value[2]}`
-    const dateString = `${value[0]}-${month}-${date}T00:00:00Z` // We put a full timestamp on it so it gets parsed as UTC time and the date doesn't get changed due to locale
-    return parseISO(dateString)
-  }
-  return parseISO(ds)
-}
 
 export type SchemaType = z.infer<Awaited<ReturnType<ReturnType<typeof schemaFactory>>>>

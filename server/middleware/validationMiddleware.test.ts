@@ -5,12 +5,17 @@ import { FLASH_KEY__VALIDATION_ERRORS } from '../utils/constants'
 import {
   createSchema,
   validate,
+  validateAndTransformReferenceData,
   validateTransformDate,
   validateTransformOptionalDate,
   validateTransformPastDate,
   validateTransformFutureDate,
   validateTransformDateInRange,
 } from './validationMiddleware'
+
+beforeAll(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => undefined)
+})
 
 it('should normalise new lines', async () => {
   const schema = createSchema({
@@ -30,11 +35,44 @@ it('should normalise new lines', async () => {
   expect(next).toHaveBeenCalledWith()
 })
 
-describe('date validation tests', () => {
-  beforeEach(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+describe('reference data validation', () => {
+  const refData = new Map([
+    ['exists1', { value: 1 }],
+    ['exists2', { value: 10 }],
+  ])
+  const schema = createSchema({
+    item: z.string().min(1, { error: 'Required' }).transform(validateAndTransformReferenceData(refData, 'Unknown')),
   })
 
+  it.each([
+    { input: 'exists1', expected: 1 },
+    { input: 'exists2', expected: 10 },
+  ])('should accept valid input ($input)', async ({ input, expected }) => {
+    const { req, res, next } = mockRequest({
+      body: { item: input },
+      expectSuccess: true,
+    })
+    await validate(schema)(req, res, next)
+    expect(next).toHaveBeenCalledWith()
+    expect(req.body.item).toEqual({ value: expected })
+  })
+
+  it.each([
+    { input: '', error: 'Required' },
+    { input: 'missing', error: 'Unknown' },
+  ])('should reject invalid input ($input)', async ({ input, error }) => {
+    const { req, res, next } = mockRequest({
+      body: { item: input },
+      expectSuccess: false,
+    })
+    await validate(schema)(req, res, next)
+    expect(next).not.toHaveBeenCalledWith()
+    const errors = getFlashValidationErrors(req)
+    expect(errors).toEqual({ item: [error] })
+  })
+})
+
+describe('date validation', () => {
   const schema = createSchema({
     required: validateTransformDate('Required', 'Invalid'),
     optional: validateTransformOptionalDate('Invalid'),

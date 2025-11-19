@@ -1,6 +1,6 @@
 import { Request } from 'express'
 import { z, RefinementCtx } from 'zod'
-import { isBefore, parseISO } from 'date-fns'
+import { isAfter } from 'date-fns'
 import {
   createSchema,
   validateAndTransformReferenceData,
@@ -53,35 +53,33 @@ export const schemaFactory =
         path: ['description'],
         when(payload): boolean {
           const { value, issues } = payload
-          if (!value) {
-            return false
-          }
-          if (typeof value !== 'object' || !('alertCode' in value)) {
+          if (!value || typeof value !== 'object' || !('alertCode' in value)) {
             return false
           }
           if (
-            value.alertCode &&
-            typeof value.alertCode === 'object' &&
-            'code' in value.alertCode &&
-            value.alertCode.code === 'DOCGM'
+            (value.alertCode &&
+              typeof value.alertCode === 'object' &&
+              'code' in value.alertCode &&
+              value.alertCode.code === 'DOCGM') ||
+            (typeof value.alertCode === 'string' && value.alertCode === 'DOCGM')
           ) {
-            return false
-          }
-          if (typeof value.alertCode === 'string' && value.alertCode === 'DOCGM') {
             return false
           }
           return issues.every(iss => iss.path?.[0] !== 'description')
         },
       })
-      .refine(({ activeFrom, activeTo }) => !isBefore(lenientParseDate(activeTo!), lenientParseDate(activeFrom)), {
+      .refine(({ activeFrom, activeTo }) => isAfter(activeTo!, activeFrom), {
         error: 'The alert end date must be after the alert start date',
         path: ['activeTo'],
         when(payload): boolean {
           const { value, issues } = payload
-          if (!value) {
-            return false
-          }
-          if (typeof value !== 'object' || !('activeFrom' in value) || !('activeTo' in value) || !value.activeTo) {
+          if (
+            !value ||
+            typeof value !== 'object' ||
+            !('activeFrom' in value) ||
+            !('activeTo' in value) ||
+            !value.activeTo
+          ) {
             return false
           }
           return issues.every(iss => iss.path?.[0] !== 'activeFrom' && iss.path?.[0] !== 'activeTo')
@@ -102,17 +100,5 @@ export const schemaFactory =
         }
       })
   }
-
-const lenientParseDate = (ds: string) => {
-  if (ds.match(/[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}/)) {
-    const value = ds.split(/[-/]/).reverse()
-    // Prefix month and date with a 0 if needed
-    const month = value[1]?.length === 2 ? value[1] : `0${value[1]}`
-    const date = value[2]?.length === 2 ? value[2] : `0${value[2]}`
-    const dateString = `${value[0]}-${month}-${date}T00:00:00Z` // We put a full timestamp on it so it gets parsed as UTC time and the date doesn't get changed due to locale
-    return parseISO(dateString)
-  }
-  return parseISO(ds)
-}
 
 export type SchemaType = z.infer<Awaited<ReturnType<ReturnType<typeof schemaFactory>>>>

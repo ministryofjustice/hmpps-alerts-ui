@@ -13,7 +13,7 @@ This repository hosts the Alerts User Interface, a frontend application for mana
   * Ask someone with access to manage user accounts in HMPPS Digital Services to create you a new user and grant the required roles:
     * ROLE_ALERTS_REFERENCE_DATA_MANAGER
     * ROLE_BULK_PRISON_ESTATE_ALERTS
-  * Run `npm ci` to install the dependencies
+  * Run `npm run setup` to install the dependencies
   * Run `npm run build` to compile the styling and build the views
   * Run `npm run start:dev` to start the UI
   * Use the new user details you got given to log in

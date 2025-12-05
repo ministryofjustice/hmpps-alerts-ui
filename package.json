@@ -24,7 +24,8 @@
     "rebuild": "npm run clean && npm i && npm run build",
     "precommit:secrets": "gitleaks git --pre-commit --redact --staged --verbose --config .gitleaks/config.toml --gitleaks-ignore-path .gitleaks/.gitleaksignore",
     "precommit:lint": "lint-staged",
-    "precommit:verify": "npm run typecheck && npm test"
+    "precommit:verify": "npm run typecheck && npm test",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^24",
@@ -37,6 +38,7 @@
     "@ministryofjustice/hmpps-auth-clients": "^1.0.0",
     "@ministryofjustice/hmpps-connect-dps-components": "^5.2.0",
     "@ministryofjustice/hmpps-monitoring": "^1.0.0",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@ministryofjustice/hmpps-rest-client": "^1.0.0",
     "@sentry/cli": "^2.58.0",
     "@sentry/node": "^10.24.0",

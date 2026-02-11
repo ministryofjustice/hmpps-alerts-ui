@@ -5,13 +5,13 @@ export default configureAllowedScripts({
     // Needed by esbuild for watching files during development
     'node_modules/@parcel/watcher@2.5.4': 'ALLOW',
     // Enables use of Sentry CLI:
-    'node_modules/@sentry/cli@3.1.0': 'ALLOW',
+    'node_modules/@sentry/cli@3.2.0': 'ALLOW',
     // Needed for running integration tests:
-    'node_modules/cypress@15.9.0': 'ALLOW',
+    'node_modules/cypress@15.10.0': 'ALLOW',
     // Provides native integration, supporting ability to write dtrace probes for bunyan
     'node_modules/dtrace-provider@0.8.8': 'ALLOW',
     // ESBuild is written in GoLang - this is needed to download prebuilt binaries for the specific platform
-    'node_modules/esbuild@0.27.2': 'ALLOW',
+    'node_modules/esbuild@0.27.3': 'ALLOW',
     // Needed by esbuild (via chokidar)
     'node_modules/fsevents@2.3.3': 'ALLOW',
     // Native solution to quickly resolve module paths, used by jest and eslint

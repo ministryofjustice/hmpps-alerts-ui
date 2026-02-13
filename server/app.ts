@@ -2,7 +2,6 @@ import express from 'express'
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import * as Sentry from '@sentry/node'
 import createError from 'http-errors'
-// @ts-expect-error Import untyped middleware for cypress coverage
 import cypressCoverage from '@cypress/code-coverage/middleware/express'
 import './sentry'
 import nunjucksSetup from './utils/nunjucksSetup'

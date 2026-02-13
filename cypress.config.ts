@@ -35,7 +35,8 @@ export default defineConfig({
     specPattern: '**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'integration_tests/support/index.ts',
     experimentalRunAllSpecs: true,
-    env: {
+    allowCypressEnv: false,
+    expose: {
       codeCoverage: {
         url: 'http://localhost:3007/__coverage__',
       },

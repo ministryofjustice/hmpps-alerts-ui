@@ -3,7 +3,9 @@ import type { SelectOption } from '../../server/utils/viewUtils'
 const alertTypeElement = document.getElementById('alertType') as HTMLSelectElement | undefined
 const alertCodeElement = document.getElementById('alertCode') as HTMLSelectElement | undefined
 const descriptionGroupElement = document.getElementById('description')?.parentElement
-const typeCodeMap: Record<string, SelectOption[]> = JSON.parse(document.getElementById('typeCodeMap')?.textContent ?? '{}')
+const typeCodeMap: Record<string, SelectOption[]> = JSON.parse(
+  document.getElementById('typeCodeMap')?.textContent ?? '{}',
+)
 
 if (alertCodeElement && descriptionGroupElement) {
   document.addEventListener('DOMContentLoaded', () => {

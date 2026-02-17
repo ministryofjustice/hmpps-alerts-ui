@@ -1,8 +1,9 @@
 import { Request } from 'express'
 import AlertsApiClient from '../../data/alertsApiClient'
 import { AlertCode, AlertType } from '../../@types/alerts/alertsApiTypes'
+import type { SelectOption } from '../../utils/viewUtils'
 
-export default class BaseController {
+export default abstract class BaseController {
   constructor(readonly alertsApiService: AlertsApiClient) {}
 
   /**
@@ -31,7 +32,7 @@ export default class BaseController {
       includeInactive,
     )
 
-    const typeCodeMap: { [key: string]: { value: string; text: string }[] } = types.reduce(
+    const typeCodeMap: Record<string, SelectOption[]> = types.reduce(
       (ts, t) => ({
         ...ts,
         [t.code]: this.mapActiveSortedAlertTypes(t.alertCodes, existingAlertCodes, includeInactive),
@@ -39,7 +40,7 @@ export default class BaseController {
       {},
     )
 
-    let alertCodes: { value: string; text: string }[] = []
+    let alertCodes: SelectOption[] = []
     if (type) {
       const selectedType = types.find(t => t.code === type)
       if (selectedType) {
@@ -53,10 +54,10 @@ export default class BaseController {
     alertTypes: (AlertType | AlertCode)[],
     existingAlertCodes?: string[],
     includeInactive?: boolean,
-  ): { text: string; value: string }[] {
+  ): SelectOption[] {
     return alertTypes
       ?.filter(alertType => includeInactive || alertType.isActive)
-      .map(alertType => {
+      .map<SelectOption>(alertType => {
         return {
           value: alertType.code,
           text: alertType.description,

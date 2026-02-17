@@ -1,5 +1,3 @@
-import { nodeListForEach } from './utils'
-
 function FormSpinner(container) {
   this.container = container
 
@@ -22,7 +20,7 @@ function FormSpinner(container) {
     setTimeout(() => document.querySelector('body').appendChild(formSpinnerTemplate.content.firstChild), 1000)
 
     const buttons = this.container.querySelectorAll('[data-module="govuk-button"]')
-    nodeListForEach(buttons, function (button) {
+    buttons.forEach(function (button) {
       button.setAttribute('disabled', 'disabled')
       button.setAttribute('aria-disabled', 'true')
     })

@@ -5,13 +5,9 @@ import Card from './components/card'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
+govukFrontend.createAll(FormSpinner)
 
 const $cards = document.querySelectorAll<HTMLDivElement>('.card--clickable')
 $cards.forEach($card => {
   new Card($card)
-})
-
-const $spinnerForms = document.querySelectorAll<HTMLFormElement>('[data-module="form-spinner"]')
-$spinnerForms.forEach($spinnerForm => {
-  new FormSpinner($spinnerForm)
 })

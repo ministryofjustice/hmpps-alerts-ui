@@ -6,12 +6,12 @@ import Card from './components/card'
 govukFrontend.initAll()
 mojFrontend.initAll()
 
-var $cards = document.querySelectorAll('.card--clickable')
-$cards.forEach(function ($card) {
+const $cards = document.querySelectorAll<HTMLDivElement>('.card--clickable')
+$cards.forEach($card => {
   new Card($card)
 })
 
-var $spinnerForms = document.querySelectorAll('[data-module="form-spinner"]')
-$spinnerForms.forEach(function ($spinnerForm) {
+const $spinnerForms = document.querySelectorAll<HTMLFormElement>('[data-module="form-spinner"]')
+$spinnerForms.forEach($spinnerForm => {
   new FormSpinner($spinnerForm)
 })

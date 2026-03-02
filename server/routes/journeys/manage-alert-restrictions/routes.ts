@@ -1,6 +1,5 @@
 import BaseRouter from '../../common/routes'
 import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
-import AuthorisedRoles from '../../../authentication/authorisedRoles'
 import { validate } from '../../../middleware/validationMiddleware'
 import { schema } from './schemas'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
@@ -12,6 +11,7 @@ import SelectAlertCodeRoutes from './select-alert-code/routes'
 import SelectUserRoutes from './select-user/routes'
 import ManageAlertRestrictionsCheckAnswersRoutes from './check-answers/routes'
 import ManageAlertRestrictionConfirmationRoutes from './confirmation/routes'
+import AuthorisedRoles from '../../../utils/authorisedRoles'
 
 export default function ManageAlertRestrictionRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()

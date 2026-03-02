@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import AuthorisedRoles from '../../../authentication/authorisedRoles'
+import AuthorisedRoles from '../../../utils/authorisedRoles'
 
 context('test /update-reference-data screen', () => {
   const uuid = uuidV4()

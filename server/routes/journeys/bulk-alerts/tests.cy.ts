@@ -1,4 +1,4 @@
-import AuthorisedRoles from '../../../authentication/authorisedRoles'
+import AuthorisedRoles from '../../../utils/authorisedRoles'
 
 context('test /bulk-alerts screen', () => {
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })

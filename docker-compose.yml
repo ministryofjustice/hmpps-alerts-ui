@@ -1,4 +1,3 @@
-version: '3.1'
 services:
   redis:
     image: redis:7
@@ -23,6 +22,19 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
+  hmpps-template-kotlin:
+    image: ghcr.io/ministryofjustice/hmpps-template-kotlin:latest
+    networks:
+      - hmpps
+    container_name: hmpps-template-kotlin
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+    environment:
+      - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
+      - EXAMPLE_API_URL=http://localhost:8080
+
   app:
     build:
       context: .
@@ -34,6 +46,8 @@ services:
       - hmpps
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/health"]
     environment:
       - PRODUCT_ID=UNASSIGNED
       - REDIS_ENABLED=false
@@ -51,6 +65,7 @@ services:
       - TOKEN_VERIFICATION_API_URL=http://hmpps-auth:8080/auth
       - TOKEN_VERIFICATION_ENABLED=false
       - INGRESS_URL=http://localhost:3000
+      - NO_HTTPS=true
 
 networks:
   hmpps:

@@ -3,7 +3,7 @@ import { configureAllowedScripts } from '@ministryofjustice/hmpps-npm-script-all
 export default configureAllowedScripts({
   allowlist: {
     // Needed by esbuild for watching files during development
-    'node_modules/@parcel/watcher@2.5.4': 'ALLOW',
+    'node_modules/@parcel/watcher@2.5.6': 'ALLOW',
     // Enables use of Sentry CLI:
     'node_modules/@sentry/cli@3.2.0': 'ALLOW',
     // Needed for running integration tests:

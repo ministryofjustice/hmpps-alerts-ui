@@ -32,9 +32,14 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["node"],
+      "matchPackageNames": ["node", "hmpps-node"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchFileNames": ["**/.github/workflows/**/*.ya?ml"],
+      "separateMinorPatch": true
     },
     {
       "matchManagers": ["pre-commit"],

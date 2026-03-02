@@ -7,7 +7,6 @@ const { buildNotificationPlugin, cleanPlugin } = require('./utils')
 
 /**
  * Copy additional assets into distribution
- * @type {BuildStep}
  */
 const getAdditionalAssetsConfig = buildConfig => ({
   outdir: buildConfig.assets.outDir,
@@ -22,7 +21,6 @@ const getAdditionalAssetsConfig = buildConfig => ({
 
 /**
  * Build scss and javascript assets
- * @type {BuildStep}
  */
 const getAssetsConfig = buildConfig => ({
   entryPoints: buildConfig.assets.entryPoints,

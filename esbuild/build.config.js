@@ -1,9 +1,8 @@
-const path = require('node:path')
+const path = require('path')
 const { globSync } = require('node:fs')
 
 /**
  * Configuration for build steps
- * @type {() => BuildConfig}
  */
 const getBuildConfig = () => {
   const cwd = process.cwd()

@@ -1,6 +1,5 @@
 import BaseRouter from '../../common/routes'
 import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
-import AuthorisedRoles from '../../../authentication/authorisedRoles'
 import { validate } from '../../../middleware/validationMiddleware'
 import { schemaFactory } from './schemas'
 import { DataAccess } from '../../../data'
@@ -16,6 +15,7 @@ import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAns
 import BulkAlertsConfirmationRoutes from './confirmation/routes'
 import { Services } from '../../../services'
 import BulkAlertsCancellationCheckRoutes from './cancellation-check/routes'
+import AuthorisedRoles from '../../../utils/authorisedRoles'
 
 export default function BulkAlertsRoutes(
   { alertsApiClient, prisonerSearchApiClient }: DataAccess,

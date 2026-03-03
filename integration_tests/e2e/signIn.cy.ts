@@ -2,7 +2,7 @@ import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'
-import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import AuthorisedRoles from '../../server/utils/authorisedRoles'
 
 context('Sign In', () => {
   beforeEach(() => {

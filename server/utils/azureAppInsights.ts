@@ -4,12 +4,21 @@ import {
   DistributedTracingModes,
   getCorrelationContext,
   setup,
-  TelemetryClient,
+  type TelemetryClient,
 } from 'applicationinsights'
 import { Request, RequestHandler } from 'express'
 import { v4 } from 'uuid'
+import { CorrelationContext } from 'applicationinsights/out/AutoCollection/CorrelationContextManager'
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
 import type { ApplicationInfo } from '../applicationInfo'
+
+const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GET /info']
+const dependencyPrefixesToIgnore = ['sqs']
+
+export type ContextObject = {
+  ['http.ServerRequest']?: Request
+  correlationContext?: CorrelationContext
+}
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -70,6 +79,28 @@ export function buildAppInsightsClient(
     return defaultClient
   }
   return null
+}
+
+export function ignoredRequestsProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString.Request) {
+    const requestData = envelope.data.baseData
+    if (requestData instanceof Contracts.RequestData && requestData.success) {
+      const { name } = requestData
+      return requestPrefixesToIgnore.every(prefix => !name.startsWith(prefix))
+    }
+  }
+  return true
+}
+
+export function ignoredDependenciesProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString.Dependency) {
+    const dependencyData = envelope.data.baseData
+    if (dependencyData instanceof Contracts.RemoteDependencyData && dependencyData.success) {
+      const { target } = dependencyData
+      return dependencyPrefixesToIgnore.every(prefix => !target.startsWith(prefix))
+    }
+  }
+  return true
 }
 
 export function appInsightsMiddleware(): RequestHandler {

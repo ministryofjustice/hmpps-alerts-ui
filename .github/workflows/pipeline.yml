@@ -70,11 +70,11 @@ jobs:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
-      push: ${{ inputs.push || true }}
+      push: ${{ inputs.push || inputs.push == null }}
       docker_multiplatform: false
       additional_docker_build_args: --secret id=sentry,env=SENTRY_AUTH_TOKEN
   deploy_dev:
-    name: Deploy to the dev environment
+    name: Deploy to the development environment
     if: github.ref == 'refs/heads/main'
     needs:
       - build
@@ -109,3 +109,4 @@ jobs:
       environment: 'prod'
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'
+      slack_notification: 'false' # if 'true', it needs a valid NONPROD_RELEASES_SLACK_CHANNEL variable to be set

@@ -21,7 +21,7 @@ import { auditPageViewMiddleware } from './middleware/auditPageViewMiddleware'
 
 import routes from './routes'
 import type { Services } from './services'
-import AuthorisedRoles from './authentication/authorisedRoles'
+import AuthorisedRoles from './utils/authorisedRoles'
 import populateClientToken from './middleware/populateClientToken'
 import logger from '../logger'
 import config from './config'

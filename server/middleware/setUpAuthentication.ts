@@ -3,10 +3,10 @@ import flash from 'connect-flash'
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import { Router } from 'express'
 import { Strategy } from 'passport-oauth2'
-import { AuthenticatedRequest, VerificationClient } from '@ministryofjustice/hmpps-auth-clients'
+import { VerificationClient, AuthenticatedRequest } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
-import generateOauthClientToken from '../authentication/clientCredentials'
+import generateOauthClientToken from '../utils/clientCredentials'
 import logger from '../../logger'
 
 passport.serializeUser((user, done) => {

@@ -10,9 +10,6 @@ RUN apk --update-cache upgrade --available \
 ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
-RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --ingroup appgroup
-
 WORKDIR /app
 
 ARG BUILD_NUMBER

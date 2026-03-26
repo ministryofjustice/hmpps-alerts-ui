@@ -22,7 +22,7 @@ jobs:
         with:
           use_oidc: true
           directory: test_artifacts
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           use_oidc: true
           directory: test_artifacts

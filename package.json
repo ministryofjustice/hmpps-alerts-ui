@@ -32,15 +32,15 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1014.0",
-    "@cypress/code-coverage": "4.0.2",
+    "@aws-sdk/client-sqs": "3.1020.0",
+    "@cypress/code-coverage": "4.0.3",
     "@ministryofjustice/frontend": "8.0.1",
     "@ministryofjustice/hmpps-auth-clients": "^1.0.2",
-    "@ministryofjustice/hmpps-connect-dps-components": "5.3.2",
+    "@ministryofjustice/hmpps-connect-dps-components": "5.3.5",
     "@ministryofjustice/hmpps-monitoring": "^1.0.2",
-    "@ministryofjustice/hmpps-rest-client": "1.1.0",
-    "@sentry/cli": "3.3.3",
-    "@sentry/node": "10.45.0",
+    "@ministryofjustice/hmpps-rest-client": "1.2.0",
+    "@sentry/cli": "3.3.5",
+    "@sentry/node": "10.46.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.2",
@@ -100,7 +100,7 @@
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "axe-core": "^4.11.1",
-    "cypress": "15.12.0",
+    "cypress": "15.13.0",
     "cypress-axe": "^1.7.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^2.0.5",
@@ -110,7 +110,7 @@
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "3.7.0",
     "jest": "30.3.0",
-    "jest-html-reporter": "^4.3.0",
+    "jest-html-reporter": "4.4.0",
     "jest-junit": "^16.0.0",
     "jsonwebtoken": "^9.0.3",
     "lint-staged": "16.4.0",
@@ -125,7 +125,7 @@
     "wait-on": "9.0.4"
   },
   "overrides": {
-    "diff": "^8.0.3",
-    "serialize-javascript": "^7.0.4"
+    "diff": "^8.0.4",
+    "serialize-javascript": "^7.0.5"
   }
 }

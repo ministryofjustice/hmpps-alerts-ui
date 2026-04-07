@@ -27,19 +27,24 @@ export default function setUpWebSecurity(): Router {
           // This ensures only scripts we trust are loaded, and not anything injected into the
           // page by an attacker.
           scriptSrc: [
-            "'self' https://browser.sentry-cdn.com https://js.sentry-cdn.com",
+            "'self'",
+            'https://browser.sentry-cdn.com',
+            'https://js.sentry-cdn.com',
             (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
           ],
           connectSrc: [
-            "'self' https://*.sentry.io https://northeurope-0.in.applicationinsights.azure.com https://js.monitor.azure.com",
+            "'self'",
+            'https://*.sentry.io',
+            'https://northeurope-0.in.applicationinsights.azure.com',
+            'https://js.monitor.azure.com',
           ],
-          workerSrc: ["'self' blob:"],
+          workerSrc: ["'self'", 'blob:'],
           styleSrc: [
             "'self'",
             (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
           ],
           fontSrc: ["'self'"],
-          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
+          formAction: ["'self'", config.apis.hmppsAuth.externalUrl],
           ...(config.production ? {} : { upgradeInsecureRequests: null }),
         },
       },

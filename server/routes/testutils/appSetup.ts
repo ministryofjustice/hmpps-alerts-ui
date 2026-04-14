@@ -69,7 +69,7 @@ function appSetup(
       logger,
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      requestOptions: { includeSharedData: true },
+      requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
     }),
   )
   app.use(routes(services))

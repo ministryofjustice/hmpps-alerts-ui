@@ -50,6 +50,7 @@ export default function setupAuthentication() {
       logger,
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
+      requestOptions: { updateContentSecurityPolicy: true },
     }),
     (_req, res) => {
       res.status(401)

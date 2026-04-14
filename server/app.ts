@@ -63,7 +63,7 @@ export default function createApp(services: Services): express.Application {
       logger,
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      requestOptions: { includeSharedData: true },
+      requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
     }),
   )
 

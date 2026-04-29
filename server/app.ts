@@ -1,9 +1,7 @@
 import express from 'express'
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
-import * as Sentry from '@sentry/node'
-import createError from 'http-errors'
+import { NotFound } from 'http-errors'
 import cypressCoverage from '@cypress/code-coverage/middleware/express'
-import './sentry'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
@@ -27,7 +25,7 @@ import logger from '../logger'
 import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
-import sentryMiddleware from './middleware/sentryMiddleware'
+import { setUpSentry, sentryMiddleware, setUpSentryErrorHandler } from './middleware/setUpSentry'
 import { handleApiError } from './middleware/handleApiError'
 
 export default function createApp(services: Services): express.Application {
@@ -41,6 +39,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
+  setUpSentry()
   app.use(sentryMiddleware())
   app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
@@ -71,9 +70,9 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
 
-  if (config.sentry.dsn) Sentry.setupExpressErrorHandler(app)
+  setUpSentryErrorHandler(app)
 
-  app.use((_req, _res, next) => next(createError(404, 'Not found')))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(handleApiError)
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 

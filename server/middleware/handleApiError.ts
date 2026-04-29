@@ -18,8 +18,7 @@ export const handleApiError = (error: HTTPError, req: Request, res: Response, ne
     } else {
       next(error)
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (_e) {
+  } catch {
     next(error)
   }
 }

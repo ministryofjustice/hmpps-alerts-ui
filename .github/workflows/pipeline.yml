@@ -21,6 +21,7 @@ permissions:
   contents: read
   id-token: write
   packages: write
+  attestations: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
@@ -73,6 +74,9 @@ jobs:
       push: ${{ inputs.push || inputs.push == null }}
       docker_multiplatform: false
       additional_docker_build_args: --secret id=sentry,env=SENTRY_AUTH_TOKEN
+      generate_sbom: true
+      attach_sbom_to_registry: true
+      sign_image: true
   deploy_dev:
     name: Deploy to the development environment
     if: github.ref == 'refs/heads/main'

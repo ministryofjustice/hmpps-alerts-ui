@@ -17,7 +17,7 @@
 
 {% block pageTitle %}{{ errorSummaryList.length and "Error - " }}{{pageTitle | default(applicationName)}} - DPS{% endblock %}
 
-{% block header %}
+{% block govukHeader %}
   {{ feComponents.header | safe }}
 {% endblock %}
 
@@ -58,7 +58,7 @@
 {% block bodyStart %}
 {% endblock %}
 
-{% block footer %}
+{% block govukFooter %}
   {{ feComponents.footer | safe }}
 {% endblock %}
 

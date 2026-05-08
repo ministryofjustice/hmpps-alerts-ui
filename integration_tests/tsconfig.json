@@ -4,7 +4,7 @@
     "strict": false,
     "noEmit": true,
     "target": "es2021",
-    "lib": ["dom", "es2021"],
+    "lib": ["es5", "dom", "es2015.promise"],
     "types": ["cypress", "express", "express-session", "cypress-file-upload", "@testing-library/cypress"],
     "esModuleInterop": true,
     "skipLibCheck": true

@@ -5,7 +5,6 @@ const { buildNotificationPlugin } = require('./utils')
 
 /**
  * Build typescript application into CommonJS
- * @type {BuildStep}
  */
 const getAppConfig = buildConfig => ({
   entryPoints: globSync(buildConfig.app.entryPoints),

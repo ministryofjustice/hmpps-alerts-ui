@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress'
 import coverageTask from '@cypress/code-coverage/task'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
-import auth from './integration_tests/mockApis/auth'
+import auth from './integration_tests/mockApis/hmppsAuth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import alertsApi from './integration_tests/mockApis/alertsApi'
 import prisonerSearchApi from './integration_tests/mockApis/prisonerSearchApi'

@@ -18,6 +18,11 @@ This repository hosts the Alerts User Interface, a frontend application for mana
   * Run `npm run start:dev` to start the UI
   * Use the new user details you got given to log in
 
+To update hmpps-alerts-api types, run
+```shell
+npx openapi-typescript https://alerts-api-dev.hmpps.service.justice.gov.uk/v3/api-docs > ./server/@types/alerts/index.d.ts
+```
+
 ## Testing
 
 This project uses Jest for unit testing and Cypress for integration testing.

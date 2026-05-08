@@ -1,11 +1,11 @@
 import BaseRouter from '../common/routes'
 import AlertsApiClient from '../../data/alertsApiClient'
 import authorisationMiddleware from '../../middleware/authorisationMiddleware'
-import AuthorisedRoles from '../../authentication/authorisedRoles'
 import { validate } from '../../middleware/validationMiddleware'
 import { schemaFactory } from './schemas'
 import AuditService from '../../services/auditService'
 import DeleteAlertController from './controller'
+import AuthorisedRoles from '../../utils/authorisedRoles'
 
 export default function DeleteAlertRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()

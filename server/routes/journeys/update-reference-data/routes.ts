@@ -1,6 +1,5 @@
 import BaseRouter from '../../common/routes'
 import authorisationMiddleware from '../../../middleware/authorisationMiddleware'
-import AuthorisedRoles from '../../../authentication/authorisedRoles'
 import { validate } from '../../../middleware/validationMiddleware'
 import { schema } from './schemas'
 import redirectCheckAnswersMiddleware from '../../../middleware/redirectCheckAnswersMiddleware'
@@ -18,6 +17,7 @@ import EditAlertCodeRoutes from './edit-alert-code/routes'
 import DeactivateAlertCodeRoutes from './deactivate-alert-code/routes'
 import EditAlertTypeRoutes from './edit-alert-type/routes'
 import DeactivateAlertTypeRoutes from './deactivate-alert-type/routes'
+import AuthorisedRoles from '../../../utils/authorisedRoles'
 
 export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()

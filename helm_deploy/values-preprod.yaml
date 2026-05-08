@@ -26,5 +26,5 @@ generic-service:
     DPS_HOME_PAGE_URL: "https://digital-preprod.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-prisoner-profile-non-prod # sent to Slack channel #connect-dps-non-prod-alerts
+  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
   businessHoursOnly: true

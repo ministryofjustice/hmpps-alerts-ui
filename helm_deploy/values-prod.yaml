@@ -22,4 +22,4 @@ generic-service:
     DPS_HOME_PAGE_URL: "https://digital.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-prisoner-profile-prod # sent to Slack channel #connect-dps-prod-alerts
+  alertSeverity: hmpps-connect-dps-prod # sent to #connect-dps-prod-alerts

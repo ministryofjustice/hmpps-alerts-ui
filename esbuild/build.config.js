@@ -1,9 +1,8 @@
-const path = require('node:path')
+const path = require('path')
 const { globSync } = require('node:fs')
 
 /**
  * Configuration for build steps
- * @type {() => BuildConfig}
  */
 const getBuildConfig = () => {
   const cwd = process.cwd()
@@ -34,7 +33,11 @@ const getBuildConfig = () => {
 
     assets: {
       outDir: path.join(cwd, 'dist/assets'),
-      entryPoints: globSync([path.join(cwd, 'assets/js/*.js'), path.join(cwd, 'assets/scss/*.scss')]),
+      entryPoints: globSync([
+        path.join(cwd, 'assets/js/*.js'),
+        path.join(cwd, 'assets/js/*.ts'),
+        path.join(cwd, 'assets/scss/*.scss'),
+      ]),
       copy: [
         {
           from: path.join(cwd, 'assets/images/**/*'),

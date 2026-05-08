@@ -1,9 +1,9 @@
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
-import { v4 as uuidv4 } from 'uuid'
 
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import flash from 'connect-flash'
+import { randomUUID } from 'crypto'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -56,7 +56,7 @@ function appSetup(
     next()
   })
   app.use((req, _res, next) => {
-    req.id = uuidv4()
+    req.id = randomUUID()
     next()
   })
   app.use(express.json())
@@ -69,7 +69,7 @@ function appSetup(
       logger,
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrison,
-      requestOptions: { includeSharedData: true },
+      requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
     }),
   )
   app.use(routes(services))

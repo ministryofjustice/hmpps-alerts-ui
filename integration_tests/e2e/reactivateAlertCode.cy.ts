@@ -1,4 +1,4 @@
-import AuthorisedRoles from '../../server/authentication/authorisedRoles'
+import AuthorisedRoles from '../../server/utils/authorisedRoles'
 
 context('Reactivate an alert code', () => {
   beforeEach(() => {

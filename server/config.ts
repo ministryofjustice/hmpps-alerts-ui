@@ -110,7 +110,7 @@ export default {
   /** Phase banner tag label (blank in prod namespace) */
   environmentName: get('ENVIRONMENT_NAME', ''),
   sentry: {
-    dsn: process.env.SENTRY_DSN,
+    dsn: get('SENTRY_DSN', null, requiredInProduction),
     loaderScriptId: process.env.SENTRY_LOADER_SCRIPT_ID,
     environment: get('SENTRY_ENVIRONMENT', 'local', requiredInProduction),
     tracesSampleRate: Number(get('SENTRY_TRACES_SAMPLE_RATE', 0.05)),

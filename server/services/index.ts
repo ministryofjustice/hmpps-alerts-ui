@@ -4,11 +4,9 @@ import AuditService from './auditService'
 export const services = () => {
   const { applicationInfo, hmppsAuditClient } = dataAccess()
 
-  const auditService = new AuditService(hmppsAuditClient)
-
   return {
     applicationInfo,
-    auditService,
+    auditService: new AuditService(hmppsAuditClient),
   }
 }
 

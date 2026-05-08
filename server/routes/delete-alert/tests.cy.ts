@@ -1,4 +1,4 @@
-import AuthorisedRoles from '../../authentication/authorisedRoles'
+import AuthorisedRoles from '../../utils/authorisedRoles'
 
 context('test /delete-alert screen', () => {
   const submitButton = () => cy.findByRole('button', { name: /Delete alert/ })

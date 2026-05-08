@@ -1,4 +1,4 @@
-import AuthorisedRoles from '../../authentication/authorisedRoles'
+import AuthorisedRoles from '../../utils/authorisedRoles'
 import { todayStringGBFormat } from '../../utils/datetimeUtils'
 
 context('test /add-any-alert screen', () => {

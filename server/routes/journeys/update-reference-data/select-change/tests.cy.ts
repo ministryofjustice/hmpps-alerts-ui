@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid'
-import AuthorisedRoles from '../../../../authentication/authorisedRoles'
+import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /update-reference-data/select-change screen', () => {

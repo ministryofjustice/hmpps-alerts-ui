@@ -32,7 +32,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1041.0",
+    "@aws-sdk/client-sqs": "3.1042.0",
     "@cypress/code-coverage": "4.0.3",
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "1.0.2",

@@ -17,7 +17,7 @@ const stubGetPrisoner = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/prisoner-search-api/prisoner/[A-z0-9]*',
+      urlPattern: '/prisoner-search-api/prisoner/[A-Za-z0-9]*',
     },
     response: {
       status: 200,
@@ -41,7 +41,7 @@ const stubGetPrisoner500 = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/prisoner-search-api/prisoner/[A-z0-9]*',
+      urlPattern: '/prisoner-search-api/prisoner/[A-Za-z0-9]*',
     },
     response: {
       status: 500,

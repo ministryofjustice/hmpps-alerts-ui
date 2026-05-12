@@ -32,7 +32,7 @@ export default function BulkAlertsRoutes(
       /enter-alert-reason$/,
       /select-prisoner(\/query)?$/,
       /upload-prisoner-list(\?_csrf=.+)?$/,
-      /review-prisoners\?remove=[A-z0-9]+/,
+      /review-prisoners\?remove=[A-Za-z0-9]+/,
       /check-answers$/,
       /cancellation-check$/,
     ]),

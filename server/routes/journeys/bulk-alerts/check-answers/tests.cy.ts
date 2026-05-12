@@ -113,6 +113,6 @@ context('test /bulk-alerts/check-answers', () => {
 
   const continueToConfirmation = () => {
     cy.findByRole('button', { name: /Confirm and upload alerts/i }).click()
-    cy.url().should('to.match', /\/confirmation(#[A-z]+)?$/)
+    cy.url().should('to.match', /\/confirmation(#[A-Za-z]+)?$/)
   }
 })

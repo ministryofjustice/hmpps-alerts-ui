@@ -44,7 +44,7 @@ context('test /update-reference-data/deactivate-alert-type', () => {
     getYesRadio().click()
     getContinueButton().click()
 
-    cy.url().should('to.match', /\/confirmation(#[A-z]+)?$/)
+    cy.url().should('to.match', /\/confirmation(#[A-Za-z]+)?$/)
   })
 
   it('should cancel deactivating Alert Type and return to homepage', () => {

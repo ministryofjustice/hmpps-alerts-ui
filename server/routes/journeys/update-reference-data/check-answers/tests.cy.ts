@@ -272,6 +272,6 @@ context('test /update-reference-data/check-answers', () => {
 
   const continueToConfirmation = () => {
     cy.findByRole('button', { name: /Confirm and save/i }).click()
-    cy.url().should('to.match', /\/confirmation(#[A-z]+)?$/)
+    cy.url().should('to.match', /\/confirmation(#[A-Za-z]+)?$/)
   }
 })

@@ -33,7 +33,7 @@ export default class PrisonerSearchApiClient extends RestClient {
   }
 
   async searchPrisonersByQueryString(token: string, query: string) {
-    if (query.match(/^[A-z][0-9]{4}[A-z]{2}$/)) {
+    if (query.match(/^[A-Z][0-9]{4}[A-Z]{2}$/i)) {
       return this.searchPrisoners(token, { prisonerIdentifier: query })
     }
 

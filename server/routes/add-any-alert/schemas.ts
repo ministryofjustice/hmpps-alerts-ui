@@ -27,7 +27,7 @@ export const schemaFactory =
     return createSchema({
       prisonNumber: z
         .string()
-        .regex(/^[A-z]{1}[0-9]{4}[A-z]{2}$/, 'Enter a prison number in the format A1234CD')
+        .regex(/^[A-Z][0-9]{4}[A-Z]{2}$/i, 'Enter a prison number in the format A1234CD')
         .transform(async (val: string, ctx: RefinementCtx) => {
           try {
             return await prisonerSearchApiClient.getPrisonerDetails(req.middleware.clientToken, val.toUpperCase())

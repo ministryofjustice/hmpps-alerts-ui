@@ -69,11 +69,11 @@ context('test /bulk-alerts full journey', () => {
     validateCheckAnswersChangeLink()
 
     cy.findByRole('button', { name: /Confirm and upload alerts/i }).click()
-    cy.url().should('to.match', /\/confirmation(#[A-z]+)?$/)
+    cy.url().should('to.match', /\/confirmation(#[A-Za-z]+)?$/)
 
     // validate that user will be redirected to confirmation screen if trying to go back
     cy.go('back')
-    cy.url().should('to.match', /\/confirmation(#[A-z]+)?$/)
+    cy.url().should('to.match', /\/confirmation(#[A-Za-z]+)?$/)
   })
 
   const validateCheckAnswersChangeLink = () => {

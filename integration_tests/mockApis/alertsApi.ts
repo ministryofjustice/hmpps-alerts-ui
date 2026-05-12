@@ -314,7 +314,7 @@ const stubCreateAlert = () => {
   return stubFor({
     request: {
       method: 'POST',
-      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts\\?allowInactiveCode=true',
+      urlPattern: '/alerts-api/prisoners/[A-Za-z0-9]*/alerts\\?allowInactiveCode=true',
     },
     response: {
       status: 201,
@@ -332,7 +332,7 @@ const stubGetPrisonerAlertsNotFound = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts.*',
+      urlPattern: '/alerts-api/prisoners/[A-Za-z0-9]*/alerts.*',
     },
     response: {
       status: 200,
@@ -350,7 +350,7 @@ const stubGetPrisonerAlertsFound = () => {
   return stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/alerts-api/prisoners/[A-z0-9]*/alerts.*',
+      urlPattern: '/alerts-api/prisoners/[A-Za-z0-9]*/alerts.*',
     },
     response: {
       status: 200,

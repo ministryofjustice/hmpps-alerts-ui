@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import {
   Contracts,
   defaultClient,
@@ -7,7 +8,6 @@ import {
   type TelemetryClient,
 } from 'applicationinsights'
 import { Request, RequestHandler } from 'express'
-import { v4 } from 'uuid'
 import { CorrelationContext } from 'applicationinsights/out/AutoCollection/CorrelationContextManager'
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
 import type { ApplicationInfo } from '../applicationInfo'
@@ -109,7 +109,7 @@ export function appInsightsMiddleware(): RequestHandler {
       const context = getCorrelationContext()
       if (context && req.route) {
         context.customProperties.setProperty('operationName', `${req.method} ${req.route?.path}`)
-        context.customProperties.setProperty('operationId', v4())
+        context.customProperties.setProperty('operationId', randomUUID())
       }
     })
     next()

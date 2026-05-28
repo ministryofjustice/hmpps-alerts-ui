@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /bulk-alerts/how-to-add-prisoners screen', () => {
-  const uuid = uuidV4()
+  const uuid = randomUUID()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getRadio1 = () => cy.findByRole('radio', { name: /Search for them one by one/ })

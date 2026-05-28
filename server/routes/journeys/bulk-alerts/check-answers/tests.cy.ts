@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /bulk-alerts/check-answers', () => {
-  const uuid = uuidV4()
+  const uuid = randomUUID()
 
   beforeEach(() => {
     cy.task('reset')

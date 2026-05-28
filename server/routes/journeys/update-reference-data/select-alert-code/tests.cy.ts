@@ -1,10 +1,10 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 import { AlertType } from '../../../../@types/alerts/alertsApiTypes'
 
 context('test /update-reference-data/select-alert-code screen', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getAlertCodeRadio1 = () => cy.findByRole('radio', { name: /AA \(AA description\)$/ })
@@ -21,7 +21,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
   })
 
   it('should try out ALERT_CODE EDIT_DESCRIPTION cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
     cy.checkAxeAccessibility()
@@ -42,7 +42,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
   })
 
   it('should try out ALERT_CODE DEACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
     cy.checkAxeAccessibility()
@@ -57,7 +57,7 @@ context('test /update-reference-data/select-alert-code screen', () => {
   })
 
   it('should try out ALERT_CODE REACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-code$/)
     cy.checkAxeAccessibility()

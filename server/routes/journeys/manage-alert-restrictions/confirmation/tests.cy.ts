@@ -1,10 +1,10 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 import { ManageAlertRestrictionsJourney } from '../../../../@types/express'
 
 context('test /manage-alert-restrictions/confirmation', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   const defaultJourneyData: ManageAlertRestrictionsJourney = {
     alertType: {
@@ -36,7 +36,7 @@ context('test /manage-alert-restrictions/confirmation', () => {
   })
 
   it('should show RESTRICT_ALERT confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       ...defaultJourneyData,
       changeType: 'RESTRICT_ALERT',
@@ -51,7 +51,7 @@ context('test /manage-alert-restrictions/confirmation', () => {
   })
 
   it('should show REMOVE_ALERT_RESTRICTION confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       ...defaultJourneyData,
       changeType: 'REMOVE_ALERT_RESTRICTION',
@@ -66,7 +66,7 @@ context('test /manage-alert-restrictions/confirmation', () => {
   })
 
   it('should show ADD_PRIVILEGED_USER confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       ...defaultJourneyData,
       changeType: 'ADD_PRIVILEGED_USER',
@@ -84,7 +84,7 @@ context('test /manage-alert-restrictions/confirmation', () => {
   })
 
   it('should show REMOVE_PRIVILEGED_USER confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       ...defaultJourneyData,
       changeType: 'REMOVE_PRIVILEGED_USER',

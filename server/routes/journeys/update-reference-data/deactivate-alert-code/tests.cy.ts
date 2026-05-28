@@ -1,4 +1,4 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
@@ -7,7 +7,7 @@ context('test /update-reference-data/deactivate-alert-code', () => {
   const getYesRadio = () => cy.findByRole('radio', { name: /Yes$/ })
   const getNoRadio = () => cy.findByRole('radio', { name: /No$/ })
 
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   beforeEach(() => {
     cy.task('reset')
@@ -18,7 +18,7 @@ context('test /update-reference-data/deactivate-alert-code', () => {
   })
 
   it('should confirm to deactivate Alert Code', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage()
     cy.url().should('to.match', /\/deactivate-alert-code$/)
     cy.checkAxeAccessibility()
@@ -45,7 +45,7 @@ context('test /update-reference-data/deactivate-alert-code', () => {
   })
 
   it('should cancel deactivating Alert Code and return to homepage', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage()
     cy.url().should('to.match', /\/deactivate-alert-code$/)
 

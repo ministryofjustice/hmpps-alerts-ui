@@ -1,10 +1,10 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 import { UpdateReferenceDataJourney } from '../../../../@types/express'
 
 context('test /update-reference-data/check-answers', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   beforeEach(() => {
     cy.task('reset')
@@ -20,7 +20,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Create Alert Type', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'ADD_NEW',
@@ -50,7 +50,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Edit Alert Type', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'EDIT_DESCRIPTION',
@@ -87,7 +87,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Reactivate Alert Type', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'REACTIVATE',
@@ -117,7 +117,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Create Alert Code', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'ADD_NEW',
@@ -161,7 +161,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Edit Alert Code', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'EDIT_DESCRIPTION',
@@ -216,7 +216,7 @@ context('test /update-reference-data/check-answers', () => {
   })
 
   it('should check answers for Reactivate Alert Code', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'REACTIVATE',

@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /update-reference-data/select-alert-type screen', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /AA \(A description\)$/ })
@@ -43,7 +43,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_TYPE DEACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_TYPE', 'DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -59,7 +59,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_TYPE REACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_TYPE', 'REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -75,7 +75,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_CODE ADD_NEW cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_CODE', 'ADD_NEW')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -91,7 +91,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_CODE EDIT_DESCRIPTION cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_CODE', 'EDIT_DESCRIPTION')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -107,7 +107,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_CODE DEACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_CODE', 'DEACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -123,7 +123,7 @@ context('test /update-reference-data/select-alert-type screen', () => {
   })
 
   it('should try out ALERT_CODE REACTIVATE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_CODE', 'REACTIVATE')
     cy.url().should('to.match', /\/update-reference-data\/select-alert-type$/)
     cy.checkAxeAccessibility()

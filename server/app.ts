@@ -4,7 +4,6 @@ import { NotFound } from 'http-errors'
 import cypressCoverage from '@cypress/code-coverage/middleware/express'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import { appInsightsMiddleware } from './utils/azureAppInsights'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
@@ -27,6 +26,8 @@ import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
 import { setUpSentry, sentryMiddleware, setUpSentryErrorHandler } from './middleware/setUpSentry'
 import { handleApiError } from './middleware/handleApiError'
+import addUserMetadataToLogs from './middleware/addUserMetadataToLogs'
+import forAllGetRequests from './utils/forAllGetRequests'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -41,7 +42,6 @@ export default function createApp(services: Services): express.Application {
 
   setUpSentry()
   app.use(sentryMiddleware())
-  app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
@@ -49,24 +49,26 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app)
   app.use(setUpAuthentication())
-  app.get('*any', auditPageViewMiddleware(services.auditService))
+  app.use(forAllGetRequests(auditPageViewMiddleware(services.auditService)))
   app.use(authorisationMiddleware(Object.values(AuthorisedRoles)))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser())
   app.use(populateClientToken())
   app.use(populateValidationErrors())
 
-  app.get(
-    '*any',
-    getFrontendComponents({
-      logger,
-      componentApiConfig: config.apis.componentApi,
-      dpsUrl: config.serviceUrls.digitalPrison,
-      requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
-    }),
+  app.use(
+    forAllGetRequests(
+      getFrontendComponents({
+        logger,
+        componentApiConfig: config.apis.componentApi,
+        dpsUrl: config.serviceUrls.digitalPrison,
+        requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
+      }),
+    ),
   )
 
   app.use(checkPopulateUserCaseloads())
+  app.use(addUserMetadataToLogs())
 
   app.use(routes(services))
 

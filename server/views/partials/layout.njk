@@ -69,11 +69,8 @@
         Sentry.init({
           release: "hmpps-alerts-ui@{{ version }}",
           environment: "{{ sentry.environment }}",
-          tracesSampleRate: {{ sentry.tracesSampleRate }},
-          replaysSessionSampleRate: {{ sentry.replaySampleRate }},
-          replaysOnErrorSampleRate: {{ sentry.replayOnErrorSampleRate }},
           initialScope: {
-            user: { username: "{{ user.username }}" },
+            user: { id: Math.random().toString() },
           },
         });
       };

@@ -17,7 +17,6 @@ export function setUpSentry() {
     Sentry.init({
       dsn: config.sentry.dsn,
       environment: config.sentry.environment,
-      tracesSampleRate: config.sentry.tracesSampleRate,
       release: config.gitRef,
       sendDefaultPii: false,
 

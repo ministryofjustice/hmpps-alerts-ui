@@ -32,7 +32,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1053.0",
+    "@aws-sdk/client-sqs": "3.1055.0",
     "@cypress/code-coverage": "4.0.3",
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "2.0.0",
@@ -40,7 +40,7 @@
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.1.0",
     "@sentry/cli": "3.4.3",
-    "@sentry/node": "10.53.1",
+    "@sentry/node": "10.55.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.2",
@@ -99,7 +99,7 @@
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "axe-core": "^4.11.4",
-    "cypress": "15.15.0",
+    "cypress": "15.16.0",
     "cypress-axe": "^1.7.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^2.0.5",

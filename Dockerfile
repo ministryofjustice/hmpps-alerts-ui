@@ -1,8 +1,10 @@
-# Stage: base image
-FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS base
+# Build args available to all stages
+ARG BUILD_NUMBER
+ARG GIT_REF
+ARG GIT_BRANCH
 
-LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
-
+# Stage: build assets
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS build
 RUN apk --update-cache upgrade --available \
   && apk --no-cache add tzdata \
   && rm -rf /var/cache/apk/*
@@ -25,14 +27,6 @@ RUN test -n "$GIT_BRANCH" || (echo "GIT_BRANCH not set" && false)
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 ENV GIT_REF=${GIT_REF}
 ENV GIT_BRANCH=${GIT_BRANCH}
-
-# Stage: build assets
-FROM base AS build
-
-ARG BUILD_NUMBER
-ARG GIT_REF
-ARG GIT_BRANCH
-
 COPY package*.json .allowed-scripts.mjs .npmrc ./
 RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
 ENV NODE_ENV='production'
@@ -43,8 +37,12 @@ RUN --mount=type=secret,id=sentry SENTRY_AUTH_TOKEN=$(cat /run/secrets/sentry) n
 RUN npm prune --no-audit --no-fund --omit=dev
 
 # Stage: copy production assets and dependencies
-FROM base
-
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine-runtime
+LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
+ARG BUILD_NUMBER
+ARG GIT_REF
+ARG GIT_BRANCH
+WORKDIR /app
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
         /app/package-lock.json \
@@ -60,7 +58,9 @@ COPY --from=build --chown=appuser:appgroup \
 RUN mkdir uploads && chown appuser:appgroup uploads && chmod 775 uploads
 
 EXPOSE 3000
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+ENV GIT_REF=${GIT_REF}
+ENV GIT_BRANCH=${GIT_BRANCH}
 ENV NODE_ENV='production'
 USER 2000
-
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/server.js" ]

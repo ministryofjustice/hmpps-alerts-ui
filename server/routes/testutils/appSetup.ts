@@ -1,9 +1,9 @@
+import { randomUUID } from 'node:crypto'
+import flash from 'connect-flash'
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
-import flash from 'connect-flash'
-import { randomUUID } from 'crypto'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'

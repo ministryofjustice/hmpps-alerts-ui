@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express'
-import { validate } from 'uuid'
+import { validateUuid } from '../utils/validateUuid'
 import AuditService from '../services/auditService'
 
 export const auditPageViewMiddleware = (auditService: AuditService): RequestHandler => {
   return async (req, res, next) => {
-    const hasJourneyId = validate(req.originalUrl.split('/')[1])
+    const hasJourneyId = validateUuid(req.originalUrl.split('/')[1])
     let pageNameSuffix = req.originalUrl.replace(/\?.*/, '')
     const splitUrl = pageNameSuffix.toUpperCase().split('/')
     if (hasJourneyId) {

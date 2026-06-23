@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto'
 import type { Express } from 'express'
 import request from 'supertest'
-import { v4 as uuidV4 } from 'uuid'
 import { appWithAllRoutes } from './routes/testutils/appSetup'
 
 let app: Express
@@ -16,7 +16,7 @@ afterEach(() => {
 describe('GET 404', () => {
   it('should render content with stack in dev mode', () => {
     return request(app)
-      .get(`/${uuidV4()}/unknown`)
+      .get(`/${randomUUID()}/unknown`)
       .expect(404)
       .expect('Content-Type', /html/)
       .expect(res => {
@@ -27,7 +27,7 @@ describe('GET 404', () => {
 
   it('should render content without stack in production mode', () => {
     return request(appWithAllRoutes({ production: true }))
-      .get(`/${uuidV4()}/unknown`)
+      .get(`/${randomUUID()}/unknown`)
       .expect(404)
       .expect('Content-Type', /html/)
       .expect(res => {

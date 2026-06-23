@@ -1,10 +1,10 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 import { UpdateReferenceDataJourney } from '../../../../@types/express'
 
 context('test /update-reference-data/confirmation', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   beforeEach(() => {
     cy.task('reset')
@@ -14,7 +14,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show ADD_NEW ALERT_TYPE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'ADD_NEW',
@@ -31,7 +31,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show EDIT_DESCRIPTION ALERT_TYPE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'EDIT_DESCRIPTION',
@@ -55,7 +55,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show DEACTIVATE ALERT_TYPE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'DEACTIVATE',
@@ -78,7 +78,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show REACTIVATE ALERT_TYPE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_TYPE',
       changeType: 'REACTIVATE',
@@ -101,7 +101,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show ADD_NEW ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'ADD_NEW',
@@ -118,7 +118,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show EDIT_DESCRIPTION ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'EDIT_DESCRIPTION',
@@ -144,7 +144,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show DEACTIVATE ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'DEACTIVATE',
@@ -169,7 +169,7 @@ context('test /update-reference-data/confirmation', () => {
   })
 
   it('should show REACTIVATE ALERT_CODE confirmation page', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage({
       referenceDataType: 'ALERT_CODE',
       changeType: 'REACTIVATE',

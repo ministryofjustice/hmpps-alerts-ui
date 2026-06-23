@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../utils/authorisedRoles'
 import Chainable = Cypress.Chainable
 
 context('Manage alert restrictions page', () => {
-  const uuid = uuidV4()
+  const uuid = randomUUID()
 
   const getRestrictAlertRadio = () => cy.findByRole('radio', { name: /Restrict alert$/ })
   const getRemoveRestrictionRadio = () => cy.findByRole('radio', { name: /Remove alert restriction$/ })

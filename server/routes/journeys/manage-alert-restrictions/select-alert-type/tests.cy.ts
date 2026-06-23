@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /manage-alert-restrictions/select-alert-type screen', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /AA \(A description\)$/ })
@@ -53,7 +53,7 @@ context('test /manage-alert-restrictions/select-alert-type screen', () => {
   })
 
   it('should try out REMOVE_ALERT_RESTRICTION cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('REMOVE_ALERT_RESTRICTION')
     cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -70,7 +70,7 @@ context('test /manage-alert-restrictions/select-alert-type screen', () => {
   })
 
   it('should try out ADD_PRIVILEGED_USER cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ADD_PRIVILEGED_USER')
     cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-type$/)
     cy.checkAxeAccessibility()
@@ -87,7 +87,7 @@ context('test /manage-alert-restrictions/select-alert-type screen', () => {
   })
 
   it('should try out REMOVE_PRIVILEGED_USER cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('REMOVE_PRIVILEGED_USER')
     cy.url().should('to.match', /\/manage-alert-restrictions\/select-alert-type$/)
     cy.checkAxeAccessibility()

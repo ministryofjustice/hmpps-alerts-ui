@@ -1,12 +1,14 @@
-import type { NextFunction, Request, Response } from 'express'
-import { v4 as uuidV4, validate } from 'uuid'
+import { randomUUID } from 'node:crypto'
+import type { RequestHandler } from 'express'
+import { validateUuid } from '../utils/validateUuid'
 
-export default function insertJourneyIdentifier() {
-  return (req: Request, res: Response, next: NextFunction): void => {
+export default function insertJourneyIdentifier(): RequestHandler {
+  return (req, res, next): void => {
     const uuid = req.url.split('/')[1] || '/'
-    if (!validate(uuid)) {
-      return res.redirect(`${req.baseUrl}/${uuidV4()}${req.url}`)
+    if (!validateUuid(uuid)) {
+      res.redirect(`${req.baseUrl}/${randomUUID()}${req.url}`)
+      return
     }
-    return next()
+    next()
   }
 }

@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto'
 import { TokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import { Request, RequestHandler, Response } from 'express'
-import { v4 as uuidV4 } from 'uuid'
 import setUpJourneyData from './setUpJourneyData'
 
 let middleware: RequestHandler
@@ -14,7 +14,7 @@ let journeyId: string
 const next = jest.fn()
 
 beforeEach(() => {
-  journeyId = uuidV4()
+  journeyId = randomUUID()
 
   res = {
     callback: () => null,

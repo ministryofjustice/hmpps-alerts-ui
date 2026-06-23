@@ -1,9 +1,9 @@
-import { v4 as uuidV4 } from 'uuid'
+import { randomUUID } from 'node:crypto'
 import AuthorisedRoles from '../../../../utils/authorisedRoles'
 import injectJourneyDataAndReload from '../../../../../integration_tests/utils/e2eTestUtils'
 
 context('test /update-reference-data/select-change screen', () => {
-  let uuid = uuidV4()
+  let uuid = randomUUID()
 
   const getContinueButton = () => cy.findByRole('button', { name: /Continue/ })
   const getAlertTypeRadio1 = () => cy.findByRole('radio', { name: /Add new alert type$/ })
@@ -49,7 +49,7 @@ context('test /update-reference-data/select-change screen', () => {
   })
 
   it('should try out ALERT_CODE cases', () => {
-    uuid = uuidV4()
+    uuid = randomUUID()
     navigateToTestPage('ALERT_CODE')
     cy.url().should('to.match', /\/update-reference-data\/select-change$/)
     cy.checkAxeAccessibility()

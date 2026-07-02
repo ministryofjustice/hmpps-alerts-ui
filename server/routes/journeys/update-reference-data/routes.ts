@@ -18,6 +18,7 @@ import DeactivateAlertCodeRoutes from './deactivate-alert-code/routes'
 import EditAlertTypeRoutes from './edit-alert-type/routes'
 import DeactivateAlertTypeRoutes from './deactivate-alert-type/routes'
 import AuthorisedRoles from '../../../utils/authorisedRoles'
+import forAllGetRequests from '../../../utils/forAllGetRequests'
 
 export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
@@ -30,19 +31,21 @@ export default function UpdateReferenceDataRoutes(alertsApiClient: AlertsApiClie
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)
 
-  router.get('*any', (req, res, next) => {
-    const { referenceDataType, alertType, alertCode } = req.journeyData.updateRefData!
-    if (referenceDataType) {
-      res.locals.auditEvent.subjectType = referenceDataType
-      if (referenceDataType === 'ALERT_TYPE' && alertType) {
-        res.locals.auditEvent.subjectId = alertType.code
-      } else if (referenceDataType === 'ALERT_CODE' && alertCode) {
-        res.locals.auditEvent.subjectId = alertCode.code
+  router.use(
+    forAllGetRequests((req, res, next) => {
+      const { referenceDataType, alertType, alertCode } = req.journeyData.updateRefData!
+      if (referenceDataType) {
+        res.locals.auditEvent.subjectType = referenceDataType
+        if (referenceDataType === 'ALERT_TYPE' && alertType) {
+          res.locals.auditEvent.subjectId = alertType.code
+        } else if (referenceDataType === 'ALERT_CODE' && alertCode) {
+          res.locals.auditEvent.subjectId = alertCode.code
+        }
       }
-    }
-    res.locals.auditEvent.who = res.locals.user.username
-    next()
-  })
+      res.locals.auditEvent.who = res.locals.user.username
+      next()
+    }),
+  )
 
   router.use('/select-change', SelectChangeRoutes())
   router.use('/add-alert-type', AddAlertTypeRoutes(alertsApiClient))

@@ -17,6 +17,7 @@ import config from '../../config'
 import populateValidationErrors from '../../middleware/populateValidationErrors'
 import { HmppsAuditClient } from '../../data'
 import { auditPageViewMiddleware } from '../../middleware/auditPageViewMiddleware'
+import forAllGetRequests from '../../utils/forAllGetRequests'
 
 jest.mock('../../services/auditService')
 
@@ -61,16 +62,17 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.get('*any', auditPageViewMiddleware(services.auditService))
+  app.use(forAllGetRequests(auditPageViewMiddleware(services.auditService)))
   app.use(populateValidationErrors())
-  app.get(
-    '*any',
-    getFrontendComponents({
-      logger,
-      componentApiConfig: config.apis.componentApi,
-      dpsUrl: config.serviceUrls.digitalPrison,
-      requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
-    }),
+  app.use(
+    forAllGetRequests(
+      getFrontendComponents({
+        logger,
+        componentApiConfig: config.apis.componentApi,
+        dpsUrl: config.serviceUrls.digitalPrison,
+        requestOptions: { includeSharedData: true, updateContentSecurityPolicy: true },
+      }),
+    ),
   )
   app.use(routes(services))
   app.use((_req, _res, next) => next(new NotFound()))

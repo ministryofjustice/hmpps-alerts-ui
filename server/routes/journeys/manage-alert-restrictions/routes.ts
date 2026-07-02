@@ -12,6 +12,7 @@ import SelectUserRoutes from './select-user/routes'
 import ManageAlertRestrictionsCheckAnswersRoutes from './check-answers/routes'
 import ManageAlertRestrictionConfirmationRoutes from './confirmation/routes'
 import AuthorisedRoles from '../../../utils/authorisedRoles'
+import forAllGetRequests from '../../../utils/forAllGetRequests'
 
 export default function ManageAlertRestrictionRoutes(alertsApiClient: AlertsApiClient, auditService: AuditService) {
   const { router, get, post } = BaseRouter()
@@ -26,15 +27,17 @@ export default function ManageAlertRestrictionRoutes(alertsApiClient: AlertsApiC
   get('/', controller.GET)
   post('/', validate(schema), controller.POST)
 
-  router.get('*any', (req, res, next) => {
-    const { alertCode } = req.journeyData.restrictAlert!
-    res.locals.auditEvent.subjectType = 'ALERT_CODE'
-    if (alertCode) {
-      res.locals.auditEvent.subjectId = alertCode.code
-    }
-    res.locals.auditEvent.who = res.locals.user.username
-    next()
-  })
+  router.use(
+    forAllGetRequests((req, res, next) => {
+      const { alertCode } = req.journeyData.restrictAlert!
+      res.locals.auditEvent.subjectType = 'ALERT_CODE'
+      if (alertCode) {
+        res.locals.auditEvent.subjectId = alertCode.code
+      }
+      res.locals.auditEvent.who = res.locals.user.username
+      next()
+    }),
+  )
 
   router.use('/select-alert-type', SelectAlertTypeRoutes(alertsApiClient))
   router.use('/select-alert-code', SelectAlertCodeRoutes(alertsApiClient))

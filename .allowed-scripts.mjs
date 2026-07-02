@@ -15,6 +15,6 @@ export default configureAllowedScripts({
     // Needed by esbuild (via chokidar)
     'node_modules/fsevents@2.3.3': 'ALLOW',
     // Native solution to quickly resolve module paths, used by jest and eslint
-    'node_modules/unrs-resolver@1.12.2': 'ALLOW',
+    'node_modules/unrs-resolver@1.11.1': 'ALLOW',
   },
 })

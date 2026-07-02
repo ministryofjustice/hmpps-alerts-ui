@@ -16,6 +16,7 @@ import BulkAlertsConfirmationRoutes from './confirmation/routes'
 import { Services } from '../../../services'
 import BulkAlertsCancellationCheckRoutes from './cancellation-check/routes'
 import AuthorisedRoles from '../../../utils/authorisedRoles'
+import forAllGetRequests from '../../../utils/forAllGetRequests'
 
 export default function BulkAlertsRoutes(
   { alertsApiClient, prisonerSearchApiClient }: DataAccess,
@@ -41,21 +42,23 @@ export default function BulkAlertsRoutes(
   get('/', controller.GET)
   post('/', validate(schemaFactory(alertsApiClient)), controller.START_BACKEND_SESSION, controller.POST)
 
-  router.get('*any', (req, res, next) => {
-    const { planId, alertCode, alertType, alertCodeSubJourney } = req.journeyData.bulkAlert!
-    const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
-    const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code
-    if (planId) {
-      res.locals.auditEvent.subjectId = planId
-      res.locals.auditEvent.subjectType = planId
-    }
-    res.locals.auditEvent.details = {
-      ...res.locals.auditEvent.details,
-      ...(detailsAlertType && { alertType: detailsAlertType }),
-      ...(detailsAlertCode && { alertCode: detailsAlertCode }),
-    }
-    next()
-  })
+  router.use(
+    forAllGetRequests((req, res, next) => {
+      const { planId, alertCode, alertType, alertCodeSubJourney } = req.journeyData.bulkAlert!
+      const detailsAlertType = alertType?.code || alertCodeSubJourney?.alertType?.code
+      const detailsAlertCode = alertCode?.code || alertCodeSubJourney?.alertCode?.code
+      if (planId) {
+        res.locals.auditEvent.subjectId = planId
+        res.locals.auditEvent.subjectType = planId
+      }
+      res.locals.auditEvent.details = {
+        ...res.locals.auditEvent.details,
+        ...(detailsAlertType && { alertType: detailsAlertType }),
+        ...(detailsAlertCode && { alertCode: detailsAlertCode }),
+      }
+      next()
+    }),
+  )
 
   router.use('/enter-alert-reason', EnterAlertReasonRoutes())
   router.use('/how-to-add-prisoners', HowToAddPrisonersRoutes())

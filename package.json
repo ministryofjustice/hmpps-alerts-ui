@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "3.1069.0",
-    "@cypress/code-coverage": "4.0.3",
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.0.2",
@@ -71,6 +70,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "4.0.3",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "1.0.3",

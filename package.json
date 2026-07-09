@@ -10,7 +10,7 @@
     "build": "node esbuild/esbuild",
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
     "start:dev": "node esbuild/esbuild --watch",
-    "start-feature": "nyc instrument dist --nycrc-path ./.nycrc && node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js | bunyan -o short",
+    "start-feature": "node $NODE_DEBUG_OPTION --env-file=feature.env dist/server.js | bunyan -o short",
     "start-feature:dev": "node esbuild/esbuild --watch --env feature.env",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --cache --max-warnings 0 --fix",
@@ -70,8 +70,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "4.0.3",
-    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "1.0.3",
     "@ministryofjustice/frontend-types": "2.0.0",
@@ -83,7 +81,6 @@
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.8.1",
     "@types/connect-flash": "0.0.40",
-    "@types/cypress__code-coverage": "^3.10.2",
     "@types/express-session": "^1.19.0",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
@@ -115,7 +112,6 @@
     "lint-staged": "17.0.8",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "14.0.16",
-    "nyc": "^18.0.0",
     "prettier": "^3.9.4",
     "prettier-plugin-jinja-template": "^2.2.0",
     "supertest": "^7.2.2",

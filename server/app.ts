@@ -1,7 +1,6 @@
 import express from 'express'
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import { NotFound } from 'http-errors'
-import cypressCoverage from '@cypress/code-coverage/middleware/express'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
@@ -31,10 +30,6 @@ import forAllGetRequests from './utils/forAllGetRequests'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
-
-  if (process.env.NODE_ENV === 'e2e-test') {
-    cypressCoverage(app)
-  }
 
   app.set('json spaces', 2)
   app.set('trust proxy', true)

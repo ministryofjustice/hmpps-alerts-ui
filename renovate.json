@@ -26,7 +26,7 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchPackageNames": ["@types/node"],
+      "matchPackageNames": ["@types/node", "typescript"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },

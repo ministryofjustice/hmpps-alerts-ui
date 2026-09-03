@@ -36,7 +36,7 @@
     "@ministryofjustice/frontend": "11.0.0",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.0.2",
-    "@ministryofjustice/hmpps-connect-dps-components": "6.3.3",
+    "@ministryofjustice/hmpps-connect-dps-components": "6.3.4",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.2.0",
     "@sentry/cli": "3.6.2",
@@ -72,7 +72,7 @@
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.4",
     "@ministryofjustice/eslint-config-hmpps": "1.0.3",
-    "@ministryofjustice/frontend-types": "2.0.1",
+    "@ministryofjustice/frontend-types": "2.0.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "@testing-library/cypress": "^10.1.3",

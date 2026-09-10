@@ -33,7 +33,6 @@ export default defineConfig({
     specPattern: '**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'integration_tests/support/index.ts',
     experimentalRunAllSpecs: true,
-    allowCypressEnv: false,
     retries: {
       runMode: 2,
     },

@@ -17,17 +17,6 @@
         <div class="govuk-grid-column-full">
           <div class="card-group govuk-grid-row" data-module="card-group">
 
-            {% if false and roles and roles.includes('BULK_ALERTS') %}
-              <div class="govuk-grid-column-one-third card-group__item">
-                <div class="card card--clickable">
-                  <h2 class="govuk-heading-m card__heading">
-                    <a class="govuk-link govuk-link--no-visited-state card__link" href="/prison-bulk-alerts">Manage alerts in bulk for your prison</a>
-                  </h2>
-                  <p class="govuk-body card__description">Add and update alerts for anyone resident in your prison.</p>
-                </div>
-              </div>
-            {% endif %}
-
             {% if roles and roles.includes('BULK_PRISON_ESTATE_ALERTS') %}
               <div class="govuk-grid-column-one-third card-group__item">
                 <div class="card card--clickable">

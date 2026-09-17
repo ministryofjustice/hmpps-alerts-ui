@@ -1,5 +1,6 @@
-import express from 'express'
+import express, { Request } from 'express'
 import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 import { NotFound } from 'http-errors'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -23,9 +24,8 @@ import logger from '../logger'
 import config from './config'
 import populateValidationErrors from './middleware/populateValidationErrors'
 import checkPopulateUserCaseloads from './middleware/checkPopulateUserCaseloads'
-import { setUpSentry, sentryMiddleware, setUpSentryErrorHandler } from './middleware/setUpSentry'
+import { sentryMiddleware, setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
 import { handleApiError } from './middleware/handleApiError'
-import addUserMetadataToLogs from './middleware/addUserMetadataToLogs'
 import forAllGetRequests from './utils/forAllGetRequests'
 
 export default function createApp(services: Services): express.Application {
@@ -63,8 +63,11 @@ export default function createApp(services: Services): express.Application {
   )
 
   app.use(checkPopulateUserCaseloads())
-  app.use(addUserMetadataToLogs())
-
+  app.use(
+    telemetryMiddleware.addUserMetadataToTelemetry({
+      getAttributes: (req: Request) => ({ username: req.user?.username }),
+    }),
+  )
   app.use(routes(services))
 
   setUpSentryErrorHandler(app)

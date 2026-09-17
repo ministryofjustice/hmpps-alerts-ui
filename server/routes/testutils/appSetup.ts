@@ -24,6 +24,7 @@ jest.mock('../../services/auditService')
 export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
+  userUuid: '11111111-1111-1111-1111-111111111111',
   token:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkZpcnN0IExhc3QiLCJpYXQiOjE1MTYyMzkwMjIsImF1dGhvcml0aWVzIjpbIlJPTEVfQUxFUlRTX1JFRkVSRU5DRV9EQVRBX01BTkFHRVIiLCJST0xFX01BTkFHRV9TRUNVUkVfQUxFUlRTIl19.GhXs8pD74dIh8nl6O9RWbAKrDok-wWqPydhQl9qnUxw',
   username: 'user1',

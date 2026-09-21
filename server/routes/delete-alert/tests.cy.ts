@@ -15,7 +15,7 @@ context('test /delete-alert screen', () => {
 
   it('Delete an existing alert - happy path', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
 
     const alertUuid = 'c866a9ec-2f15-45fa-9041-460d3deda27d'
@@ -34,9 +34,9 @@ context('test /delete-alert screen', () => {
     cy.findByText(`Deleted alert ${alertUuid}`).should('be.visible')
   })
 
-  it('shows unauthorised message if user does not have DPS_APPLICATION_DEVELOPER role', () => {
+  it('shows unauthorised message if user does not have ALERTS_ADMINISTRATOR role', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
     })
     navigateToTestPage()
     cy.url().should('to.match', /delete-alert$/)
@@ -46,7 +46,7 @@ context('test /delete-alert screen', () => {
 
   it('shows validation errors', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
 
     navigateToTestPage()
@@ -62,7 +62,7 @@ context('test /delete-alert screen', () => {
 
   it('shows error if no existing alert found for alert UUID', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
 
     const alertUuid = '1db14f00-da8a-43f0-9513-d02a8312814a'

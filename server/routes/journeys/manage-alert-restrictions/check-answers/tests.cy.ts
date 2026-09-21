@@ -35,7 +35,7 @@ context('test /manage-alert-restrictions/check-answers', () => {
     cy.task('stubAddPrivilegedUser')
     cy.task('stubRemovePrivilegedUser')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
   })
 

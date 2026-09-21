@@ -15,13 +15,13 @@ context('test /manage-alert-restrictions/select-alert-type screen', () => {
     cy.task('reset')
     cy.task('stubGetAlertTypes')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
   })
 
-  it('should require the DPS_APPLICATION_DEVELOPER role to view the page', () => {
+  it('should require the ALERTS_ADMINISTRATOR role to view the page', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
+      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
     })
     navigateToTestPage('RESTRICT_ALERT')
     cy.findByRole('heading', { name: /Authorisation Error/ }).should('be.visible')

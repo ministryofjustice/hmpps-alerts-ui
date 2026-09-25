@@ -23,7 +23,7 @@ context('test /manage-alert-restrictions/select-alert-code screen', () => {
 
   it('should require the ALERTS_ADMINISTRATOR role to view the page', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
     navigateToTestPage('RESTRICT_ALERT')
     cy.findByRole('heading', { name: /Authorisation Error/ }).should('be.visible')

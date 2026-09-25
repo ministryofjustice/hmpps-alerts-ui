@@ -36,7 +36,7 @@ context('test /delete-alert screen', () => {
 
   it('shows unauthorised message if user does not have ALERTS_ADMINISTRATOR role', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
     navigateToTestPage()
     cy.url().should('to.match', /delete-alert$/)

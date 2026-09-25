@@ -10,7 +10,7 @@ context('test / homepage', () => {
       roles: [
         AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS,
         AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER,
-        AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER,
+        AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR,
       ],
     })
     navigateToTestPage()
@@ -78,9 +78,9 @@ context('test / homepage', () => {
     cy.checkAxeAccessibility()
   })
 
-  it('shows only DPS admin tiles if user only has ROLE_DPS_APPLICATION_DEVELOPER', () => {
+  it('shows only DPS admin tiles if user only has ROLE_ALERTS_ADMINISTRATOR', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
     navigateToTestPage()
 

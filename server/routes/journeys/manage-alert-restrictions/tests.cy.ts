@@ -21,7 +21,7 @@ context('Manage alert restrictions page', () => {
 
   it('should require the ALERTS_ADMINISTRATOR role to view the page', () => {
     cy.task('stubSignIn', {
-      roles: [],
+      roles: [AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER],
     })
     navigateToTestPage()
 

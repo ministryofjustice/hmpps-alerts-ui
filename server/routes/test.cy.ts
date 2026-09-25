@@ -104,9 +104,7 @@ context('test / homepage', () => {
   })
 
   it('shows unauthorised message if user does not have any of the required roles', () => {
-    cy.task('stubSignIn', {
-      roles: [],
-    })
+    cy.task('stubSignIn')
     navigateToTestPage()
     cy.findByText('You are not authorised to use this application.').should('be.visible')
     cy.findByRole('heading', { name: /Manage prisoner alerts/i }).should('not.exist')

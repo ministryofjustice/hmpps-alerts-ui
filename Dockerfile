@@ -27,7 +27,8 @@ RUN test -n "$GIT_BRANCH" || (echo "GIT_BRANCH not set" && false)
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 ENV GIT_REF=${GIT_REF}
 ENV GIT_BRANCH=${GIT_BRANCH}
-COPY package*.json .allowed-scripts.mjs .npmrc ./
+RUN npm install -g npm@12
+COPY package*.json .npmrc ./
 RUN NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
 ENV NODE_ENV='production'
 

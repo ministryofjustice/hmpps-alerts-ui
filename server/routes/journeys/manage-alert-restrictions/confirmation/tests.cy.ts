@@ -31,7 +31,7 @@ context('test /manage-alert-restrictions/confirmation', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
   })
 

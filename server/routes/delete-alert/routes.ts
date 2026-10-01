@@ -11,7 +11,7 @@ export default function DeleteAlertRoutes(alertsApiClient: AlertsApiClient, audi
   const { router, get, post } = BaseRouter()
   const controller = new DeleteAlertController(alertsApiClient, auditService)
 
-  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER], false))
+  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR], false))
 
   get('/', controller.GET)
   post('/', validate(schemaFactory(alertsApiClient)), controller.checkSubmitToAPI, controller.POST)

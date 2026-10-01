@@ -10,7 +10,7 @@ context('test / homepage', () => {
       roles: [
         AuthorisedRoles.ROLE_BULK_PRISON_ESTATE_ALERTS,
         AuthorisedRoles.ROLE_ALERTS_REFERENCE_DATA_MANAGER,
-        AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER,
+        AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR,
       ],
     })
     navigateToTestPage()
@@ -78,9 +78,9 @@ context('test / homepage', () => {
     cy.checkAxeAccessibility()
   })
 
-  it('shows only DPS admin tiles if user only has ROLE_DPS_APPLICATION_DEVELOPER', () => {
+  it('shows only DPS admin tiles if user only has ROLE_ALERTS_ADMINISTRATOR', () => {
     cy.task('stubSignIn', {
-      roles: [AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER],
+      roles: [AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR],
     })
     navigateToTestPage()
 
@@ -104,9 +104,7 @@ context('test / homepage', () => {
   })
 
   it('shows unauthorised message if user does not have any of the required roles', () => {
-    cy.task('stubSignIn', {
-      roles: [],
-    })
+    cy.task('stubSignIn')
     navigateToTestPage()
     cy.findByText('You are not authorised to use this application.').should('be.visible')
     cy.findByRole('heading', { name: /Manage prisoner alerts/i }).should('not.exist')

@@ -18,7 +18,7 @@ export default function ManageAlertRestrictionRoutes(alertsApiClient: AlertsApiC
   const { router, get, post } = BaseRouter()
   const controller = new ManageAlertRestrictionsController()
 
-  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_DPS_APPLICATION_DEVELOPER], false))
+  router.use(authorisationMiddleware([AuthorisedRoles.ROLE_ALERTS_ADMINISTRATOR], false))
 
   router.use(
     redirectCheckAnswersMiddleware([/select-alert-type$/, /select-alert-code$/, /select-user$/, /check-answers$/]),

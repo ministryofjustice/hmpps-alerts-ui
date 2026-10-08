@@ -32,7 +32,7 @@
     "npm": "^12"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1143.0",
+    "@aws-sdk/client-sqs": "3.1144.0",
     "@ministryofjustice/frontend": "11.1.0",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.1.0",
@@ -127,12 +127,12 @@
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "dtrace-provider@0.8.8": false,
-    "fsevents@2.3.3": true,
-    "fsevents@2.3.2": true,
-    "unrs-resolver@1.12.2": true,
+    "@sentry/cli@3.8.0": true,
     "cypress@16.1.1": true,
+    "dtrace-provider@0.8.8": false,
     "esbuild@0.28.2": true,
-    "@sentry/cli@3.8.0": true
+    "fsevents@2.3.2": true,
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.12.2": true
   }
 }

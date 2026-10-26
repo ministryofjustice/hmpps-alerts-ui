@@ -42,7 +42,7 @@
     "@sentry/cli": "3.8.0",
     "@sentry/node": "11.8.0",
     "agentkeepalive": "^4.6.0",
-    "body-parser": "^2.3.0",
+    "body-parser": "^2.4.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.2",
@@ -57,7 +57,7 @@
     "helmet": "8.3.0",
     "http-errors": "^2.0.1",
     "jwt-decode": "^4.0.0",
-    "multer": "^2.4.0",
+    "multer": "^2.5.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
@@ -123,8 +123,7 @@
     "@opentelemetry/resources": "2.12.0",
     "@opentelemetry/sdk-trace-base": "2.12.0",
     "@opentelemetry/sdk-trace-web": "2.12.0",
-    "js-yaml": "^5.5.0",
-    "qs": "^6.16.1"
+    "js-yaml": "^5.5.0"
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
@@ -132,7 +131,6 @@
     "cypress@16.2.0": true,
     "dtrace-provider@0.8.8": false,
     "esbuild@0.28.2": true,
-    "fsevents@2.3.2": true,
     "fsevents@2.3.3": true,
     "unrs-resolver@1.12.2": true
   }

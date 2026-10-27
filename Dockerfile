@@ -4,7 +4,7 @@ ARG GIT_REF
 ARG GIT_BRANCH
 
 # Stage: build assets
-FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS build
+FROM ghcr.io/ministryofjustice/hmpps-node:26-alpine AS build
 RUN apk --update-cache upgrade --available \
   && apk --no-cache add tzdata \
   && rm -rf /var/cache/apk/*
@@ -38,7 +38,7 @@ RUN --mount=type=secret,id=sentry SENTRY_AUTH_TOKEN=$(cat /run/secrets/sentry) n
 RUN npm prune --no-audit --no-fund --omit=dev
 
 # Stage: copy production assets and dependencies
-FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine-runtime
+FROM ghcr.io/ministryofjustice/hmpps-node:26-alpine-runtime
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 ARG BUILD_NUMBER
 ARG GIT_REF

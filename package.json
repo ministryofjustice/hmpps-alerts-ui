@@ -32,15 +32,15 @@
     "npm": "^12"
   },
   "dependencies": {
-    "@aws-sdk/client-sqs": "3.1152.0",
+    "@aws-sdk/client-sqs": "3.1156.0",
     "@ministryofjustice/frontend": "12.0.0",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.1.0",
     "@ministryofjustice/hmpps-connect-dps-components": "6.4.1",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.2.0",
-    "@sentry/cli": "3.8.0",
-    "@sentry/node": "11.8.0",
+    "@sentry/cli": "3.8.2",
+    "@sentry/node": "11.9.0",
     "agentkeepalive": "^4.6.0",
     "body-parser": "^2.4.0",
     "bunyan": "^1.8.15",
@@ -118,7 +118,7 @@
     "wait-on": "9.5.1"
   },
   "overrides": {
-    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/api": "1.10.0",
     "@opentelemetry/core": "2.12.0",
     "@opentelemetry/resources": "2.12.0",
     "@opentelemetry/sdk-trace-base": "2.12.0",

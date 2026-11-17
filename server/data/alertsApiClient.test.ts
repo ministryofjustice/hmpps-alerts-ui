@@ -17,6 +17,10 @@ describe('The alerts API client', () => {
     nock.cleanAll()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('POST', () => {
     it('should create an alert type', async () => {
       fakeAlertsApi.post('/alert-types').reply(201)

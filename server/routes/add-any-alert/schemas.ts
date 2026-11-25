@@ -38,7 +38,7 @@ export const schemaFactory =
         }),
       alertType: z.string().transform(validateAndTransformReferenceData(alertTypeMap, 'Select the alert type')),
       alertCode: z.string().transform(validateAndTransformReferenceData(alertCodeMap, 'Select the alert')),
-      description: z.string().max(1000, 'The reason for creating this alert must be 1,000 characters or under'),
+      description: z.string().max(4000, 'The reason for creating this alert must be 4,000 characters or under'),
       activeFrom: validateTransformDateInRange(
         'Enter the alert start date',
         'The alert start date must be a real date',

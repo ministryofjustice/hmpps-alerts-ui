@@ -84,11 +84,11 @@ context('test /add-any-alert screen', () => {
       .click()
     getDateToInput().should('be.focused')
 
-    getDescriptionInput().type('n'.repeat(1001), { delay: 0 })
+    getDescriptionInput().type('n'.repeat(4001), { delay: 0 })
     getDateFromInput().clear()
     getContinueButton().click()
 
-    cy.findByRole('link', { name: /The reason for creating this alert must be 1,000 characters or under/i })
+    cy.findByRole('link', { name: /The reason for creating this alert must be 4,000 characters or under/i })
       .should('be.visible')
       .click()
     getDescriptionInput().should('be.focused')

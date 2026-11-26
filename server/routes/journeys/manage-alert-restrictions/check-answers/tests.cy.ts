@@ -21,6 +21,7 @@ context('test /manage-alert-restrictions/check-answers', () => {
       description: 'BB description',
       isActive: true,
       isRestricted: false,
+      canBeAdministered: true,
       listSequence: 1,
       createdAt: '',
       createdBy: '',

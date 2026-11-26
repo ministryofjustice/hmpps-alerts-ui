@@ -849,6 +849,11 @@ export interface components {
        */
       isRestricted: boolean
       /**
+       * @description Indicates that the alert code can be administered by the user
+       * @example false
+       */
+      canBeAdministered: boolean
+      /**
        * Format: date-time
        * @description The date and time the alert code was created
        */

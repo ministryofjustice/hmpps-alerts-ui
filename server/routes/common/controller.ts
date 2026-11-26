@@ -13,19 +13,28 @@ export default abstract class BaseController {
    * @param type - preselected alert type to determine list of codes
    * @param existingAlertCodes
    * @param includeInactive
+   * @param excludeRestricted - exclude restricted alert codes the current user is not a privileged user for
    */
   mapAlertTypes = async ({
     req,
     type,
     existingAlertCodes,
     includeInactive,
+    excludeRestricted,
   }: {
     req: Request
     type?: string
     existingAlertCodes?: string[]
     includeInactive?: boolean
+    excludeRestricted?: boolean
   }) => {
-    const types = await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, includeInactive)
+    const retrievedTypes = await this.alertsApiService.retrieveAlertTypes(req.middleware.clientToken, includeInactive)
+    const types = excludeRestricted
+      ? retrievedTypes.map(t => ({
+          ...t,
+          alertCodes: t.alertCodes.filter(code => !code.isRestricted || code.canBeAdministered),
+        }))
+      : retrievedTypes
     const alertTypes = this.mapActiveSortedAlertTypes(
       types.filter(t => t.alertCodes.length),
       undefined,

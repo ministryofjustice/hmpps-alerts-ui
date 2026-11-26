@@ -13,7 +13,12 @@ export const schemaFactory = (alertsApiClient: AlertsApiClient) => async (req: R
     }),
   )
 
-  const alertCodeMap = new Map(types.flatMap(type => type.alertCodes).map(code => [code.code, code]))
+  const alertCodeMap = new Map(
+    types
+      .flatMap(type => type.alertCodes)
+      .filter(code => !code.isRestricted || code.canBeAdministered)
+      .map(code => [code.code, code]),
+  )
 
   return createSchema({
     alertType: z.string().transform(validateAndTransformReferenceData(alertTypeMap, 'You must select an alert type')),

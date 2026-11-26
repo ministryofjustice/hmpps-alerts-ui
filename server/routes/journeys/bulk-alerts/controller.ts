@@ -26,6 +26,7 @@ export default class BulkAlertsController extends BaseController {
     const { alertTypes, alertCodes, typeCodeMap } = await this.mapAlertTypes({
       req,
       includeInactive: true,
+      excludeRestricted: true,
       ...(alertType ? { type: alertType as string } : {}),
     })
     res.render('bulk-alerts/view', {
